@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://cop6kl2ttusns"]
+
+[ext_resource type="Script" path="res://ArcheologyItem.gd" id="1_0vev8"]
+[ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_lfthp"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]
+rough = true
+
+[node name="ArcheologyItem" type="RigidBody2D"]
+input_pickable = true
+physics_material_override = SubResource("PhysicsMaterial_05x1r")
+gravity_scale = 0.0
+can_sleep = false
+lock_rotation = true
+linear_damp = 20.171
+angular_damp = 18.364
+script = ExtResource("1_0vev8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_lfthp")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+texture = ExtResource("2_lfthp")
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(100, 100, 200, 100, 200, 200, 100, 200)
+metadata/_edit_lock_ = true
+
+[node name="Scars" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
+[connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bekql6wb10r0o"]
+
+[sub_resource type="Curve" id="Curve_q3kjk"]
+_data = [Vector2(0.0346535, 1), 0.0, 0.0, 0, 0, Vector2(0.554455, 0.549451), 0.0, 0.0, 0, 0, Vector2(1, 0.142857), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="ItemScarLine" type="Line2D"]
+points = PackedVector2Array(-218, 84, -88, 37, -59, -17, 41, -97, 185, 12, 215, 11)
+width_curve = SubResource("Curve_q3kjk")
+default_color = Color(0, 0, 0, 1)

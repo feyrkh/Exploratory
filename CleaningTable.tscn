@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dsqjk8ggv547x"]
+
+[ext_resource type="PackedScene" uid="uid://lxehddere6da" path="res://ArcheologyItem.tscn" id="1_7dktr"]
+[ext_resource type="Script" path="res://CleaningTable.gd" id="1_avayf"]
+[ext_resource type="PackedScene" uid="uid://cop6kl2ttusns" path="res://ArcheologySquare.tscn" id="3_61cpd"]
+
+[node name="CleaningTable" type="Node2D"]
+script = ExtResource("1_avayf")
+
+[node name="Pot1" parent="." instance=ExtResource("1_7dktr")]
+position = Vector2(1473, 176)
+
+[node name="Pot2" parent="." instance=ExtResource("1_7dktr")]
+position = Vector2(-569, 98)
+
+[node name="Pot3" parent="." instance=ExtResource("1_7dktr")]
+position = Vector2(599, 39)
+
+[node name="Square" parent="." instance=ExtResource("3_61cpd")]
+position = Vector2(294, 88)

@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://lxehddere6da"]
+
+[ext_resource type="Script" path="res://ArcheologyItem.gd" id="1_yx51a"]
+[ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_bwwpx"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]
+rough = true
+
+[node name="ArcheologyItem" type="RigidBody2D"]
+input_pickable = true
+physics_material_override = SubResource("PhysicsMaterial_05x1r")
+gravity_scale = 0.0
+can_sleep = false
+lock_rotation = true
+linear_damp = 20.171
+angular_damp = 18.364
+script = ExtResource("1_yx51a")
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_bwwpx")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+texture = ExtResource("2_bwwpx")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-301, -26)
+polygon = PackedVector2Array(366, 112, 366, 83, 372, 72, 382, 62, 398, 52, 429, 41, 470, 32, 504, 28, 557, 27, 617, 32, 670, 45, 693, 55, 712, 70, 718, 82, 719, 108, 713, 119, 714, 130, 725, 157, 745, 191, 758, 223, 767, 262, 770, 306, 766, 338, 755, 376, 736, 415, 709, 450, 681, 475, 670, 486, 661, 506, 659, 516, 662, 521, 666, 529, 671, 537, 669, 546, 656, 557, 633, 566, 596, 573, 545, 577, 492, 574, 450, 566, 430, 559, 416, 550, 412, 543, 412, 535, 421, 524, 427, 518, 424, 506, 415, 486, 400, 471, 376, 450, 353, 421, 333, 384, 321, 351, 316, 311, 315, 287, 317, 259, 322, 236, 338, 193, 364, 152, 376, 124)
+
+[node name="Scars" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="ShardEdges" type="Node2D" parent="."]
+z_index = -3
+z_as_relative = false
+
+[connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
+[connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

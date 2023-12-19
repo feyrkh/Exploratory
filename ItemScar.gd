@@ -67,7 +67,7 @@ func remove_line_segments(covered_pts, from_end:bool):
 		print("Full line was deleted")
 		queue_free()
 
-func get_edge_intersections(edge_start:Vector2, edge_end:Vector2, distance_tolerance=0.1):
+func get_edge_intersections(edge_start:Vector2, edge_end:Vector2, distance_tolerance=0.7):
 	var closest_intersection_of_start
 	var closest_intersection_of_end
 	var closest = Geometry2D.get_closest_point_to_segment(line.points[0], edge_start, edge_end)
@@ -106,6 +106,7 @@ func intersect_scar(scar2:ItemScar, scar1_from_end:bool, scar2_from_end:bool): #
 		var next_pt = scar1_pts[i]
 		var start_pt2 = scar2_pts[0]
 		for j in range(1, scar2_pts.size()):
+			# walk forward on second scar to find the segment that intersects with the current segment of scar1
 			var next_pt2 = scar2_pts[j]
 			var intersect_pt = Geometry2D.segment_intersects_segment(start_pt, next_pt, start_pt2, next_pt2)
 			if intersect_pt != null:

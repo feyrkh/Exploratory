@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://yeusf7ot7b4a"]
+
+[ext_resource type="Texture2D" uid="uid://b5ij3m7w65djn" path="res://art/broken_clay.png" id="1_a0b8r"]
+[ext_resource type="Script" path="res://ItemShardEdge.gd" id="2_5g4ha"]
+
+[sub_resource type="Curve" id="Curve_l5ar3"]
+_data = [Vector2(0, 0.488764), 0.0, 0.0, 0, 0, Vector2(0.490099, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.488764), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="Line2D" type="Line2D"]
+width = 20.0
+width_curve = SubResource("Curve_l5ar3")
+default_color = Color(0.454902, 0.192157, 0.137255, 1)
+texture = ExtResource("1_a0b8r")
+texture_mode = 1
+script = ExtResource("2_5g4ha")

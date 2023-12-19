@@ -31,6 +31,7 @@ var area_pct:
 @onready var sprite:Sprite2D = find_child("Sprite2D")
 @onready var scars:Node2D = find_child("Scars")
 @onready var polygon:Polygon2D = find_child("Polygon2D")
+@onready var shard_edges:Node2D = find_child("ShardEdges")
 
 func _ready():
 	refresh_polygon()
@@ -52,8 +53,12 @@ func clone(new_polygon:Array):
 	for scar in scars.get_children():
 		var new_scar = scar.clone()
 		new_scene.scars.add_child(new_scar)
+	for edge in shard_edges.get_children():
+		var new_edge = edge.clone()
+		new_scene.shard_edges.add_child(new_edge)
 	new_scene.refresh_polygon()
 	new_scene.shattering_in_progress = true
+	return new_scene
 
 func refresh_polygon():
 	center = null
@@ -77,8 +82,12 @@ func refresh_polygon():
 	for i in range(collision.polygon.size()):
 		var j = (i+1) % collision.polygon.size()
 		total_edge_length += collision.polygon[i].distance_to(collision.polygon[j])
+	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, 3)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
+	for edge in shard_edges.get_children():
+		if scar_trim_poly.size() > 0:
+			edge.refresh_edge_path(scar_trim_poly[0])
 	if abs(area) < 45:
 		print("Too-small shard was created, area is ", area, ", deleting")
 		queue_free()
@@ -150,6 +159,66 @@ func add_scar(scar:ItemScar):
 	scars.add_child(scar)
 
 func try_shatter():
+	# look at each scar in turn
+	var scar_count = scars.get_child_count()
+	var break_path
+	for pt_idx in range(collision.polygon.size()):
+		if break_path != null: break
+		var next_pt_idx = (pt_idx + 1) % collision.polygon.size()
+		for scar1_idx in range(scar_count):
+			if break_path != null: break
+			var scar1:ItemScar = scars.get_child(scar1_idx)
+			# check if that scar intersects the same edge on both sides, if so that's our break path
+			var scar1_intersect = scar1.get_edge_intersections(collision.polygon[pt_idx], collision.polygon[next_pt_idx])
+			if scar1_intersect == null:
+				continue
+			if scar1_intersect[-1] == "both":
+				break_path = scar1.line.points
+				break
+			# otherwise, look for any scar which intersects with this one, our break path is the first scar up to the intersection point, then follow the second scar back to its start
+			for scar2_idx in range(scar1_idx+1, scar_count):
+				var scar2 = scars.get_child(scar2_idx)
+				var scar1_intersect_scar2 = scar1.intersect_scar(scar2, false, false)
+				if scar1_intersect_scar2:
+					break_path = scar1_intersect_scar2[0]
+					break
+			if !break_path:
+				# Finally, if no other scars intersect this one, look at whether the endpoint of this scar intersects any other edges
+				for endpt_idx in range(collision.polygon.size()):
+					var next_endpt_idx = (endpt_idx + 1) % collision.polygon.size()
+					var scar1_endpt_intersect = scar1.get_edge_intersections(collision.polygon[endpt_idx], collision.polygon[next_endpt_idx])
+					if scar1_endpt_intersect != null:
+						if scar1_endpt_intersect[-1] != "start":
+							break_path = scar1.line.points
+							break
+	# see if we found any break path
+	if !break_path:
+		return
+	# expand our break path
+	# this doesn't work like I want it to, gonna write my own
+	#var break_poly := Geometry2D.offset_polyline(PackedVector2Array(break_path), 5, Geometry2D.JOIN_MITER, Geometry2D.END_JOINED)
+	var break_poly = MyGeom.inflate_polyline(break_path, 0.5)
+	# intersect our break path with our existing polygon
+	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
+	for poly in clipped_polygons:
+		# check that each result polygon is clockwise, reverse it if not
+		if !Geometry2D.is_polygon_clockwise(poly):
+			poly.reverse()
+	# if no polygons were found, destroy this obj - it got divided into dust
+	if clipped_polygons == null or clipped_polygons.size() == 0:
+		queue_free()
+		return
+	add_break_underlay(break_path, clipped_polygons[0])
+	# create a new item out of all but the first polygon we found
+	for i in range(1, clipped_polygons.size()):
+		var new_item = clone(clipped_polygons[i])
+		new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)
+	# replace our current collision polygon with the first polygon we found
+	collision.polygon = clipped_polygons[0]
+	shattering_in_progress = true
+	refresh_polygon()
+
+func try_shatter_old():
 	var pts := polygon.polygon
 	var cur_edge_start := pts[0]
 	var cur_edge_end := cur_edge_start
@@ -224,10 +293,10 @@ func try_shatter():
 						elif intersections2.size() == 3:
 							second_scar = scar2
 							scar_intersection = scar.intersect_scar(scar2, intersections[-1] == "end", intersections2[-1] == "end")
-							covered_scar1_pts = scar_intersection[1]
-							covered_scar2_pts = scar_intersection[2]
-							scar_intersection = scar_intersection[0]
 							if scar_intersection != null:
+								covered_scar1_pts = scar_intersection[1]
+								covered_scar2_pts = scar_intersection[2]
+								scar_intersection = scar_intersection[0]
 								print("Found an intersection with another scar at edge ", j, " with coords ", scar_intersection)
 								# if the scars intersect, then we have a fragment
 								fragment_edge_idx_start = i
@@ -305,7 +374,7 @@ func random_scar():
 	var end_pos = center
 	var len = start_pos.distance_to(end_pos)
 	#scar.generate_scar(collision.polygon, start_pos, randf_range(len/2, len*2), start_angle, 0, 1.0, 1.0)
-	specific_scar(start_pos, (end_pos - start_pos).normalized() * randf_range(len/2, len*2/3), PI/6, 0.1, 0.2)
+	specific_scar(start_pos, end_pos + Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * randf_range(len/3, len/2), PI/6, 0.1, 0.2)
 
 func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, min_segment_len:float=1.0, max_segment_len:float=1.0):
 	var start_angle = start_pos.angle_to_point(end_pos)
@@ -338,3 +407,14 @@ func _find_center() -> Vector2:
 
 	print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
 	return center
+
+func add_break_underlay(break_path, clip_polygon, offset=0.1):
+	#for i in break_path.size():
+	#	break_path[i] = break_path[i] + (center - break_path[i]).normalized()*0.1
+	break_path = Geometry2D.clip_polyline_with_polygon(break_path, Geometry2D.offset_polygon(clip_polygon, 1))
+	for path_part in break_path:
+		var edge = load("res://ItemShardEdge.tscn").instantiate()
+		var line = load("res://ItemShardEdgeLine.tscn").instantiate()
+		line.points = path_part
+		edge.add_child(line)
+		shard_edges.add_child(edge)

@@ -33,5 +33,9 @@ metadata/_edit_lock_ = true
 [node name="Scars" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
 
+[node name="ShardEdges" type="Node2D" parent="."]
+z_index = -3
+z_as_relative = false
+
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

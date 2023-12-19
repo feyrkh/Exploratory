@@ -1,12 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://yeusf7ot7b4a"]
+[gd_scene load_steps=2 format=3 uid="uid://8h4xde2tkngh"]
 
 [ext_resource type="Script" path="res://ItemShardEdge.gd" id="1_76tvu"]
 
-[sub_resource type="Curve" id="Curve_l5ar3"]
-_data = [Vector2(0.00990099, 0.131868), 0.0, 0.0, 0, 0, Vector2(0.490099, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.098901), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[node name="ItemShardEdge" type="Line2D"]
-width_curve = SubResource("Curve_l5ar3")
-default_color = Color(0.454902, 0.192157, 0.137255, 1)
+[node name="ItemShardEdge" type="Node2D"]
 script = ExtResource("1_76tvu")

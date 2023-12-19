@@ -15,6 +15,38 @@ position = Vector2(-569, 98)
 
 [node name="Pot3" parent="." instance=ExtResource("1_7dktr")]
 position = Vector2(599, 39)
+linear_damp = 30.0
+angular_damp_mode = 1
+angular_damp = 16.0
 
 [node name="Square" parent="." instance=ExtResource("3_61cpd")]
 position = Vector2(294, 88)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainer"]
+layout_mode = 2
+
+[node name="FreezeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Move: Free"
+alignment = 0
+
+[node name="LockRotateButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "Rotate: Locked"
+alignment = 0
+
+[node name="CollideButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "Collide: Yes"
+alignment = 0
+
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LockRotateButton" to="." method="_on_lock_rotate_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/CollideButton" to="." method="_on_collide_button_pressed"]

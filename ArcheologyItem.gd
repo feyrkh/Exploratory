@@ -1,10 +1,18 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
+# if -1, the mouse is not hovering over this piece
 var hover_idx = -1
+# If null, the user is not dragging this piece
 var drag_start_mouse = null
 var drag_start_item = null
 var target_pos = null
+# if null, the user is not rotating this piece
+var rotate_start_mouse = null
+var rotate_start_item = null
+var target_rot = null
+
+# Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
 var shattering_in_progress:bool = false:
 	set(val):
@@ -42,6 +50,24 @@ func _process(_delta):
 	if shattering_in_progress:
 		shattering_in_progress = false
 		try_shatter()
+
+func global_lock_rotation(val:bool):
+	# Called by Global.lock_rotation when rotation locking for fragments is enabled/disabled
+	# Only applied if we're not already dragging or rotating the current item - when we stop, it will take on the global setting again
+	if drag_start_item == null and rotate_start_item == null:
+		lock_rotation = val
+
+func global_freeze_pieces(val:bool):
+	# Called by Global.freeze_pieces. Only applied if we're not already interacting with the current item.
+	if drag_start_item == null and rotate_start_item == null:
+		freeze = val
+		
+func global_collide(val:bool):
+	# Called by Global.collide when piece collisions should be disabled
+	if val:
+		collision_mask |= 1 # allow this piece to collide with elements on layer 1
+	else:
+		collision_mask &= ~1 # prevent this piece from colliding with elements on layer 1
 
 func clone(new_polygon:Array):
 	var new_scene = load(scene_file_path).instantiate()
@@ -115,17 +141,34 @@ func _unhandled_input(event):
 				print("Starting drag")
 				drag_start_mouse = get_global_mouse_position()
 				drag_start_item = global_position
+				lock_rotation = true
+				freeze = false
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
 				print("Shattering item")
 				try_shatter()
-		if event.is_action_released("drag_start"):
+			if event.is_action_pressed("rotate_start"):
+				rotate_start_mouse = center.angle_to_point(get_global_mouse_position())
+				rotate_start_item = global_rotation
+				lock_rotation = false
+				freeze = false
+				print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rotate_start_mouse)				
+		if drag_start_mouse != null and event.is_action_released("drag_start"):
 			drag_start_mouse = null
 			drag_start_item = null
 			target_pos = null
 			if hover_idx == -1:
 				_on_mouse_shape_exited(-1)
+			lock_rotation = Global.lock_rotation
+			freeze = Global.freeze_pieces
 			#print("Ending drag")
+		elif rotate_start_mouse != null and event.is_action_released("rotate_start"):
+			rotate_start_mouse = null
+			rotate_start_item = null
+			target_rot = null
+			lock_rotation = Global.lock_rotation
+			freeze = Global.freeze_pieces
+			print("Stopping rotate")
 	elif drag_start_mouse != null and event is InputEventMouseMotion:
 		target_pos = get_global_mouse_position()
 	elif hover_idx >= 0 and event.is_action_pressed("delete_item"):
@@ -406,6 +449,7 @@ func _find_center() -> Vector2:
 	center = Vector2(x/f+off.x, y/f+off.y)
 
 	print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
+	center_of_mass = center
 	return center
 
 func add_break_underlay(break_path, clip_polygon, offset=0.1):

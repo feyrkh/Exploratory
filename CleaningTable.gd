@@ -1,13 +1,23 @@
 extends Node2D
+const CAMERA_MOVE_SPEED := 10
+const ZOOM_INCREMENT := Vector2(0.1, 0.1)
+@onready var camera:Camera2D = find_child("Camera2D")
+
+func _process(_delta):
+	var movement = Input.get_vector("left", "right", "up", "down")
+	if movement != Vector2.ZERO:
+		camera.position += movement * CAMERA_MOVE_SPEED / camera.zoom.x
 
 func _unhandled_input(event):
-	if event.is_action_pressed("add_crack"):
-		find_child("Pot3").random_scar()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("toggle_lock_rotation"):
-		Global.lock_rotation = !Global.lock_rotation
-		get_viewport().set_input_as_handled()
-		
+	if event.is_action("zoom_in"):
+		camera.zoom += ZOOM_INCREMENT
+		if camera.zoom.x > 4.0:
+			camera.zoom = Vector2(4, 4)
+	elif event.is_action("zoom_out"):
+		camera.zoom -= ZOOM_INCREMENT
+		if camera.zoom.x < 0.2:
+			camera.zoom = Vector2(0.2, 0.2)
+	
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,7 +48,7 @@ func _ready():
 		#pot2.random_scar()
 		pot3.random_scar()
 	
-	var square = find_child("Square")
+	#var square = find_child("Square")
 	#square.specific_scar(Vector2(100, 151), Vector2(160, 150), 0, 0.5, 0.5) # from left
 	#square.specific_scar(Vector2(151, 100), Vector2(150, 160), 0, 0.5, 0.5) # from top
 	#square.specific_scar(Vector2(200, 151), Vector2(140, 150), 0, 0.5, 0.5) # from right
@@ -47,8 +57,8 @@ func _ready():
 	#square.specific_scar(Vector2(100, 199), Vector2(160, 140), 0, 0.5, 0.5) # from bottom-left
 
 
-	square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
-	square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
+	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
+	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
 
 
 func _on_freeze_button_pressed():
@@ -79,3 +89,44 @@ func update_button_text():
 		find_child("LockRotateButton").text = "Rotate: Locked"
 	else:
 		find_child("LockRotateButton").text = "Rotate: Free"
+
+
+func _on_add_fracture_button_pressed():
+	find_child("Pot3").random_scar()
+
+
+func _on_shatter_button_pressed():
+	find_child("Pot3").try_shatter()
+
+
+func _on_shuffle_button_pressed():
+	var pieces = find_child("Pieces").get_children()
+	pieces.shuffle()
+	var cur_min_x = 150
+	var cur_min_y = 0
+	var max_x = get_viewport_rect().size.x
+	var cur_row_height = 0
+	for piece in pieces:
+		piece.global_rotation = 0
+		var poly = piece.find_child("CollisionPolygon2D").polygon
+		var bb_xmin = 9999999
+		var bb_ymin = 9999999
+		var bb_xmax = -9999999
+		var bb_ymax = -9999999
+		for pt in poly:
+			if pt.x < bb_xmin: bb_xmin = pt.x
+			if pt.y < bb_ymin: bb_ymin = pt.y
+			if pt.x > bb_xmax: bb_xmax = pt.x
+			if pt.y > bb_ymax: bb_ymax = pt.y
+		if cur_row_height < (bb_ymax - bb_ymin) + 10:
+			cur_row_height = (bb_ymax - bb_ymin) + 10
+		# check if there's room left on this row
+		var space_needed = bb_xmax - bb_xmin + 20
+		if space_needed + cur_min_x > max_x:
+			cur_min_x = 200
+			cur_min_y += cur_row_height
+			cur_row_height = 0
+		else:
+			cur_min_x += space_needed
+		piece.reset_position = Vector2(cur_min_x - space_needed - bb_xmin, cur_min_y - bb_ymin)
+		piece.freeze = false #should get reset to whatever it should be after the position is changed

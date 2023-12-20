@@ -10,7 +10,9 @@ var target_pos = null
 # if null, the user is not rotating this piece
 var rotate_start_mouse = null
 var rotate_start_item = null
+var rotate_start_item_com_position = null
 var target_rot = null
+var reset_position = null
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
@@ -148,11 +150,13 @@ func _unhandled_input(event):
 				print("Shattering item")
 				try_shatter()
 			if event.is_action_pressed("rotate_start"):
-				rotate_start_mouse = center.angle_to_point(get_global_mouse_position())
+				rotate_start_mouse = to_global(center_of_mass).angle_to_point(get_global_mouse_position())
 				rotate_start_item = global_rotation
+				rotate_start_item_com_position = to_global(center_of_mass)
 				lock_rotation = false
 				freeze = false
-				print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rotate_start_mouse)				
+				print("Mouse at ", get_global_mouse_position(), ", COM at ", to_global(center_of_mass))
+				print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rad_to_deg(rotate_start_mouse))
 		if drag_start_mouse != null and event.is_action_released("drag_start"):
 			drag_start_mouse = null
 			drag_start_item = null
@@ -168,17 +172,69 @@ func _unhandled_input(event):
 			target_rot = null
 			lock_rotation = Global.lock_rotation
 			freeze = Global.freeze_pieces
+			find_child("target_rot").visible = false
+			find_child("rotate_start_item").visible = false
+			find_child("rotate_start_mouse").visible = false
+			find_child("actual_rot").visible = false
 			print("Stopping rotate")
 	elif drag_start_mouse != null and event is InputEventMouseMotion:
 		target_pos = get_global_mouse_position()
+	elif rotate_start_mouse != null and event is InputEventMouseMotion:
+		target_rot = 0.1 # just something to get the _integrate_forces method started
 	elif hover_idx >= 0 and event.is_action_pressed("delete_item"):
 		print("Deleting item ", self)
-		queue_free()
 
 func _integrate_forces(state):
+	if reset_position != null:
+		state.transform = state.transform.rotated(-state.transform.get_rotation())
+		state.transform.origin = reset_position
+		reset_position = null
+		freeze = Global.freeze_pieces
 	if target_pos != null:
 		var desired_motion = drag_start_item - global_position + target_pos - drag_start_mouse
 		state.linear_velocity = desired_motion * 25
+	if target_rot != null:
+		#var direction
+		#if (global_rotation <= target_rot) and (target_rot - global_rotation < PI):
+		#	direction = 1
+		#elif (target_rot <= global_rotation) and (global_rotation - target_rot < PI):
+		#	direction = -1
+		#elif (global_rotation <= target_rot) and (target_rot - global_rotation < PI):
+		#	direction = -1
+		#elif (target_rot <= global_rotation) and (global_rotation - target_rot < PI):
+		#	direction = 1
+		#else:
+		#	direction = target_rot - global_rotation
+		#var actual_rot = rotate_start_item - global_rotation
+		#print("target: ", rad_to_deg(target_rot), ", actual: ", rad_to_deg(actual_rot))
+		#if target_rot < global_rotation:
+			#angular_velocity = -abs(target_rot - global_rotation) * 5
+			##print("Rot neg, ", global_rotation, " to ", target_rot)
+		#elif target_rot > global_rotation:
+			#angular_velocity = abs(target_rot - global_rotation) * 5
+			##print("Rot pos, ", global_rotation, " to ", target_rot)
+		#else:
+			#print("Reached position? ", global_rotation, " vs ", target_rot)		var item_center = to_global(center_of_mass)
+		var item_center = to_global(center_of_mass)
+		var mouse_cursor = get_global_mouse_position()
+		var angle_from_item_to_mouse = item_center.angle_to_point(mouse_cursor)
+		var offset_from_original_angle = angle_from_item_to_mouse - rotate_start_mouse
+		var distance_already_rotated = global_rotation - rotate_start_item
+		var distance_to_rotate = offset_from_original_angle - distance_already_rotated
+		#state.transform.origin += item_center - rotate_start_item_com_position
+		#rotate_start_item_com_position = to_global(center_of_mass)
+		if distance_to_rotate >= PI:
+			distance_to_rotate -= 2*PI
+		elif distance_to_rotate <= -PI:
+			distance_to_rotate += 2*PI
+		#print("item_center=%s, mouse_cursor=%s, angle_from_item_to_mouse=%s, offset_from_original_angle=%s, distance_already_rotated=%s, distance_to_rotate=%s" % 
+		#[item_center, mouse_cursor, rad_to_deg(angle_from_item_to_mouse), rad_to_deg(offset_from_original_angle), rad_to_deg(distance_already_rotated), rad_to_deg(distance_to_rotate)])
+		target_rot = distance_to_rotate
+		while target_rot > PI:
+			target_rot -= PI
+		while target_rot < -PI:
+			target_rot += PI
+		angular_velocity = target_rot * 15
 
 func _on_mouse_shape_entered(shape_idx):
 	sprite.modulate = Color.AQUAMARINE
@@ -205,12 +261,14 @@ func try_shatter():
 	# look at each scar in turn
 	var scar_count = scars.get_child_count()
 	var break_path
+	var scar1:ItemScar
+	var scar2:ItemScar
 	for pt_idx in range(collision.polygon.size()):
 		if break_path != null: break
 		var next_pt_idx = (pt_idx + 1) % collision.polygon.size()
 		for scar1_idx in range(scar_count):
 			if break_path != null: break
-			var scar1:ItemScar = scars.get_child(scar1_idx)
+			scar1 = scars.get_child(scar1_idx)
 			# check if that scar intersects the same edge on both sides, if so that's our break path
 			var scar1_intersect = scar1.get_edge_intersections(collision.polygon[pt_idx], collision.polygon[next_pt_idx])
 			if scar1_intersect == null:
@@ -220,12 +278,13 @@ func try_shatter():
 				break
 			# otherwise, look for any scar which intersects with this one, our break path is the first scar up to the intersection point, then follow the second scar back to its start
 			for scar2_idx in range(scar1_idx+1, scar_count):
-				var scar2 = scars.get_child(scar2_idx)
+				scar2 = scars.get_child(scar2_idx)
 				var scar1_intersect_scar2 = scar1.intersect_scar(scar2, false, false)
 				if scar1_intersect_scar2:
 					break_path = scar1_intersect_scar2[0]
 					break
 			if !break_path:
+				scar2 = null
 				# Finally, if no other scars intersect this one, look at whether the endpoint of this scar intersects any other edges
 				for endpt_idx in range(collision.polygon.size()):
 					var next_endpt_idx = (endpt_idx + 1) % collision.polygon.size()
@@ -240,7 +299,7 @@ func try_shatter():
 	# expand our break path
 	# this doesn't work like I want it to, gonna write my own
 	#var break_poly := Geometry2D.offset_polyline(PackedVector2Array(break_path), 5, Geometry2D.JOIN_MITER, Geometry2D.END_JOINED)
-	var break_poly = MyGeom.inflate_polyline(break_path, 0.5)
+	var break_poly = MyGeom.inflate_polyline(break_path, 1)
 	# intersect our break path with our existing polygon
 	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
 	for poly in clipped_polygons:

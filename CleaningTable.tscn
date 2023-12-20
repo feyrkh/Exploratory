@@ -1,26 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=3 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="PackedScene" uid="uid://lxehddere6da" path="res://ArcheologyItem.tscn" id="1_7dktr"]
 [ext_resource type="Script" path="res://CleaningTable.gd" id="1_avayf"]
-[ext_resource type="PackedScene" uid="uid://cop6kl2ttusns" path="res://ArcheologySquare.tscn" id="3_61cpd"]
 
 [node name="CleaningTable" type="Node2D"]
 script = ExtResource("1_avayf")
 
-[node name="Pot1" parent="." instance=ExtResource("1_7dktr")]
-position = Vector2(1473, 176)
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(578, 328)
+position_smoothing_enabled = true
 
-[node name="Pot2" parent="." instance=ExtResource("1_7dktr")]
-position = Vector2(-569, 98)
+[node name="Pieces" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
 
-[node name="Pot3" parent="." instance=ExtResource("1_7dktr")]
-position = Vector2(599, 39)
+[node name="Pot3" parent="Pieces" instance=ExtResource("1_7dktr")]
+position = Vector2(334, 46)
 linear_damp = 30.0
-angular_damp_mode = 1
-angular_damp = 16.0
-
-[node name="Square" parent="." instance=ExtResource("3_61cpd")]
-position = Vector2(294, 88)
+angular_velocity = 31.4159
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -33,20 +29,51 @@ layout_mode = 2
 
 [node name="FreezeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 toggle_mode = true
 text = "Move: Free"
 alignment = 0
 
 [node name="LockRotateButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Rotate: Locked"
 alignment = 0
 
 [node name="CollideButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Collide: Yes"
 alignment = 0
+
+[node name="AddFractureButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Add Fracture"
+alignment = 0
+
+[node name="ShatterButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Shatter"
+alignment = 0
+
+[node name="ShuffleButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Shuffle"
+alignment = 0
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 130.0
+offset_right = 1141.0
+offset_bottom = 49.0
+text = "camera=wasd, leftclick+drag=move piece, rightclick+drag=rotate piece, mouse wheel=zoom
+top buttons toggle whether pieces are locked in place when bumped for movement & rotation, or whether collisions happen at all"
 
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LockRotateButton" to="." method="_on_lock_rotate_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/CollideButton" to="." method="_on_collide_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddFractureButton" to="." method="_on_add_fracture_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShatterButton" to="." method="_on_shatter_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]

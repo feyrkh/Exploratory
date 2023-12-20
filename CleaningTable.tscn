@@ -68,7 +68,7 @@ alignment = 0
 offset_left = 130.0
 offset_right = 1141.0
 offset_bottom = 49.0
-text = "camera=wasd, leftclick+drag=move piece, rightclick+drag=rotate piece, mouse wheel=zoom
+text = "camera=wasd, leftclick+drag=move piece, rightclick+drag=rotate piece, mouse wheel=zoom, shift=disable collisions while held
 top buttons toggle whether pieces are locked in place when bumped for movement & rotation, or whether collisions happen at all"
 
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]

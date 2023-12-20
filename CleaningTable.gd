@@ -2,6 +2,7 @@ extends Node2D
 const CAMERA_MOVE_SPEED := 10
 const ZOOM_INCREMENT := Vector2(0.1, 0.1)
 @onready var camera:Camera2D = find_child("Camera2D")
+var collision_temp_disabled = false
 
 func _process(_delta):
 	var movement = Input.get_vector("left", "right", "up", "down")
@@ -13,11 +14,19 @@ func _unhandled_input(event):
 		camera.zoom += ZOOM_INCREMENT
 		if camera.zoom.x > 4.0:
 			camera.zoom = Vector2(4, 4)
+		get_viewport().set_input_as_handled()
 	elif event.is_action("zoom_out"):
 		camera.zoom -= ZOOM_INCREMENT
 		if camera.zoom.x < 0.2:
 			camera.zoom = Vector2(0.2, 0.2)
-	
+		get_viewport().set_input_as_handled()
+	elif Global.collide == true and event.is_action_pressed("disable_collision"):
+		print("Disabling collision ", self)
+		Global.collide = false
+		collision_temp_disabled = true
+	elif collision_temp_disabled and event.is_action_released("disable_collision"):
+		Global.collide = true
+		print("Reenabling collision")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

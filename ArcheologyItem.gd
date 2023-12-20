@@ -14,6 +14,8 @@ var rotate_start_item_com_position = null
 var target_rot = null
 var reset_position = null
 
+const TOO_SMALL_POLYGON_AREA := 85
+
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
 var shattering_in_progress:bool = false:
@@ -84,11 +86,10 @@ func clone(new_polygon:Array):
 	for edge in shard_edges.get_children():
 		var new_edge = edge.clone()
 		new_scene.shard_edges.add_child(new_edge)
-	new_scene.refresh_polygon()
 	new_scene.shattering_in_progress = true
 	return new_scene
 
-func refresh_polygon():
+func refresh_polygon() -> int:
 	center = null
 	area = 0
 	if collision.polygon[0].distance_to(collision.polygon[-1]) < 0.5:
@@ -116,11 +117,13 @@ func refresh_polygon():
 	for edge in shard_edges.get_children():
 		if scar_trim_poly.size() > 0:
 			edge.refresh_edge_path(scar_trim_poly[0])
-	if abs(area) < 45:
+	if abs(area) < TOO_SMALL_POLYGON_AREA:
 		print("Too-small shard was created, area is ", area, ", deleting")
 		queue_free()
+		return 0
 	else:
 		print("Decent-sized shard was created, area is ", area)
+		return 1
 
 func get_random_edge_point() -> Vector2:
 	var dist = randf_range(0, total_edge_length)
@@ -145,6 +148,7 @@ func _unhandled_input(event):
 				drag_start_item = global_position
 				lock_rotation = true
 				freeze = false
+				get_parent().move_child(self, -1)
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
 				print("Shattering item")
@@ -257,12 +261,32 @@ func add_scar(scar:ItemScar):
 			scar.queue_free()
 	scars.add_child(scar)
 
+#func try_shatter_all_at_once():
+	#var working_polygons = [collision.polygon]
+	#var scar_polygons = []
+	#for scar in scars.get_children():
+		#scar_polygons.append(MyGeom.inflate_polyline(scar.line.points, 1))
+	#for break_poly in scar_polygons:
+		#var new_polygons = []
+		#for working_poly in working_polygons:
+			#var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
+			##for poly in clipped_polygons:
+				## check that each result polygon is clockwise, reverse it if not
+				##if !Geometry2D.is_polygon_clockwise(poly):
+				##	poly.reverse()
+			#new_polygons.append_array(clipped_polygons)
+		#working_polygons = new_polygons
+	#for poly in working_polygons:
+		
+
 func try_shatter():
 	# look at each scar in turn
 	var scar_count = scars.get_child_count()
 	var break_path
 	var scar1:ItemScar
 	var scar2:ItemScar
+	var scar1_edge_segments
+	var scar2_edge_segments
 	for pt_idx in range(collision.polygon.size()):
 		if break_path != null: break
 		var next_pt_idx = (pt_idx + 1) % collision.polygon.size()
@@ -275,6 +299,7 @@ func try_shatter():
 				continue
 			if scar1_intersect[-1] == "both":
 				break_path = scar1.line.points
+				scar1_edge_segments = break_path
 				break
 			# otherwise, look for any scar which intersects with this one, our break path is the first scar up to the intersection point, then follow the second scar back to its start
 			for scar2_idx in range(scar1_idx+1, scar_count):
@@ -282,6 +307,8 @@ func try_shatter():
 				var scar1_intersect_scar2 = scar1.intersect_scar(scar2, false, false)
 				if scar1_intersect_scar2:
 					break_path = scar1_intersect_scar2[0]
+					scar1_edge_segments = scar1_intersect_scar2[1]
+					scar2_edge_segments = scar1_intersect_scar2[2]
 					break
 			if !break_path:
 				scar2 = null
@@ -292,14 +319,20 @@ func try_shatter():
 					if scar1_endpt_intersect != null:
 						if scar1_endpt_intersect[-1] != "start":
 							break_path = scar1.line.points
+							scar1_edge_segments = break_path
 							break
 	# see if we found any break path
 	if !break_path:
 		return
+	if scar1 and scar1_edge_segments:
+		scar1.remove_line_segments(scar1_edge_segments, false)
+	if scar2 and scar2_edge_segments:
+		scar2.remove_line_segments(scar2_edge_segments, false)
+	
 	# expand our break path
 	# this doesn't work like I want it to, gonna write my own
 	#var break_poly := Geometry2D.offset_polyline(PackedVector2Array(break_path), 5, Geometry2D.JOIN_MITER, Geometry2D.END_JOINED)
-	var break_poly = MyGeom.inflate_polyline(break_path, 1)
+	var break_poly = MyGeom.inflate_polyline(break_path, 1.5)
 	# intersect our break path with our existing polygon
 	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
 	for poly in clipped_polygons:
@@ -314,11 +347,12 @@ func try_shatter():
 	# create a new item out of all but the first polygon we found
 	for i in range(1, clipped_polygons.size()):
 		var new_item = clone(clipped_polygons[i])
+		new_item.refresh_polygon()
 		new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)
 	# replace our current collision polygon with the first polygon we found
 	collision.polygon = clipped_polygons[0]
-	shattering_in_progress = true
 	refresh_polygon()
+	shattering_in_progress = true
 
 func try_shatter_old():
 	var pts := polygon.polygon

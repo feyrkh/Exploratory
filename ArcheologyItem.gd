@@ -14,7 +14,7 @@ var rotate_start_item_com_position = null
 var target_rot = null
 var reset_position = null
 
-const TOO_SMALL_POLYGON_AREA := 85
+const TOO_SMALL_POLYGON_AREA := 35
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
@@ -323,6 +323,8 @@ func try_shatter():
 							break
 	# see if we found any break path
 	if !break_path:
+		for scar in scars.get_children():
+			scar.queue_free()
 		return
 	if scar1 and scar1_edge_segments:
 		scar1.remove_line_segments(scar1_edge_segments, false)

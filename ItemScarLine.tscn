@@ -1,7 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://bekql6wb10r0o"]
 
 [sub_resource type="Curve" id="Curve_q3kjk"]
-_data = [Vector2(0.0346535, 1), 0.0, 0.0, 0, 0, Vector2(0.554455, 0.549451), 0.0, 0.0, 0, 0, Vector2(1, 0.142857), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.521235, 0.457464), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
 [node name="ItemScarLine" type="Line2D"]

@@ -127,8 +127,6 @@ func _on_shuffle_button_pressed():
 			if pt.y < bb_ymin: bb_ymin = pt.y
 			if pt.x > bb_xmax: bb_xmax = pt.x
 			if pt.y > bb_ymax: bb_ymax = pt.y
-		if cur_row_height < (bb_ymax - bb_ymin) + 10:
-			cur_row_height = (bb_ymax - bb_ymin) + 10
 		# check if there's room left on this row
 		var space_needed = bb_xmax - bb_xmin + 20
 		if space_needed + cur_min_x > max_x:
@@ -136,6 +134,8 @@ func _on_shuffle_button_pressed():
 			cur_min_y += cur_row_height
 			cur_row_height = 0
 		else:
+			if cur_row_height < (bb_ymax - bb_ymin) + 10:
+				cur_row_height = (bb_ymax - bb_ymin) + 10
 			cur_min_x += space_needed
 		piece.reset_position = Vector2(cur_min_x - space_needed - bb_xmin, cur_min_y - bb_ymin)
 		piece.freeze = false #should get reset to whatever it should be after the position is changed

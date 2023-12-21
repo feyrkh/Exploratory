@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://buutfuxdyqktw"]
+
+[ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_ihvqq"]
+
+[node name="Item" type="StaticBody2D"]
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ihvqq")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(388, 27, 408, 41, 416, 51, 417, 84, 411, 102, 440, 160, 458, 201, 468, 276, 444, 372, 363, 486, 149, 546, 98, 403, 18, 262, 121, 57)
+metadata/_edit_lock_ = true

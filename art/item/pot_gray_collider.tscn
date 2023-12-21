@@ -1,0 +1,66 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4eqtnmc0yb0g"]
+
+[ext_resource type="Texture2D" uid="uid://dn1rg4484mtx2" path="res://art/item/pot_gray.png" id="1_seo4w"]
+
+[node name="Item" type="StaticBody2D"]
+metadata/_edit_lock_ = true
+metadata/_edit_horizontal_guides_ = [51.0, 130.0]
+
+[node name="band_1" type="ColorRect" parent="."]
+offset_left = 2.0
+offset_top = 47.0
+offset_right = 350.0
+offset_bottom = 150.0
+color = Color(1, 0.14902, 0.12549, 1)
+
+[node name="band_1_2" type="ColorRect" parent="."]
+offset_left = 1.0
+offset_top = 285.0
+offset_right = 356.0
+offset_bottom = 388.0
+color = Color(1, 0.14902, 0.12549, 1)
+
+[node name="band_2_1" type="ColorRect" parent="."]
+offset_left = -1.0
+offset_top = 161.0
+offset_right = 354.0
+offset_bottom = 276.0
+color = Color(0.356863, 1, 0.262745, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_seo4w")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="icon_1" type="ColorRect" parent="."]
+offset_left = 114.0
+offset_top = 159.0
+offset_right = 234.0
+offset_bottom = 278.0
+color = Color(0, 0.0862745, 1, 1)
+
+[node name="icon_2_1" type="ColorRect" parent="."]
+offset_left = 17.0
+offset_top = 173.0
+offset_right = 101.0
+offset_bottom = 255.0
+color = Color(1, 0.141176, 0.890196, 1)
+
+[node name="icon_2_2" type="ColorRect" parent="."]
+offset_left = 247.0
+offset_top = 173.0
+offset_right = 331.0
+offset_bottom = 255.0
+color = Color(1, 0.141176, 0.890196, 1)
+
+[node name="icon_3_1" type="ColorRect" parent="."]
+offset_left = 134.0
+offset_top = 189.0
+offset_right = 218.0
+offset_bottom = 271.0
+color = Color(1, 0.141176, 0.890196, 1)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+position = Vector2(-20, -31)
+polygon = PackedVector2Array(84, 74, 75, 67, 73, 57, 72, 44, 86, 38, 170, 31, 217, 31, 301, 42, 306, 49, 314, 54, 315, 75, 307, 81, 308, 99, 315, 120, 351, 185, 362, 211, 369, 238, 371, 259, 367, 293, 355, 326, 332, 362, 306, 389, 279, 408, 267, 414, 267, 425, 257, 429, 219, 432, 168, 432, 137, 427, 135, 418, 121, 414, 122, 407, 83, 377, 63, 358, 45, 332, 27, 297, 21, 272, 20, 237, 29, 199, 50, 157, 74, 115, 81, 93)

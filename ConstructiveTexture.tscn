@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwgaqkqm034vx"]
+
+[ext_resource type="Script" path="res://ConstructiveTexture.gd" id="1_i4fdl"]
+
+[node name="ConstructiveTexture" type="Node2D"]
+script = ExtResource("1_i4fdl")
+baseName = "pot_gray"
+bandName = "knot_band1"
+knotName = "shield_knot1"

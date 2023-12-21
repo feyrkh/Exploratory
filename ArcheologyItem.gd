@@ -15,6 +15,7 @@ var target_rot = null
 var reset_position = null
 
 const TOO_SMALL_POLYGON_AREA := 35
+const BREAK_WIDTH := 0.05
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
@@ -334,7 +335,7 @@ func try_shatter():
 	# expand our break path
 	# this doesn't work like I want it to, gonna write my own
 	#var break_poly := Geometry2D.offset_polyline(PackedVector2Array(break_path), 5, Geometry2D.JOIN_MITER, Geometry2D.END_JOINED)
-	var break_poly = MyGeom.inflate_polyline(break_path, 1.5)
+	var break_poly = MyGeom.inflate_polyline(break_path, BREAK_WIDTH)
 	# intersect our break path with our existing polygon
 	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
 	for poly in clipped_polygons:

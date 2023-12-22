@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dn1rg4484mtx2" path="res://art/item/pot_gray.png" id="1_gmyyc"]
 [ext_resource type="Texture2D" uid="uid://tdw6t04erduj" path="res://art/item/shield_knot1.png" id="2_t65iv"]
 [ext_resource type="Texture2D" uid="uid://cvcfalytffp74" path="res://art/item/knot_band1.png" id="3_d17yr"]
-[ext_resource type="Script" path="res://ConstructiveTexture.gd" id="4_5rm8r"]
+[ext_resource type="Script" path="res://test/ConstructiveTexture.gd" id="4_5rm8r"]
 
 [node name="BlendImages" type="Node2D"]
 

@@ -31,6 +31,10 @@ func _unhandled_input(event):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	update_button_text()
+	var new_item = ItemBuilder.build_random_item()
+	new_item.name = "Pot3"
+	$Pieces.add_child(new_item)
+	new_item.position = Vector2(350,150)
 	#var pot1:ArcheologyItem = find_child("Pot1")
 	#var poly := pot1.collision.polygon
 	#for i in range(30):
@@ -48,7 +52,7 @@ func _ready():
 	#pot2.collision.polygon = poly
 	#pot2.refresh_polygon()
 	
-	var pot3:ArcheologyItem = find_child("Pot3")
+	var pot3:ArcheologyItem = new_item
 	var pot_area = pot3.area
 	#pot1.mass = pot3.mass * pot1.area / pot3.area
 	#pot2.mass = pot3.mass * pot2.area / pot3.area
@@ -101,11 +105,12 @@ func update_button_text():
 
 
 func _on_add_fracture_button_pressed():
-	find_child("Pot3").random_scar()
+	find_child("Pieces").get_children().pick_random().random_scar()
 
 
 func _on_shatter_button_pressed():
-	find_child("Pot3").try_shatter()
+	for child in find_child("Pieces").get_children():
+		child.shattering_in_progress = true
 
 
 func _on_shuffle_button_pressed():

@@ -1,6 +1,6 @@
 extends Node
 
-var lock_rotation = false:
+var lock_rotation = true:
 	set(val):
 		print("Toggling rotation lock to ", val)
 		lock_rotation = val

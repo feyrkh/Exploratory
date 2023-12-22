@@ -41,7 +41,6 @@ var area_pct:
 		return area / original_area
 
 @onready var collision:CollisionPolygon2D = find_child("CollisionPolygon2D")
-@onready var sprite:Sprite2D = find_child("Sprite2D")
 @onready var scars:Node2D = find_child("Scars")
 @onready var polygon:Polygon2D = find_child("Polygon2D")
 @onready var shard_edges:Node2D = find_child("ShardEdges")
@@ -76,6 +75,7 @@ func global_collide(val:bool):
 
 func clone(new_polygon:Array):
 	var new_scene = load(scene_file_path).instantiate()
+	new_scene.find_child("Polygon2D").texture = find_child("Polygon2D").texture
 	new_scene.original_area = original_area
 	get_parent().add_child(new_scene)
 	new_scene.global_position = global_position
@@ -177,10 +177,6 @@ func _unhandled_input(event):
 			target_rot = null
 			lock_rotation = Global.lock_rotation
 			freeze = Global.freeze_pieces
-			find_child("target_rot").visible = false
-			find_child("rotate_start_item").visible = false
-			find_child("rotate_start_mouse").visible = false
-			find_child("actual_rot").visible = false
 			print("Stopping rotate")
 	elif drag_start_mouse != null and event is InputEventMouseMotion:
 		target_pos = get_global_mouse_position()
@@ -194,7 +190,7 @@ func _integrate_forces(state):
 		state.transform = state.transform.rotated(-state.transform.get_rotation())
 		state.transform.origin = reset_position
 		reset_position = null
-		freeze = Global.freeze_pieces
+		set_deferred("freeze", Global.freeze_pieces)
 	if target_pos != null:
 		var desired_motion = drag_start_item - global_position + target_pos - drag_start_mouse
 		state.linear_velocity = desired_motion * 25
@@ -242,14 +238,14 @@ func _integrate_forces(state):
 		angular_velocity = target_rot * 15
 
 func _on_mouse_shape_entered(shape_idx):
-	sprite.modulate = Color.AQUAMARINE
+	polygon.modulate = Color(1.3, 1.3, 1.3, 1.3)
 	#print("Hovering ", shape_idx)
 	hover_idx = shape_idx
 
 func _on_mouse_shape_exited(shape_idx):
 	if shape_idx == hover_idx:
 		if drag_start_item == null:
-			sprite.modulate = Color.WHITE
+			polygon.modulate = Color.WHITE
 		#print("Left hover ", shape_idx)
 		hover_idx = -1
 

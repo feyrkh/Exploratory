@@ -144,3 +144,12 @@ func _on_shuffle_button_pressed():
 			cur_min_x += space_needed
 		piece.reset_position = Vector2(cur_min_x - space_needed - bb_xmin, cur_min_y - bb_ymin)
 		piece.freeze = false #should get reset to whatever it should be after the position is changed
+
+
+func _on_regenerate_button_pressed():
+	for child in $Pieces.get_children():
+		child.queue_free()
+	var new_item = ItemBuilder.build_random_item()
+	$Pieces.add_child(new_item)
+	new_item.name = "Pot3"
+	new_item.position = Vector2(350,150)

@@ -153,7 +153,7 @@ func _unhandled_input(event):
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
 				print("Shattering item")
-				try_shatter()
+				random_scar()
 			if event.is_action_pressed("rotate_start"):
 				rotate_start_mouse = to_global(center_of_mass).angle_to_point(get_global_mouse_position())
 				rotate_start_item = global_rotation

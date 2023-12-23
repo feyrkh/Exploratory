@@ -39,6 +39,22 @@ var area_pct:
 	get:
 		return area / original_area
 
+var visual_polygons:Array[Polygon2D] = []:
+	get:
+		if visual_polygons.size() == 0:
+			for child in get_children():
+				if child is Polygon2D:
+					visual_polygons.append(child)
+		return visual_polygons
+
+var collision_polygons:Array[CollisionPolygon2D] = []:
+	get:
+		if collision_polygons.size() == 0:
+			for child in get_children():
+				if child is CollisionPolygon2D:
+					collision_polygons.append(child)
+		return collision_polygons
+
 @onready var collision:CollisionPolygon2D = find_child("CollisionPolygon2D")
 @onready var scars:Node2D = find_child("Scars")
 @onready var polygon:Polygon2D = find_child("Polygon2D")
@@ -216,16 +232,27 @@ func _integrate_forces(state):
 		angular_velocity = target_rot * 15
 
 func _on_mouse_shape_entered(shape_idx):
-	polygon.modulate = Color(1.3, 1.3, 1.3, 1.3)
+	if Global.click_mode == Global.ClickMode.move:
+		highlight_visual_polygons()
 	#print("Hovering ", shape_idx)
 	hover_idx = shape_idx
 
 func _on_mouse_shape_exited(shape_idx):
 	if shape_idx == hover_idx:
 		if drag_start_item == null:
-			polygon.modulate = Color.WHITE
+			if Global.click_mode == Global.ClickMode.move:
+				unhighlight_visual_polygons()
 		#print("Left hover ", shape_idx)
 		hover_idx = -1
+
+func highlight_visual_polygons():
+	for polygon in visual_polygons:
+		polygon.modulate = Color(1.3, 1.3, 1.3, 1.3)
+
+func unhighlight_visual_polygons():
+	for polygon in visual_polygons:
+		polygon.modulate = Color.WHITE
+
 
 func add_scar(scar:ItemScar):
 	scar.refresh_scar_path(collision.polygon)
@@ -409,4 +436,6 @@ func glue(other:ArcheologyItem):
 				scars.add_child(scar)
 				scar.global_position = scar_pos
 				scar.global_rotation = scar_rot
+	visual_polygons = []
+	collision_polygons = []
 	other.queue_free()

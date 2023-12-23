@@ -6,6 +6,6 @@ point_count = 3
 
 [node name="ItemScarLine" type="Line2D"]
 points = PackedVector2Array(-218, 84, -88, 37, -59, -17, 41, -97, 185, 12, 215, 11)
-width = 5.0
+width = 2.0
 width_curve = SubResource("Curve_q3kjk")
 default_color = Color(0, 0, 0, 1)

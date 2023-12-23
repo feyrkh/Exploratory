@@ -15,7 +15,6 @@ var target_rot = null
 var reset_position = null
 
 const TOO_SMALL_POLYGON_AREA := 35
-const BREAK_WIDTH := 0.05
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
@@ -140,6 +139,10 @@ func get_random_edge_point() -> Vector2:
 	return collision.polygon[0]
 
 func _unhandled_input(event):
+	match Global.click_mode:
+		Global.ClickMode.move: handle_move_input(event)
+
+func handle_move_input(event):
 	if event is InputEventMouseButton:
 		#print("Clicked: ", event)
 		if hover_idx >= 0:
@@ -195,41 +198,16 @@ func _integrate_forces(state):
 		var desired_motion = drag_start_item - global_position + target_pos - drag_start_mouse
 		state.linear_velocity = desired_motion * 25
 	if target_rot != null:
-		#var direction
-		#if (global_rotation <= target_rot) and (target_rot - global_rotation < PI):
-		#	direction = 1
-		#elif (target_rot <= global_rotation) and (global_rotation - target_rot < PI):
-		#	direction = -1
-		#elif (global_rotation <= target_rot) and (target_rot - global_rotation < PI):
-		#	direction = -1
-		#elif (target_rot <= global_rotation) and (global_rotation - target_rot < PI):
-		#	direction = 1
-		#else:
-		#	direction = target_rot - global_rotation
-		#var actual_rot = rotate_start_item - global_rotation
-		#print("target: ", rad_to_deg(target_rot), ", actual: ", rad_to_deg(actual_rot))
-		#if target_rot < global_rotation:
-			#angular_velocity = -abs(target_rot - global_rotation) * 5
-			##print("Rot neg, ", global_rotation, " to ", target_rot)
-		#elif target_rot > global_rotation:
-			#angular_velocity = abs(target_rot - global_rotation) * 5
-			##print("Rot pos, ", global_rotation, " to ", target_rot)
-		#else:
-			#print("Reached position? ", global_rotation, " vs ", target_rot)		var item_center = to_global(center_of_mass)
 		var item_center = to_global(center_of_mass)
 		var mouse_cursor = get_global_mouse_position()
 		var angle_from_item_to_mouse = item_center.angle_to_point(mouse_cursor)
 		var offset_from_original_angle = angle_from_item_to_mouse - rotate_start_mouse
 		var distance_already_rotated = global_rotation - rotate_start_item
 		var distance_to_rotate = offset_from_original_angle - distance_already_rotated
-		#state.transform.origin += item_center - rotate_start_item_com_position
-		#rotate_start_item_com_position = to_global(center_of_mass)
 		if distance_to_rotate >= PI:
 			distance_to_rotate -= 2*PI
 		elif distance_to_rotate <= -PI:
 			distance_to_rotate += 2*PI
-		#print("item_center=%s, mouse_cursor=%s, angle_from_item_to_mouse=%s, offset_from_original_angle=%s, distance_already_rotated=%s, distance_to_rotate=%s" % 
-		#[item_center, mouse_cursor, rad_to_deg(angle_from_item_to_mouse), rad_to_deg(offset_from_original_angle), rad_to_deg(distance_already_rotated), rad_to_deg(distance_to_rotate)])
 		target_rot = distance_to_rotate
 		while target_rot > PI:
 			target_rot -= PI
@@ -331,7 +309,7 @@ func try_shatter():
 	# expand our break path
 	# this doesn't work like I want it to, gonna write my own
 	#var break_poly := Geometry2D.offset_polyline(PackedVector2Array(break_path), 5, Geometry2D.JOIN_MITER, Geometry2D.END_JOINED)
-	var break_poly = MyGeom.inflate_polyline(break_path, BREAK_WIDTH)
+	var break_poly = MyGeom.inflate_polyline(break_path, Global.shatter_width)
 	# intersect our break path with our existing polygon
 	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
 	for poly in clipped_polygons:
@@ -353,155 +331,6 @@ func try_shatter():
 	refresh_polygon()
 	shattering_in_progress = true
 
-func try_shatter_old():
-	var pts := polygon.polygon
-	var cur_edge_start := pts[0]
-	var cur_edge_end := cur_edge_start
-	var fragment_edge_idx_start
-	var fragment_edge_offset_start 
-	var fragment_edge_idx_end
-	var fragment_edge_offset_end
-	var scar_intersection
-	var first_scar
-	var second_scar
-	var scar1_from_end:bool
-	var scar2_from_end:bool
-	var covered_scar1_pts
-	var covered_scar2_pts
-	
-	# Loop over all edges
-	var edge_count = pts.size()
-	for i in range(edge_count):
-		if scar_intersection != null: break
-		cur_edge_start = pts[i]
-		cur_edge_end = pts[(i+1) % edge_count]
-		# If the current edge intersects with any of the edges on any scar, this might be the start of a fragment
-		for scar in scars.get_children():
-			if scar_intersection != null: break
-			var intersections = scar.get_edge_intersections(cur_edge_start, cur_edge_end)
-			var intersections2
-			if intersections == null:
-				continue
-			if intersections.size() == 3:
-				print("Found a scar that intersects with the same edge twice: ", intersections)
-				first_scar = scar
-				print("Skipping for now")
-				continue
-			if intersections.size() == 2:
-				print("Found a scar that intersects with this edge ", i, " at ", intersections)
-				scar1_from_end = intersections[-1] == "end"
-				first_scar = scar
-				# one end of the scar touches the current edge of this item
-				# check all the edges starting with the current one, looking for other scars that intersect with this one
-				# We know we don't have to check any previous edges, because they would have caught this one
-				for j in range(i, edge_count):
-					if scar_intersection != null: break
-					for scar2 in scars.get_children():
-						if scar_intersection != null: break
-						var later_edge_start := pts[j]
-						var later_edge_end := pts[(j+1)%edge_count]
-						intersections2 = scar2.get_edge_intersections(later_edge_start, later_edge_end)
-						if intersections2 == null:
-							# the current scar2 doesn't intersect with this edge2, so try the next scar2
-							continue
-						if intersections2.size() == 2:
-							scar2_from_end = intersections2[-1] == "end"
-							# We have a scar2 that intersects with this edge, now check if it intersects with the first scar
-							# but skip it if this intersection is the same as the previous intersection
-							if intersections[0].distance_to(intersections2[0]) < 0.5:
-								print("Found an intersecting scar, but it looks like it's the same as the first one, skipping")
-								continue
-							print("Found a second intersecting scar, ", scar2, " at edge ", j, ", checking if it intersects with ", scar)
-							second_scar = scar2
-							scar_intersection = scar.intersect_scar(scar2, scar1_from_end, scar2_from_end)
-							if scar_intersection != null:
-								covered_scar1_pts = scar_intersection[1]
-								covered_scar2_pts = scar_intersection[2]
-								scar_intersection = scar_intersection[0]
-								print("Found an intersection with another scar at edge ", j, " with coords ", scar_intersection)
-								# if the scars intersect, then we have a fragment
-								fragment_edge_idx_start = i
-								fragment_edge_offset_start = intersections[0]
-								fragment_edge_idx_end = j
-								fragment_edge_offset_end = intersections2[0]
-								break
-						elif intersections2.size() == 3:
-							second_scar = scar2
-							scar_intersection = scar.intersect_scar(scar2, intersections[-1] == "end", intersections2[-1] == "end")
-							if scar_intersection != null:
-								covered_scar1_pts = scar_intersection[1]
-								covered_scar2_pts = scar_intersection[2]
-								scar_intersection = scar_intersection[0]
-								print("Found an intersection with another scar at edge ", j, " with coords ", scar_intersection)
-								# if the scars intersect, then we have a fragment
-								fragment_edge_idx_start = i
-								fragment_edge_offset_start = intersections[0]
-								fragment_edge_idx_end = j
-								fragment_edge_offset_end = intersections2[0]
-								break
-
-	if scar_intersection != null:
-		print("Found a scar intersection: ", scar_intersection)
-		# We found two scars that intersect, and the fragment_edge* fields should be set to point to the start and end
-		# endpoints around the edge of the current item, while the scar_intersection represents the internal points.
-		# From the POV of the original item, the internal points are in clockwise order, while from the POV of the new
-		# fragment they are in counterclockwise order, so we should reverse them when constructing the edge of the new
-		# fragment.
-		var my_new_polygon = []
-		var other_new_polygon = []
-		var working_on_original = true
-		
-		# We need to delete the points that will disappear when the break is made
-		# The first element of scar_intersection is the edge endpoint the first scar
-		# The last element of scar_intersection is the edge endpoint of the second scar
-		first_scar.remove_line_segments(covered_scar1_pts, scar1_from_end)
-		second_scar.remove_line_segments(covered_scar2_pts, scar2_from_end)
-		#if !scar1_from_end:
-			## remove from the front
-			#while scar_intersection[0].distance_squared_to(first_scar.line.points[0]) >= 1:
-				#first_scar.line.points.remove_at(0)
-		#else:
-			## remove from the back
-			#while scar_intersection[0].distance_squared_to(first_scar.line.points[-1]) >= 1:
-				#first_scar.line.points.remove_at(-1)
-		#if !scar2_from_end:
-			## remove from the front
-			#while scar_intersection[-1].distance_squared_to(second_scar.line.points[0]) >= 1:
-				#second_scar.line.points.remove_at(0)
-		#else:
-			## remove from the back
-			#while scar_intersection[-1].distance_squared_to(second_scar.line.points[-1]) >= 1:
-				#second_scar.line.points.remove_at(-1)
-		
-		working_on_original = true
-		for i in range(collision.polygon.size()):
-			if working_on_original:
-				if i == (fragment_edge_idx_start+1)%edge_count:
-					# We've reached the start of the fragment, append the internal fracture points, then continue accumulating edge
-					# points on the new polygon until we reach the endpoint
-					working_on_original = false
-					for pt in scar_intersection:
-						my_new_polygon.append(pt)
-						print("Orig (s): ", pt)
-				else:
-					my_new_polygon.append(collision.polygon[i])
-					print("Orig (o): ", collision.polygon[i])
-			if !working_on_original:
-				other_new_polygon.append(collision.polygon[i])
-				print("New (o): ", collision.polygon[i])
-				if i == fragment_edge_idx_end:
-					working_on_original = true
-					scar_intersection.reverse()
-					for pt in scar_intersection:
-						other_new_polygon.append(pt)
-						print("New (s): ", pt)
-		collision.polygon = my_new_polygon
-		clone(other_new_polygon)
-		shattering_in_progress = true
-		refresh_polygon()
-	else:
-		print("No scar intersections")
-
 func random_scar():
 	#var start_pos_idx = randi_range(0, collision.polygon.size() - 2)
 	#var start_pos = collision.polygon[start_pos_idx] + randf_range(0, 1) * (collision.polygon[(start_pos_idx+1)%collision.polygon.size()] - collision.polygon[start_pos_idx])
@@ -509,7 +338,7 @@ func random_scar():
 	var end_pos = center
 	var len = start_pos.distance_to(end_pos)
 	#scar.generate_scar(collision.polygon, start_pos, randf_range(len/2, len*2), start_angle, 0, 1.0, 1.0)
-	specific_scar(start_pos, end_pos + Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * randf_range(len/3, len/2), PI/6, 0.1, 0.2)
+	specific_scar(start_pos, end_pos + Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * randf_range(len/2, len), PI/6, 0.1, 0.2)
 
 func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, min_segment_len:float=1.0, max_segment_len:float=1.0):
 	var start_angle = start_pos.angle_to_point(end_pos)
@@ -554,3 +383,30 @@ func add_break_underlay(break_path, clip_polygon, offset=0.1):
 		line.points = path_part
 		edge.add_child(line)
 		shard_edges.add_child(edge)
+
+func glue(other:ArcheologyItem):
+	for child in other.get_children():
+		if child is Polygon2D or child is CollisionPolygon2D:
+			var child_pos = child.global_position
+			var child_rot = child.global_rotation
+			other.remove_child(child)
+			add_child(child)
+			child.global_position = child_pos
+			child.global_rotation = child_rot
+		elif child.name == "ShardEdges":
+			for edge in child.get_children():
+				var edge_pos = edge.global_position
+				var edge_rot = edge.global_rotation
+				child.remove_child(edge)
+				shard_edges.add_child(edge)
+				edge.global_position = edge_pos
+				edge.global_rotation = edge_rot
+		elif child.name == "Scars":
+			for scar in child.get_children():
+				var scar_pos = scar.global_position
+				var scar_rot = scar.global_rotation
+				child.remove_child(scar)
+				scars.add_child(scar)
+				scar.global_position = scar_pos
+				scar.global_rotation = scar_rot
+	other.queue_free()

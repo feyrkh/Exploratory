@@ -8,7 +8,6 @@ _data = [Vector2(0, 0.0818621), 0.0, 0.0, 0, 0, Vector2(0.490099, 1), 0.0, 0.0, 
 point_count = 3
 
 [node name="Line2D" type="Line2D"]
-width = 15.0
 width_curve = SubResource("Curve_l5ar3")
 default_color = Color(0.454902, 0.192157, 0.137255, 1)
 texture = ExtResource("1_a0b8r")

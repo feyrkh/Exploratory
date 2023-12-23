@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=4 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://CleaningTable.gd" id="1_avayf"]
+[ext_resource type="Script" path="res://CursorArea.gd" id="2_018s2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
+radius = 15.0
 
 [node name="CleaningTable" type="Node2D"]
 script = ExtResource("1_avayf")
@@ -20,6 +24,13 @@ offset_bottom = 40.0
 
 [node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainer"]
 layout_mode = 2
+
+[node name="ClickModeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Mode: Move
+"
+alignment = 0
 
 [node name="AddNewButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
 layout_mode = 2
@@ -79,6 +90,17 @@ offset_bottom = 49.0
 text = "camera=wasd, leftclick+drag=move piece, rightclick+drag=rotate piece, mouse wheel=zoom, shift=disable collisions while held
 top buttons toggle whether pieces are locked in place when bumped for movement & rotation, or whether collisions happen at all"
 
+[node name="CursorArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+input_pickable = false
+monitorable = false
+script = ExtResource("2_018s2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CursorArea"]
+shape = SubResource("CircleShape2D_tahv2")
+
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ClickModeButton" to="." method="_on_click_mode_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddNewButton" to="." method="_on_add_new_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/DeleteAllButton" to="." method="_on_delete_all_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]

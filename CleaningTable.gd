@@ -2,6 +2,7 @@ extends Node2D
 const CAMERA_MOVE_SPEED := 10
 const ZOOM_INCREMENT := Vector2(0.1, 0.1)
 @onready var camera:Camera2D = find_child("Camera2D")
+@onready var cursor_area:CursorArea = find_child("CursorArea")
 var collision_temp_disabled = false
 
 func _process(_delta):
@@ -10,6 +11,23 @@ func _process(_delta):
 		camera.position += movement * CAMERA_MOVE_SPEED / camera.zoom.x
 
 func _unhandled_input(event):
+	handle_camera_input(event)
+	match Global.click_mode:
+		Global.ClickMode.move: handle_move_input(event)
+		Global.ClickMode.glue: handle_glue_input(event)
+
+func handle_glue_input(event):
+	if event.is_action_pressed("drag_start"):
+		# find all pieces under the cursor and glue them together
+		var pieces = cursor_area.get_overlaps()
+		if pieces.size() > 1:
+			print("Gluing ", pieces.size(), " pieces together")
+			var main_piece = pieces[0]
+			for i in range(1, pieces.size()):
+				main_piece.glue(pieces[i])
+		
+
+func handle_camera_input(event):
 	if event.is_action("zoom_in"):
 		camera.zoom += ZOOM_INCREMENT
 		if camera.zoom.x > 4.0:
@@ -20,7 +38,9 @@ func _unhandled_input(event):
 		if camera.zoom.x < 0.2:
 			camera.zoom = Vector2(0.2, 0.2)
 		get_viewport().set_input_as_handled()
-	elif Global.collide == true and event.is_action_pressed("disable_collision"):
+
+func handle_move_input(event):
+	if Global.collide == true and event.is_action_pressed("disable_collision"):
 		print("Disabling collision ", self)
 		Global.collide = false
 		collision_temp_disabled = true
@@ -102,6 +122,11 @@ func update_button_text():
 		find_child("LockRotateButton").text = "Rotate: Locked"
 	else:
 		find_child("LockRotateButton").text = "Rotate: Free"
+	match Global.click_mode:
+		Global.ClickMode.move:
+			find_child("ClickModeButton").text = "Click: Move"
+		Global.ClickMode.glue:
+			find_child("ClickModeButton").text = "Click: Glue"
 
 
 func _on_add_fracture_button_pressed():
@@ -155,3 +180,14 @@ func _on_add_new_button_pressed():
 func _on_delete_all_button_pressed():
 	for child in $Pieces.get_children():
 		child.queue_free()
+
+func _on_click_mode_pressed():
+	match Global.click_mode:
+		Global.ClickMode.move: 
+			Global.click_mode = Global.ClickMode.glue
+		Global.ClickMode.glue: 
+			Global.click_mode = Global.ClickMode.move
+		_: 
+			Global.click_mode = Global.ClickMode.move
+	update_button_text()
+	

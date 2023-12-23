@@ -253,7 +253,6 @@ func unhighlight_visual_polygons():
 	for polygon in visual_polygons:
 		polygon.modulate = Color.WHITE
 
-
 func add_scar(scar:ItemScar):
 	scar.refresh_scar_path(collision.polygon)
 	for scar2 in scars.get_children():

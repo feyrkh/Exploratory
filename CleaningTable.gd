@@ -25,7 +25,7 @@ func handle_glue_input(event):
 			var main_piece = pieces[0]
 			for i in range(1, pieces.size()):
 				main_piece.glue(pieces[i])
-		
+			main_piece.call_deferred("highlight_visual_polygons")
 
 func handle_camera_input(event):
 	if event.is_action("zoom_in"):

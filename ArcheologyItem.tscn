@@ -37,5 +37,17 @@ z_as_relative = false
 [node name="Glue" type="Node2D" parent="."]
 z_index = 1
 
+[node name="StructurePct" type="Label" parent="."]
+offset_left = -98.0
+offset_top = -61.0
+offset_right = 20.0
+offset_bottom = -38.0
+text = "structure 100%"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

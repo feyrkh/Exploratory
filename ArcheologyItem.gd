@@ -381,7 +381,16 @@ func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, mi
 	print("start=", start_pos, ", end=", end_pos, ", angle=", start_angle)
 	scar.generate_scar(collision.polygon, start_pos, (end_pos-start_pos).length(), start_angle, max_deviation, min_segment_len, max_segment_len)
 	add_scar(scar)
-	
+
+func _calculate_area(polygon) -> float:
+	var off:Vector2 = polygon[-1]
+	var twiceArea:float = 0
+	for i in range(polygon.size()):
+		var p1 = polygon[i-1]
+		var p2 = polygon[i]
+		var f = (p1.x - off.x) * (p2.y - off.y) - (p2.x - off.x) * (p1.y - off.y)
+		twiceArea += f
+	return twiceArea/2
 
 func _find_center() -> Vector2:
 	var off:Vector2 = collision.polygon[0]
@@ -506,3 +515,28 @@ func get_segment_intersecting_circle(circle_center:Vector2, circle_radius:float,
 				#segment_list.append(cur_segment)
 				#cur_segment = []
 	return cur_segment
+
+func recalculate_structure_completion():
+	var result = {}
+	var avg_displacements = 0
+	var num_polygons = 0
+	var total_area = 0
+	for child in get_children():
+		if child is Polygon2D:
+			var total_displacement = 0
+			var num_pts = 0
+			var cur_area = _calculate_area(child.polygon)
+			total_area += cur_area
+			for pt in child.polygon:
+				var actual_pt = child.to_global(pt)
+				var expected_pt = self.to_global(pt)
+				total_displacement += expected_pt.distance_to(actual_pt)
+				num_pts += 1
+			if num_pts > 0:
+				avg_displacements += total_displacement/num_pts * cur_area
+				num_polygons += 1
+	$StructurePct.text = "avg displace: "+str(avg_displacements/total_area)
+
+
+func _on_timer_timeout():
+	recalculate_structure_completion()

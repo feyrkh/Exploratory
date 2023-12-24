@@ -57,14 +57,14 @@ func remove_line_segments(covered_pts, from_end:bool):
 				replacement_line[delete_from] = pt_to_remove
 			else:
 				for i in range(delete_from, -1, -1):
-					print("Removing at new loc 0, ", replacement_line[0])
+					#print("Removing at new loc 0, ", replacement_line[0])
 					replacement_line.remove_at(0)
-				print("Replacing original 0 ", replacement_line[0], " with new 0, ", pt_to_remove)
+				#print("Replacing original 0 ", replacement_line[0], " with new 0, ", pt_to_remove)
 				replacement_line[0] = pt_to_remove
 			line.points = replacement_line
 	
 	if !found_endpoint or replacement_line.size() < 2:
-		print("Full line was deleted")
+		#print("Full line was deleted")
 		queue_free()
 
 func get_edge_intersections(edge_start:Vector2, edge_end:Vector2, distance_tolerance=0.7):
@@ -90,13 +90,13 @@ func get_edge_intersections(edge_start:Vector2, edge_end:Vector2, distance_toler
 		return [closest_intersection_of_start, closest_intersection_of_end, "both"]
 
 func intersect_scar(scar2:ItemScar, scar1_from_end:bool, scar2_from_end:bool): #-> Array[Vector2] or null:
-	print("Checking intersection of ", self, " and ", scar2)
+	#print("Checking intersection of ", self, " and ", scar2)
 	var scar1_pts = Array(line.points)
 	var scar2_pts = Array(scar2.line.points)
 	if scar1_from_end: scar1_pts.reverse()
 	if scar2_from_end: scar2_pts.reverse()
 	if self == scar2:
-		print("Self-intersection")
+		#print("Self-intersection")
 		return [scar1_pts, scar1_pts, []] 
 	var start_pt = scar1_pts[0]
 	var intersection = [start_pt]

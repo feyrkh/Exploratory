@@ -88,13 +88,14 @@ offset_left = 130.0
 offset_right = 1141.0
 offset_bottom = 49.0
 text = "camera=wasd, leftclick+drag=move piece, rightclick+drag=rotate piece, mouse wheel=zoom, shift=disable collisions while held
-top buttons toggle whether pieces are locked in place when bumped for movement & rotation, or whether collisions happen at all"
+tab=toggle mouse mode
+move/rotate/collide buttons toggle whether pieces are locked in place when bumped for movement & rotation, or whether collisions 
+happen at all"
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 2
 input_pickable = false
-monitorable = false
 script = ExtResource("2_018s2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CursorArea"]

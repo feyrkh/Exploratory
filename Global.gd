@@ -20,6 +20,8 @@ var collide = true:
 		collide = val
 		get_tree().call_group("archeology", "global_collide", val)
 
+signal click_mode_changed()
+
 enum ClickMode {move, glue}
 var click_mode = ClickMode.move:
 	set(val):
@@ -28,3 +30,11 @@ var click_mode = ClickMode.move:
 			ClickMode.move: Input.set_custom_mouse_cursor(null)
 			ClickMode.glue: Input.set_custom_mouse_cursor(load("res://art/cursor/glue.png"), Input.CURSOR_ARROW, Vector2(15, 15))
 			_: Input.set_custom_mouse_cursor(null)
+
+func rotate_click_mode():
+		match click_mode:
+			ClickMode.move: click_mode = ClickMode.glue
+			ClickMode.glue: click_mode = ClickMode.move
+			_: click_mode = ClickMode.move
+		click_mode_changed.emit()
+	

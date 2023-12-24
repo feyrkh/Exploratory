@@ -5,55 +5,9 @@ const ZOOM_INCREMENT := Vector2(0.1, 0.1)
 @onready var cursor_area:CursorArea = find_child("CursorArea")
 var collision_temp_disabled = false
 
-func _process(_delta):
-	var movement = Input.get_vector("left", "right", "up", "down")
-	if movement != Vector2.ZERO:
-		camera.position += movement * CAMERA_MOVE_SPEED / camera.zoom.x
-
-func _unhandled_input(event):
-	handle_camera_input(event)
-	match Global.click_mode:
-		Global.ClickMode.move: handle_move_input(event)
-		Global.ClickMode.glue: handle_glue_input(event)
-
-func handle_glue_input(event):
-	if event.is_action_pressed("drag_start"):
-		# find all pieces under the cursor and glue them together
-		var pieces = cursor_area.get_overlaps()
-		if pieces.size() > 1:
-			print("Gluing ", pieces.size(), " pieces together")
-			var main_piece = pieces[0]
-			for i in range(1, pieces.size()):
-				main_piece.glue(pieces[i])
-			main_piece.call_deferred("highlight_visual_polygons")
-			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
-		elif pieces.size() == 1:
-			print("Filling glue in cracks, maybe")
-			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
-
-func handle_camera_input(event):
-	if event.is_action("zoom_in"):
-		camera.zoom += ZOOM_INCREMENT
-		if camera.zoom.x > 4.0:
-			camera.zoom = Vector2(4, 4)
-		get_viewport().set_input_as_handled()
-	elif event.is_action("zoom_out"):
-		camera.zoom -= ZOOM_INCREMENT
-		if camera.zoom.x < 0.2:
-			camera.zoom = Vector2(0.2, 0.2)
-		get_viewport().set_input_as_handled()
-
-func handle_move_input(event):
-	if Global.collide == true and event.is_action_pressed("disable_collision"):
-		print("Disabling collision ", self)
-		Global.collide = false
-		collision_temp_disabled = true
-	elif collision_temp_disabled and event.is_action_released("disable_collision"):
-		Global.collide = true
-		print("Reenabling collision")
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	Global.click_mode_changed.connect(update_button_text)
 	update_button_text()
 	var new_item = ItemBuilder.build_random_item()
 	new_item.name = "Pot3"
@@ -96,6 +50,56 @@ func _ready():
 
 	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
+
+func _process(_delta):
+	var movement = Input.get_vector("left", "right", "up", "down")
+	if movement != Vector2.ZERO:
+		camera.position += movement * CAMERA_MOVE_SPEED / camera.zoom.x
+
+func _unhandled_input(event):
+	if event.is_action_pressed("change_click_mode"):
+		Global.rotate_click_mode()
+		get_viewport().set_input_as_handled()
+	handle_camera_input(event)
+	match Global.click_mode:
+		Global.ClickMode.move: handle_move_input(event)
+		Global.ClickMode.glue: handle_glue_input(event)
+
+func handle_glue_input(event):
+	if event.is_action_pressed("drag_start"):
+		# find all pieces under the cursor and glue them together
+		var pieces = cursor_area.get_overlaps()
+		if pieces.size() > 1:
+			print("Gluing ", pieces.size(), " pieces together")
+			var main_piece = pieces[0]
+			for i in range(1, pieces.size()):
+				main_piece.glue(pieces[i])
+			main_piece.call_deferred("highlight_visual_polygons")
+			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+		elif pieces.size() == 1:
+			print("Filling glue in cracks, maybe")
+			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+
+func handle_camera_input(event):
+	if event.is_action("zoom_in"):
+		camera.zoom += ZOOM_INCREMENT
+		if camera.zoom.x > 4.0:
+			camera.zoom = Vector2(4, 4)
+		get_viewport().set_input_as_handled()
+	elif event.is_action("zoom_out"):
+		camera.zoom -= ZOOM_INCREMENT
+		if camera.zoom.x < 0.2:
+			camera.zoom = Vector2(0.2, 0.2)
+		get_viewport().set_input_as_handled()
+
+func handle_move_input(event):
+	if Global.collide == true and event.is_action_pressed("disable_collision"):
+		print("Disabling collision ", self)
+		Global.collide = false
+		collision_temp_disabled = true
+	elif collision_temp_disabled and event.is_action_released("disable_collision"):
+		Global.collide = true
+		print("Reenabling collision")
 
 
 func _on_freeze_button_pressed():

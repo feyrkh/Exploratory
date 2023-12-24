@@ -15,6 +15,7 @@ var target_rot = null
 var reset_position = null
 
 const TOO_SMALL_POLYGON_AREA := 35
+const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
@@ -146,6 +147,10 @@ func refresh_polygon() -> int:
 			edge.refresh_edge_path(scar_trim_poly[0])
 	if abs(area) < TOO_SMALL_POLYGON_AREA:
 		print("Too-small shard was created, area is ", area, ", deleting")
+		queue_free()
+		return 0
+	elif abs(area) < total_edge_length*TOO_SMALL_POLYGON_EDGE_RATIO:
+		print("Too-skinny shard was created, area is ", area, " which is smaller than the total edge length ", total_edge_length, " times ", TOO_SMALL_POLYGON_EDGE_RATIO)
 		queue_free()
 		return 0
 	else:
@@ -430,7 +435,7 @@ func _find_center() -> Vector2:
 		totalArea += area
 	for i in range(centers.size()):
 		center += centers[i] * (areas[i] / totalArea)
-	print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
+	#print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
 	center_of_mass = center
 	return center
 
@@ -555,7 +560,7 @@ func recalculate_structure_completion():
 			if num_pts > 0:
 				avg_displacements += total_displacement/num_pts * cur_area
 				num_polygons += 1
-	$StructurePct.text = "avg displace: "+str(avg_displacements/num_polygons/total_area)
+	$StructurePct.text = "avg displace: "+str(snapped(avg_displacements/num_polygons/total_area, 0.01))+"\ncomplete: "+str(snapped(area_pct*100, 0.1))+"%"
 	result['displace'] = avg_displacements/num_polygons/total_area
 
 

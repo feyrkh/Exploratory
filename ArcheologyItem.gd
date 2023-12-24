@@ -55,10 +55,19 @@ var collision_polygons:Array[CollisionPolygon2D] = []:
 					collision_polygons.append(child)
 		return collision_polygons
 
+var glue_hashes = null:
+	get:
+		if glue_hashes == null:
+			glue_hashes = {}
+			for child in $Glue.get_children():
+				glue_hashes[child.polygon.hash()] = child
+		return glue_hashes
+
 @onready var collision:CollisionPolygon2D = find_child("CollisionPolygon2D")
 @onready var scars:Node2D = find_child("Scars")
 @onready var polygon:Polygon2D = find_child("Polygon2D")
 @onready var shard_edges:Node2D = find_child("ShardEdges")
+@onready var glue_edges:Node2D = find_child("Glue")
 
 func _ready():
 	refresh_polygon()
@@ -435,6 +444,65 @@ func glue(other:ArcheologyItem):
 				scars.add_child(scar)
 				scar.global_position = scar_pos
 				scar.global_rotation = scar_rot
+		elif child.name == "Glue":
+			for glue in child.get_children():
+				var pos = glue.global_position
+				var rot = glue.global_rotation
+				child.remove_child(glue)
+				glue_edges.add_child(glue)
+				glue.global_position = pos
+				glue.global_rotation = rot
+				glue_hashes[glue.find_child("Polygon2D").polygon.hash()] = glue
 	visual_polygons = []
 	collision_polygons = []
 	other.queue_free()
+
+# Build glue polygons by finding scars and recoloring them?
+func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
+	for edge in shard_edges.get_children():
+		var intersecting_edges = edge.get_intersecting_edge_lines(circle_center_global, circle_radius)
+		for line in intersecting_edges:
+			line.default_color = Color.GOLD
+			line.texture = null
+			line.z_index = 1
+			line.material = preload("res://shader/ItemShardEdgeLine.tres")
+
+## Build glue polygons based on the segments near the circle - doesn't work very well
+#func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
+	#var segments = []
+	#for poly in collision_polygons:
+		#var seg = get_segment_intersecting_circle(circle_center_global - poly.global_position, circle_radius, poly.polygon, poly.position)
+		#if seg.size() > 0:
+			#segments.append(seg)
+	#for i in range(segments.size()):
+		#var seg1 = segments[i]
+		#for j in range(i+1, segments.size()):
+			#var seg2 = segments[j]
+			#var glue_poly = []
+			#glue_poly.append_array(seg1)
+			#glue_poly.append_array(seg2)
+			#if !Geometry2D.is_polygon_clockwise(glue_poly):
+				#glue_poly.reverse()
+			#print("Got glue polygon: ", glue_poly)
+			#if glue_hashes.has(glue_poly.hash()):
+				#continue # polygon already exists (probably...could check the actual values in case of hash collision, but prob not worth it)
+			#print("Creating new glue and adding it")
+			#var new_glue = load("res://ItemGlueEdge.tscn").instantiate()
+			#new_glue.setup(glue_poly)
+			#$Glue.add_child(new_glue)
+			#glue_hashes[glue_poly.hash()] = new_glue
+			
+func get_segment_intersecting_circle(circle_center:Vector2, circle_radius:float, polygon, polygon_offset:Vector2) -> Array[Vector2]:
+	var cur_segment:Array[Vector2] = []
+	for i in range(polygon.size()):
+		var pt1 = polygon[i - 1]
+		var pt2 = polygon[i]
+		if Geometry2D.segment_intersects_circle(pt1, pt2, circle_center, circle_radius) != -1:
+			if cur_segment.size() == 0:
+				cur_segment.append(pt1 + polygon_offset)
+			cur_segment.append(pt2 + polygon_offset)
+		#else:
+			#if cur_segment.size() > 0:
+				#segment_list.append(cur_segment)
+				#cur_segment = []
+	return cur_segment

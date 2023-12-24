@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://jmqs1eem36ey"]
+
+[ext_resource type="Shader" path="res://shader/gold_shimmer.gdshader" id="1_223yn"]
+
+[resource]
+shader = ExtResource("1_223yn")
+shader_parameter/shine_color = Vector4(1, 1, 1, 1)

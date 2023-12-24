@@ -26,6 +26,10 @@ func handle_glue_input(event):
 			for i in range(1, pieces.size()):
 				main_piece.glue(pieces[i])
 			main_piece.call_deferred("highlight_visual_polygons")
+			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+		elif pieces.size() == 1:
+			print("Filling glue in cracks, maybe")
+			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 
 func handle_camera_input(event):
 	if event.is_action("zoom_in"):

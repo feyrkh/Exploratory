@@ -25,3 +25,16 @@ func refresh_edge_path(polygon:PackedVector2Array, offset=0.1):
 				add_child(new_line)
 		else:
 			queue_free()
+
+func get_intersecting_edge_lines(global_circle_center:Vector2, circle_radius:float):
+	var local_circle_center = global_circle_center - global_position
+	var intersections = []
+	for child in get_children():
+		var pt1 = child.points[0]
+		for i in range(1, child.points.size()):
+			var pt2 = child.points[i]
+			if Geometry2D.segment_intersects_circle(pt1, pt2, local_circle_center, circle_radius) != -1:
+				intersections.append(child)
+				break
+			pt1 = pt2
+	return intersections

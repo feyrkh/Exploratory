@@ -31,7 +31,9 @@ var center:
 var area:float:
 	get:
 		if area == 0:
-			_find_center()
+			for child in get_children():
+				if child is CollisionPolygon2D:
+					area += _calculate_area(child.polygon)
 		return area
 
 var original_area
@@ -148,6 +150,7 @@ func refresh_polygon() -> int:
 		return 0
 	else:
 		print("Decent-sized shard was created, area is ", area)
+		center_of_mass = center
 		return 1
 
 func get_random_edge_point() -> Vector2:
@@ -383,36 +386,50 @@ func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, mi
 	add_scar(scar)
 
 func _calculate_area(polygon) -> float:
-	var off:Vector2 = polygon[-1]
-	var twiceArea:float = 0
-	for i in range(polygon.size()):
-		var p1 = polygon[i-1]
-		var p2 = polygon[i]
-		var f = (p1.x - off.x) * (p2.y - off.y) - (p2.x - off.x) * (p1.y - off.y)
-		twiceArea += f
-	return twiceArea/2
+	var triangles = Geometry2D.triangulate_polygon(polygon)
+	if triangles.size() == 0:
+		polygon = Geometry2D.convex_hull(polygon)
+		triangles = Geometry2D.triangulate_polygon(polygon)
+	var twiceArea = 0
+	for i in range(0, triangles.size(), 3):
+		var t1 = triangles[i]
+		var t2 = triangles[i+1]
+		var t3 = triangles[i+2]
+		twiceArea += abs(polygon[t1].x * (polygon[t2].y - polygon[t3].y) + polygon[t2].x * (polygon[t3].y - polygon[t1].y) + polygon[t3].x * (polygon[t1].y - polygon[t2].y))
+	return twiceArea / 2
 
 func _find_center() -> Vector2:
-	var off:Vector2 = collision.polygon[0]
-	var twiceArea:float = 0
-	var x:float = 0
-	var y:float = 0
-	var p1:Vector2
-	var p2:Vector2
-	var f
-	var j = collision.polygon.size() - 1
-	for i in range(collision.polygon.size()):
-		p1 = collision.polygon[i]
-		p2 = collision.polygon[j]
-		f = (p1.x - off.x) * (p2.y - off.y) - (p2.x - off.x) * (p1.y - off.y)
-		twiceArea += f
-		x += (p1.x + p2.x - 2*off.x) * f
-		y += (p2.y + p2.y - 2*off.y) * f
-		j = i
-	f = twiceArea * 3
-	area = twiceArea / 2
-	center = Vector2(x/f+off.x, y/f+off.y)
-
+	var centers:Array[Vector2] = []
+	var areas:Array[float] = []
+	for collision in collision_polygons:
+		var twiceArea:float = 0
+		var off:Vector2 = collision.polygon[0]
+		var x:float = 0
+		var y:float = 0
+		var p1:Vector2
+		var p2:Vector2
+		var f
+		var j = collision.polygon.size() - 1
+		for i in range(collision.polygon.size()):
+			p1 = collision.polygon[i]
+			p2 = collision.polygon[j]
+			f = (p1.x - off.x) * (p2.y - off.y) - (p2.x - off.x) * (p1.y - off.y)
+			twiceArea += f
+			x += (p1.x + p2.x - 2*off.x) * f
+			y += (p2.y + p2.y - 2*off.y) * f
+			j = i
+		f = twiceArea * 3
+		centers.append(Vector2(x/f+off.x, y/f+off.y))
+		areas.append(abs(twiceArea/2))
+	if centers.size() == 0:
+		print("Item with no collision polygons? Freeing")
+		queue_free()
+	var totalArea = 0
+	center = Vector2.ZERO
+	for area in areas:
+		totalArea += area
+	for i in range(centers.size()):
+		center += centers[i] * (areas[i] / totalArea)
 	print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
 	center_of_mass = center
 	return center
@@ -464,6 +481,9 @@ func glue(other:ArcheologyItem):
 				glue_hashes[glue.find_child("Polygon2D").polygon.hash()] = glue
 	visual_polygons = []
 	collision_polygons = []
+	area = 0
+	center = null
+	center_of_mass = center
 	other.queue_free()
 
 # Build glue polygons by finding scars and recoloring them?
@@ -530,12 +550,13 @@ func recalculate_structure_completion():
 			for pt in child.polygon:
 				var actual_pt = child.to_global(pt)
 				var expected_pt = self.to_global(pt)
-				total_displacement += expected_pt.distance_to(actual_pt)
+				total_displacement += abs(expected_pt.distance_to(actual_pt))
 				num_pts += 1
 			if num_pts > 0:
 				avg_displacements += total_displacement/num_pts * cur_area
 				num_polygons += 1
-	$StructurePct.text = "avg displace: "+str(avg_displacements/total_area)
+	$StructurePct.text = "avg displace: "+str(avg_displacements/num_polygons/total_area)
+	result['displace'] = avg_displacements/num_polygons/total_area
 
 
 func _on_timer_timeout():

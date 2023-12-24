@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://djqx3eodocmbu"]
+
+[ext_resource type="Material" uid="uid://jmqs1eem36ey" path="res://shader/ItemShardEdgeLine.tres" id="1_7hrn1"]
+
+[node name="GoldShimmer_tscn" type="Node2D"]
+position = Vector2(24, -3)
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+material = ExtResource("1_7hrn1")
+position = Vector2(83, 75)
+color = Color(1, 0.858824, 0.0705882, 1)
+polygon = PackedVector2Array(-109, -72, -105, 581, 449, 611, 1045, 580, 1036, -73)

@@ -1,6 +1,6 @@
 extends Node
 
-var shatter_width = 1
+var shatter_width = 0.5
 
 var lock_rotation = true:
 	set(val):

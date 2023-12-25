@@ -407,9 +407,12 @@ func _calculate_area(polygon) -> float:
 func _find_center() -> Vector2:
 	var centers:Array[Vector2] = []
 	var areas:Array[float] = []
+	var new_top_left := Vector2(999999, 999999)
+	var new_bot_right := Vector2(-999999, -999999)
 	for collision in collision_polygons:
+		var origin = collision.position
 		var twiceArea:float = 0
-		var off:Vector2 = collision.polygon[0]
+		var off:Vector2 = collision.polygon[0].rotated(collision.rotation) + origin
 		var x:float = 0
 		var y:float = 0
 		var p1:Vector2
@@ -417,8 +420,12 @@ func _find_center() -> Vector2:
 		var f
 		var j = collision.polygon.size() - 1
 		for i in range(collision.polygon.size()):
-			p1 = collision.polygon[i]
-			p2 = collision.polygon[j]
+			p1 = collision.polygon[i].rotated(collision.rotation) + origin
+			p2 = collision.polygon[j].rotated(collision.rotation) + origin
+			if p1.x < new_top_left.x: new_top_left.x = p1.x
+			if p1.y < new_top_left.y: new_top_left.y = p1.y
+			if p1.x > new_bot_right.x: new_bot_right.x = p1.x
+			if p1.y > new_bot_right.y: new_bot_right.y = p1.y
 			f = (p1.x - off.x) * (p2.y - off.y) - (p2.x - off.x) * (p1.y - off.y)
 			twiceArea += f
 			x += (p1.x + p2.x - 2*off.x) * f
@@ -436,7 +443,11 @@ func _find_center() -> Vector2:
 		totalArea += area
 	for i in range(centers.size()):
 		center += centers[i] * (areas[i] / totalArea)
+	new_top_left -= Vector2(20, 20)
+	new_bot_right += Vector2(20, 20)
 	#print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
+	if new_top_left != $Paint/PaintPoly.polygon[0] or new_bot_right != $Paint/PaintPoly.polygon[2]:
+		$Paint/PaintPoly.polygon = [new_top_left, Vector2(new_bot_right.x, new_top_left.y), new_bot_right, Vector2(new_top_left.x, new_bot_right.y)]
 	center_of_mass = center
 	return center
 

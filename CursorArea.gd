@@ -1,13 +1,20 @@
 extends Area2D
 class_name CursorArea
 
+var default_radius:float
+
+func _ready():
+	Global.camera_zoom_changed.connect(camera_zoom_changed)
+	default_radius = $CollisionShape2D.shape.radius
+
+func camera_zoom_changed(new_zoom:float):
+	$CollisionShape2D.shape.radius = default_radius / new_zoom
+
 func _process(delta):
 	global_position = get_global_mouse_position()
 
 func get_overlaps() -> Array[Node2D]:
 	return get_overlapping_bodies()
-	#return overlapping_bodies.keys()
-
 
 func _on_body_entered(body):
 	if Global.click_mode == Global.ClickMode.glue and body.has_method("highlight_visual_polygons"):

@@ -64,6 +64,10 @@ func _unhandled_input(event):
 	match Global.click_mode:
 		Global.ClickMode.move: handle_move_input(event)
 		Global.ClickMode.glue: handle_glue_input(event)
+		Global.ClickMode.paint: handle_paint_input(event)
+
+func handle_paint_input(event):
+	pass
 
 func handle_glue_input(event):
 	if event.is_action_pressed("drag_start"):
@@ -85,11 +89,13 @@ func handle_camera_input(event):
 		camera.zoom += ZOOM_INCREMENT
 		if camera.zoom.x > 4.0:
 			camera.zoom = Vector2(4, 4)
+		Global.camera_zoom_changed.emit(camera.zoom.x)
 		get_viewport().set_input_as_handled()
 	elif event.is_action("zoom_out"):
 		camera.zoom -= ZOOM_INCREMENT
 		if camera.zoom.x < 0.2:
 			camera.zoom = Vector2(0.2, 0.2)
+		Global.camera_zoom_changed.emit(camera.zoom.x)
 		get_viewport().set_input_as_handled()
 
 func handle_move_input(event):
@@ -131,10 +137,10 @@ func update_button_text():
 	else:
 		find_child("LockRotateButton").text = "Rotate: Free"
 	match Global.click_mode:
-		Global.ClickMode.move:
-			find_child("ClickModeButton").text = "Click: Move"
-		Global.ClickMode.glue:
-			find_child("ClickModeButton").text = "Click: Glue"
+		Global.ClickMode.move: find_child("ClickModeButton").text = "Click: Move"
+		Global.ClickMode.glue: find_child("ClickModeButton").text = "Click: Glue"
+		Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
+		_: find_child("ClickModeButton").text = "Click: Unknown?"
 
 
 func _on_add_fracture_button_pressed():
@@ -190,12 +196,5 @@ func _on_delete_all_button_pressed():
 		child.queue_free()
 
 func _on_click_mode_pressed():
-	match Global.click_mode:
-		Global.ClickMode.move: 
-			Global.click_mode = Global.ClickMode.glue
-		Global.ClickMode.glue: 
-			Global.click_mode = Global.ClickMode.move
-		_: 
-			Global.click_mode = Global.ClickMode.move
-	update_button_text()
+	Global.rotate_click_mode()
 	

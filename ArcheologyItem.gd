@@ -220,6 +220,7 @@ func handle_move_input(event):
 		target_rot = 0.1 # just something to get the _integrate_forces method started
 	elif hover_idx >= 0 and event.is_action_pressed("delete_item"):
 		print("Deleting item ", self)
+		queue_free()
 
 func _integrate_forces(state):
 	if reset_position != null:
@@ -295,7 +296,7 @@ func add_scar(scar:ItemScar):
 			#new_polygons.append_array(clipped_polygons)
 		#working_polygons = new_polygons
 	#for poly in working_polygons:
-		
+
 
 func try_shatter():
 	# look at each scar in turn
@@ -440,12 +441,14 @@ func _find_center() -> Vector2:
 	return center
 
 func add_break_underlay(break_path, clip_polygon, offset=0.1):
-	#for i in break_path.size():
-	#	break_path[i] = break_path[i] + (center - break_path[i]).normalized()*0.1
 	break_path = Geometry2D.clip_polyline_with_polygon(break_path, Geometry2D.offset_polygon(clip_polygon, 1))
 	for path_part in break_path:
 		var edge = load("res://ItemShardEdge.tscn").instantiate()
 		var line = load("res://ItemShardEdgeLine.tscn").instantiate()
+		if path_part.size() == 2:
+			print("Zero width path found")
+			var new_pt = path_part[0] - (path_part[0] - path_part[1])/2
+			path_part.insert(1, new_pt)
 		line.points = path_part
 		edge.add_child(line)
 		shard_edges.add_child(edge)

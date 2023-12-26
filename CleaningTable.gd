@@ -188,11 +188,6 @@ func _on_shuffle_button_pressed():
 				cur_row_height = (bb_ymax - bb_ymin) + 20
 			cur_min_x += space_needed
 		piece.reset_position = Vector2(cur_min_x - space_needed, cur_min_y) - piece.center_of_mass.rotated(piece.global_rotation) + Vector2(bb_xmax-bb_xmin, bb_ymax-bb_ymin)/2
-		print("space needed: ", space_needed)
-		print("row_height: ", cur_row_height)
-		print("position: ", piece.reset_position)
-		print("center_of_mass: ", piece.center_of_mass)
-		print("com rotated: ", piece.center_of_mass.rotated(piece.global_rotation))
 		piece.reset_rotation = piece.global_rotation
 		piece.global_rotation = orig_rotation
 		piece.freeze = false #should get reset to whatever it should be after the position is changed

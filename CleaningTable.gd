@@ -156,21 +156,27 @@ func _on_shuffle_button_pressed():
 	var pieces = find_child("Pieces").get_children()
 	pieces.shuffle()
 	var cur_min_x = 150
-	var cur_min_y = 0
+	var cur_min_y = 100
 	var max_x = get_viewport_rect().size.x
 	var cur_row_height = 0
-	for piece in pieces:
-		piece.global_rotation = 0
-		var poly = piece.find_child("CollisionPolygon2D").polygon
+	for piece:ArcheologyItem in pieces:
+		var orig_rotation = piece.global_rotation
+		if Global.rotate_with_shuffle:
+			piece.global_rotation = randf_range(0, 2*PI)
+		else:
+			piece.global_rotation = 0
 		var bb_xmin = 9999999
 		var bb_ymin = 9999999
 		var bb_xmax = -9999999
 		var bb_ymax = -9999999
-		for pt in poly:
-			if pt.x < bb_xmin: bb_xmin = pt.x
-			if pt.y < bb_ymin: bb_ymin = pt.y
-			if pt.x > bb_xmax: bb_xmax = pt.x
-			if pt.y > bb_ymax: bb_ymax = pt.y
+		for collision:CollisionPolygon2D in piece.collision_polygons:
+			var poly := collision.polygon
+			for pt in poly:
+				pt = collision.to_global(pt)
+				if pt.x < bb_xmin: bb_xmin = pt.x
+				if pt.y < bb_ymin: bb_ymin = pt.y
+				if pt.x > bb_xmax: bb_xmax = pt.x
+				if pt.y > bb_ymax: bb_ymax = pt.y
 		# check if there's room left on this row
 		var space_needed = bb_xmax - bb_xmin + 20
 		if space_needed + cur_min_x > max_x:
@@ -178,12 +184,18 @@ func _on_shuffle_button_pressed():
 			cur_min_y += cur_row_height
 			cur_row_height = 0
 		else:
-			if cur_row_height < (bb_ymax - bb_ymin) + 10:
-				cur_row_height = (bb_ymax - bb_ymin) + 10
+			if cur_row_height < (bb_ymax - bb_ymin) + 20:
+				cur_row_height = (bb_ymax - bb_ymin) + 20
 			cur_min_x += space_needed
-		piece.reset_position = Vector2(cur_min_x - space_needed - bb_xmin, cur_min_y - bb_ymin)
+		piece.reset_position = Vector2(cur_min_x - space_needed, cur_min_y) - piece.center_of_mass.rotated(piece.global_rotation) + Vector2(bb_xmax-bb_xmin, bb_ymax-bb_ymin)/2
+		print("space needed: ", space_needed)
+		print("row_height: ", cur_row_height)
+		print("position: ", piece.reset_position)
+		print("center_of_mass: ", piece.center_of_mass)
+		print("com rotated: ", piece.center_of_mass.rotated(piece.global_rotation))
+		piece.reset_rotation = piece.global_rotation
+		piece.global_rotation = orig_rotation
 		piece.freeze = false #should get reset to whatever it should be after the position is changed
-
 
 func _on_add_new_button_pressed():
 	var new_item = ItemBuilder.build_random_item()

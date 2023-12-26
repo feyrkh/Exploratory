@@ -13,6 +13,8 @@ var rotate_start_item = null
 var rotate_start_item_com_position = null
 var target_rot = null
 var reset_position = null
+var reset_rotation = null
+var bounding_box:Rect2
 
 const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
@@ -97,8 +99,10 @@ func global_collide(val:bool):
 	# Called by Global.collide when piece collisions should be disabled
 	if val:
 		collision_mask |= 1 # allow this piece to collide with elements on layer 1
+		#modulate.a = 1.0
 	else:
 		collision_mask &= ~1 # prevent this piece from colliding with elements on layer 1
+		#modulate.a = 0.8
 
 func clone(new_polygon:Array):
 	var new_scene = load(scene_file_path).instantiate()
@@ -225,6 +229,7 @@ func handle_move_input(event):
 func _integrate_forces(state):
 	if reset_position != null:
 		state.transform = state.transform.rotated(-state.transform.get_rotation())
+		state.transform = state.transform.rotated(reset_rotation)
 		state.transform.origin = reset_position
 		reset_position = null
 		set_deferred("freeze", Global.freeze_pieces)
@@ -404,6 +409,7 @@ func _calculate_area(polygon) -> float:
 		twiceArea += abs(polygon[t1].x * (polygon[t2].y - polygon[t3].y) + polygon[t2].x * (polygon[t3].y - polygon[t1].y) + polygon[t3].x * (polygon[t1].y - polygon[t2].y))
 	return twiceArea / 2
 
+
 func _find_center() -> Vector2:
 	var centers:Array[Vector2] = []
 	var areas:Array[float] = []
@@ -443,11 +449,13 @@ func _find_center() -> Vector2:
 		totalArea += area
 	for i in range(centers.size()):
 		center += centers[i] * (areas[i] / totalArea)
-	new_top_left -= Vector2(20, 20)
-	new_bot_right += Vector2(20, 20)
+	bounding_box = Rect2(new_top_left, new_bot_right-new_top_left)
+	# TODO: Uncomment if painting returns
+	#new_top_left -= Vector2(20, 20)
+	#new_bot_right += Vector2(20, 20)
 	#print("Center of ", name, " with ", collision.polygon.size(), " points: ", center)
-	if new_top_left != $Paint/PaintPoly.polygon[0] or new_bot_right != $Paint/PaintPoly.polygon[2]:
-		$Paint/PaintPoly.polygon = [new_top_left, Vector2(new_bot_right.x, new_top_left.y), new_bot_right, Vector2(new_top_left.x, new_bot_right.y)]
+	#if new_top_left != $Paint/PaintPoly.position or new_bot_right != $Paint/PaintPoly.polygon[2]:
+	#	$Paint/PaintPoly.resize(new_top_left, new_bot_right)
 	center_of_mass = center
 	return center
 

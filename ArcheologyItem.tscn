@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://lxehddere6da"]
+[gd_scene load_steps=6 format=3 uid="uid://lxehddere6da"]
 
 [ext_resource type="Script" path="res://ArcheologyItem.gd" id="1_yx51a"]
+[ext_resource type="PackedScene" uid="uid://d4jiiof7lwkft" path="res://PaintPoly.tscn" id="2_2ppsp"]
 [ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_bwwpx"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]
 rough = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_x3puh"]
+viewport_path = NodePath("SubViewport")
 
 [node name="ArcheologyItem" type="RigidBody2D" groups=["archeology"]]
 collision_layer = 3
@@ -20,12 +24,6 @@ angular_damp_mode = 1
 angular_damp = 30.0
 script = ExtResource("1_yx51a")
 metadata/_edit_lock_ = true
-
-[node name="Paint" type="Node2D" parent="."]
-
-[node name="PaintPoly" type="Polygon2D" parent="Paint"]
-color = Color(0, 1, 0.290196, 0.266667)
-polygon = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0)
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 texture = ExtResource("2_bwwpx")
@@ -43,7 +41,13 @@ z_as_relative = false
 [node name="Glue" type="Node2D" parent="."]
 z_index = 1
 
+[node name="Paint" type="Node2D" parent="."]
+
+[node name="PaintPoly" parent="Paint" instance=ExtResource("2_2ppsp")]
+texture = SubResource("ViewportTexture_x3puh")
+
 [node name="StructurePct" type="Label" parent="."]
+visible = false
 offset_left = -98.0
 offset_top = -61.0
 offset_right = 20.0
@@ -53,6 +57,10 @@ text = "structure 100%"
 [node name="Timer" type="Timer" parent="."]
 wait_time = 2.0
 autostart = true
+
+[node name="OriginPolyDeleteMe" type="Polygon2D" parent="."]
+visible = false
+polygon = PackedVector2Array(-1, -1, 1, -1, 1, 1, -1, 1)
 
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

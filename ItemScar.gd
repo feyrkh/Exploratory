@@ -4,7 +4,7 @@ class_name ItemScar
 var line:Line2D
 
 func get_save_data() -> PackedVector2Array:
-	return line.points
+	return [position, rotation, line.points]
 
 static func load_save_data(save_data) -> ItemScar:
 	var new_item = load("res://ItemScar.tscn").instantiate()
@@ -13,7 +13,9 @@ static func load_save_data(save_data) -> ItemScar:
 	new_item.line = load("res://ItemScarLine.tscn").instantiate()
 	var curve = preload("res://ItemScarLineCurve.tres")
 	new_item.line.width_curve = curve
-	new_item.line.points = save_data
+	new_item.position = save_data[0]
+	new_item.rotation = save_data[1]
+	new_item.line.points = save_data[2]
 	new_item.add_child(new_item.line)
 	return new_item
 

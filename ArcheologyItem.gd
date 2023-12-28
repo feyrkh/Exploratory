@@ -113,11 +113,7 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 	for child in scars.get_children():
 		scar_save_data.append(child.get_save_data())
 	for child in shard_edges.get_children():
-		edge_save_data.append({
-			Fields.POSITION: child.position,
-			Fields.ROTATION: child.rotation,
-			Fields.POLYGON: child.get_save_data()
-		})
+		edge_save_data.append(child.get_save_data())
 	var me_data = {
 		Fields.POSITION: global_position,
 		Fields.ROTATION: global_rotation,
@@ -154,6 +150,9 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, reb
 	for data in scar_data:
 		var new_scar = ItemScar.load_save_data(data)
 		result.find_child("Scars").add_child(new_scar)
+	for data in edge_data:
+		var new_edge = ItemShardEdge.load_save_data(data)
+		result.find_child("ShardEdges").add_child(new_edge)
 	result.loading = true
 	result.call_deferred("post_load")
 	return result
@@ -171,6 +170,8 @@ func _post_load():
 	glue_hashes = null
 	refresh_polygon()
 	loading = false
+	for child in $ShardEdges.get_children():
+		child.loading = false
 
 func _ready():
 	if !loading:
@@ -204,6 +205,7 @@ func global_collide(val:bool):
 		#modulate.a = 0.8
 
 func clone(new_polygon:Array):
+	## TODO: Make this handle cloning glued items
 	var new_scene = load(scene_file_path).instantiate()
 	new_scene.find_child("Polygon2D").texture = visual_polygons[0].texture
 	new_scene.original_area = original_area
@@ -617,10 +619,7 @@ func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
 	for edge in shard_edges.get_children():
 		var intersecting_edges = edge.get_intersecting_edge_lines(circle_center_global, circle_radius)
 		for line in intersecting_edges:
-			line.default_color = Color.GOLD
-			line.texture = null
-			line.z_index = 1
-			line.material = preload("res://shader/ItemShardEdgeLine.tres")
+			ItemShardEdge.convert_to_glue(line, Color.GOLD)
 
 ## Build glue polygons based on the segments near the circle - doesn't work very well
 #func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):

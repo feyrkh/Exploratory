@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://lxehddere6da"]
+[gd_scene load_steps=7 format=3 uid="uid://lxehddere6da"]
 
 [ext_resource type="Script" path="res://ArcheologyItem.gd" id="1_yx51a"]
 [ext_resource type="PackedScene" uid="uid://d4jiiof7lwkft" path="res://PaintPoly.tscn" id="2_2ppsp"]
 [ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_bwwpx"]
+[ext_resource type="Script" path="res://ItemPolygon2D.gd" id="3_h7ita"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]
 rough = true
@@ -27,11 +28,13 @@ metadata/_edit_lock_ = true
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 texture = ExtResource("2_bwwpx")
+script = ExtResource("3_h7ita")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(366, 112, 366, 83, 372, 72, 382, 62, 398, 52, 429, 41, 470, 32, 504, 28, 557, 27, 617, 32, 670, 45, 693, 55, 712, 70, 718, 82, 719, 108, 713, 119, 714, 130, 725, 157, 745, 191, 758, 223, 767, 262, 770, 306, 766, 338, 755, 376, 736, 415, 709, 450, 681, 475, 670, 486, 661, 506, 659, 516, 662, 521, 666, 529, 671, 537, 669, 546, 656, 557, 633, 566, 596, 573, 545, 577, 492, 574, 450, 566, 430, 559, 416, 550, 412, 543, 412, 535, 421, 524, 427, 518, 424, 506, 415, 486, 400, 471, 376, 450, 353, 421, 333, 384, 321, 351, 316, 311, 315, 287, 317, 259, 322, 236, 338, 193, 364, 152, 376, 124)
 
 [node name="Scars" type="Node2D" parent="."]
+z_index = 10
 metadata/_edit_lock_ = true
 
 [node name="ShardEdges" type="Node2D" parent="."]
@@ -57,10 +60,6 @@ text = "structure 100%"
 [node name="Timer" type="Timer" parent="."]
 wait_time = 2.0
 autostart = true
-
-[node name="OriginPolyDeleteMe" type="Polygon2D" parent="."]
-visible = false
-polygon = PackedVector2Array(-1, -1, 1, -1, 1, 1, -1, 1)
 
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

@@ -3,6 +3,20 @@ class_name ItemScar
 
 var line:Line2D
 
+func get_save_data() -> PackedVector2Array:
+	return line.points
+
+static func load_save_data(save_data) -> ItemScar:
+	var new_item = load("res://ItemScar.tscn").instantiate()
+	if new_item.line != null and is_instance_valid(new_item.line):
+		new_item.line.queue_free()
+	new_item.line = load("res://ItemScarLine.tscn").instantiate()
+	var curve = preload("res://ItemScarLineCurve.tres")
+	new_item.line.width_curve = curve
+	new_item.line.points = save_data
+	new_item.add_child(new_item.line)
+	return new_item
+
 func clone() -> ItemScar:
 	var new_scene = load(scene_file_path).instantiate()
 	var new_line = preload("res://ItemScarLine.tscn").instantiate()
@@ -41,7 +55,7 @@ func refresh_scar_path(polygon:PackedVector2Array, generated_points = line.point
 func remove_line_segments(covered_pts, from_end:bool):
 	var cur_line_pt = line.points.size()-1 if from_end else 0
 	var line_pt_delta = -1 if from_end else 1
-	var line_pt_end = -1 if from_end else line.points.size()
+	#var line_pt_end = -1 if from_end else line.points.size()
 	var delete_from = null
 	var replacement_line = Array(line.points)
 	var found_endpoint := false

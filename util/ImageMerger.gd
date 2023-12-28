@@ -6,7 +6,7 @@ class ImageMergeInfo:
 	var position:Vector2
 	var modulate:Color
 
-static func merge_images(image_merge_info:Array[ImageMergeInfo], noise:FastNoiseLite=null, noise_cutoff:float=1.0) -> Texture2D:
+static func merge_images(image_merge_info:Array, noise:FastNoiseLite=null, noise_cutoff:float=1.0) -> Texture2D: # Array[ImageMergeInfo] as input
 	var base_img:Image
 	for merge_info in image_merge_info:
 		if base_img == null:

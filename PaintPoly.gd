@@ -10,11 +10,10 @@ func _ready():
 	viewport.add_child(_pen)
 	_pen.draw.connect(_on_draw)
 
-func _process(delta):
+func _process(_delta):
 	_pen.queue_redraw()
 
 func resize(new_top_left:Vector2, new_bot_right:Vector2):
-	var prev_polygon := polygon
 	polygon = [new_top_left, Vector2(new_bot_right.x, new_top_left.y), new_bot_right, Vector2(new_top_left.x, new_bot_right.y)]
 	uv_offset = Vector2.ZERO - new_top_left
 	uv = [new_top_left + uv_offset, Vector2(new_bot_right.x, new_top_left.y) + uv_offset, new_bot_right + uv_offset, Vector2(new_top_left.x, new_bot_right.y) + uv_offset]

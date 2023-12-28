@@ -35,10 +35,10 @@ var click_mode = ClickMode.move:
 			_: Input.set_custom_mouse_cursor(null)
 
 func rotate_click_mode():
-		match click_mode:
-			ClickMode.move: click_mode = ClickMode.glue
-			ClickMode.glue: click_mode = ClickMode.move
-			#ClickMode.paint: click_mode = ClickMode.move
-			_: click_mode = ClickMode.move
-		click_mode_changed.emit()
+	match click_mode:
+		ClickMode.move: click_mode = ClickMode.glue
+		ClickMode.glue: click_mode = ClickMode.move
+		#ClickMode.paint: click_mode = ClickMode.move
+		_: click_mode = ClickMode.move
+	click_mode_changed.emit()
 	

@@ -83,6 +83,18 @@ focus_mode = 0
 text = "Shuffle"
 alignment = 0
 
+[node name="SaveButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Save"
+alignment = 0
+
+[node name="LoadButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Load"
+alignment = 0
+
 [node name="Label" type="Label" parent="CanvasLayer"]
 offset_left = 130.0
 offset_right = 1141.0
@@ -110,5 +122,7 @@ shape = SubResource("CircleShape2D_tahv2")
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddFractureButton" to="." method="_on_add_fracture_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShatterButton" to="." method="_on_shatter_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="body_entered" from="CursorArea" to="CursorArea" method="_on_body_entered"]
 [connection signal="body_exited" from="CursorArea" to="CursorArea" method="_on_body_exited"]

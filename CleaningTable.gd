@@ -31,7 +31,7 @@ func _ready():
 	#pot2.refresh_polygon()
 	
 	var pot3:ArcheologyItem = new_item
-	var pot_area = pot3.area
+	#var pot_area = pot3.area
 	#pot1.mass = pot3.mass * pot1.area / pot3.area
 	#pot2.mass = pot3.mass * pot2.area / pot3.area
 	for i in range(4):
@@ -66,7 +66,7 @@ func _unhandled_input(event):
 		Global.ClickMode.glue: handle_glue_input(event)
 		Global.ClickMode.paint: handle_paint_input(event)
 
-func handle_paint_input(event):
+func handle_paint_input(_event):
 	pass
 
 func handle_glue_input(event):
@@ -204,4 +204,31 @@ func _on_delete_all_button_pressed():
 
 func _on_click_mode_pressed():
 	Global.rotate_click_mode()
-	
+
+func _on_save_button_pressed():
+	var image_save_data := {} # ImageBuilder.ImageSaveData -> int index
+	var item_save_data = []
+	for item in $Pieces.get_children():
+		item_save_data.append(item.get_save_data(image_save_data))
+	var save_file := FileAccess.open("user://save.dat", FileAccess.WRITE)
+	var reversed_image_save_data = {}
+	for k in image_save_data.keys():
+		reversed_image_save_data[image_save_data[k]] = k.map(func(entry): return entry.get_save_data())
+	save_file.store_var((reversed_image_save_data))
+	save_file.store_var((item_save_data))
+	save_file.close()
+
+func _on_load_button_pressed():
+	for child in $Pieces.get_children():
+		child.queue_free()
+	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)
+	var image_save_data = save_file.get_var()
+	var rebuilt_textures = {}
+	for k in image_save_data.keys():
+		image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
+		rebuilt_textures[k] = ItemBuilder.build_specific_item(image_save_data[k])
+	var item_save_data = save_file.get_var()
+	for item_save in item_save_data:
+		var new_item = ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
+		$Pieces.add_child(new_item)
+	save_file.close()

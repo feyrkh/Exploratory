@@ -1,6 +1,8 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
+enum Fields {IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA}
+
 # if -1, the mouse is not hovering over this piece
 var hover_idx = -1
 # If null, the user is not dragging this piece
@@ -15,6 +17,7 @@ var target_rot = null
 var reset_position = null
 var reset_rotation = null
 var bounding_box:Rect2
+var loading:bool = false
 
 const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
@@ -42,13 +45,15 @@ var area:float:
 var original_area
 var area_pct:
 	get:
+		if !original_area:
+			refresh_polygon()
 		return area / original_area
 
-var visual_polygons:Array[Polygon2D] = []:
+var visual_polygons:Array[ItemPolygon2D] = []:
 	get:
 		if visual_polygons.size() == 0:
 			for child in get_children():
-				if child is Polygon2D:
+				if child is ItemPolygon2D:
 					visual_polygons.append(child)
 		return visual_polygons
 
@@ -68,14 +73,108 @@ var glue_hashes = null:
 				glue_hashes[child.polygon.hash()] = child
 		return glue_hashes
 
-@onready var collision:CollisionPolygon2D = find_child("CollisionPolygon2D")
+@onready var collision:CollisionPolygon2D = find_child("CollisionPolygon2D"):
+	get:
+		if collision == null:
+			for child in get_children():
+				if child is CollisionPolygon2D:
+					collision = child
+					break
+		return collision
 @onready var scars:Node2D = find_child("Scars")
-@onready var polygon:Polygon2D = find_child("Polygon2D")
+@onready var polygon:ItemPolygon2D = find_child("Polygon2D"):
+	get:
+		if polygon == null:
+			for child in get_children():
+				if child is ItemPolygon2D:
+					polygon = child
+					break
+		return polygon
 @onready var shard_edges:Node2D = find_child("ShardEdges")
 @onready var glue_edges:Node2D = find_child("Glue")
 
-func _ready():
+func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[String, ImageBuilder.ImageSaveData]
+	var result := []
+	var img_save_data = []
+	var scar_save_data = []
+	var edge_save_data = []
+	var glue_save_data = []
+	for child in get_children():
+		if child is ItemPolygon2D:
+			var child_image_data = child.save_data
+			if !image_save_data.has(child_image_data):
+				image_save_data[child_image_data] = ImageBuilder.get_next_unique_id()
+			img_save_data.append({
+				Fields.IMG_DATA: image_save_data[child_image_data],
+				Fields.POSITION: child.position,
+				Fields.ROTATION: child.rotation,
+				Fields.POLYGON: child.polygon
+			})
+	for child in scars.get_children():
+		scar_save_data.append(child.get_save_data())
+	for child in shard_edges.get_children():
+		edge_save_data.append({
+			Fields.POSITION: child.position,
+			Fields.ROTATION: child.rotation,
+			Fields.POLYGON: child.get_save_data()
+		})
+	var me_data = {
+		Fields.POSITION: global_position,
+		Fields.ROTATION: global_rotation,
+		Fields.ORIG_AREA: original_area
+	}
+	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "me":me_data}
+
+## item_save = as returned from get_save_data
+## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), ImageBuilder.ImageSaveData]
+static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, rebuilt_textures:Dictionary) -> ArcheologyItem: 
+	var result = load("res://ArcheologyItem.tscn").instantiate()
+	result.find_child("Polygon2D").queue_free()
+	result.find_child("CollisionPolygon2D").queue_free()
+	var poly_data = item_save.get("img", [])
+	var scar_data = item_save.get("scar", [])
+	var edge_data = item_save.get("edge", [])
+	var me_data = item_save.get("me", {})
+	result.global_position = me_data[Fields.POSITION]
+	result.global_rotation = me_data[Fields.ROTATION]
+	result.original_area = me_data[Fields.ORIG_AREA]
+	for data in poly_data:
+		var new_polygon = ItemPolygon2D.new()
+		new_polygon.save_data = image_save_data[data[Fields.IMG_DATA]]
+		new_polygon.texture = rebuilt_textures[data[Fields.IMG_DATA]]
+		new_polygon.position = data[Fields.POSITION]
+		new_polygon.rotation = data[Fields.ROTATION]
+		new_polygon.polygon = data[Fields.POLYGON]
+		var new_collision = CollisionPolygon2D.new()
+		new_collision.position = new_polygon.position
+		new_collision.rotation = new_polygon.rotation
+		new_collision.polygon = new_polygon.polygon
+		result.add_child(new_polygon)
+		result.add_child(new_collision)
+	for data in scar_data:
+		var new_scar = ItemScar.load_save_data(data)
+		result.find_child("Scars").add_child(new_scar)
+	result.loading = true
+	result.call_deferred("post_load")
+	return result
+
+func post_load():
+	get_tree().process_frame.connect(_post_load, CONNECT_ONE_SHOT)
+
+func _post_load():
+	center = null
+	area = 0
+	collision_polygons = []
+	visual_polygons = []
+	polygon = null
+	collision = null
+	glue_hashes = null
 	refresh_polygon()
+	loading = false
+
+func _ready():
+	if !loading:
+		refresh_polygon()
 	if original_area == null:
 		original_area = area
 
@@ -106,7 +205,7 @@ func global_collide(val:bool):
 
 func clone(new_polygon:Array):
 	var new_scene = load(scene_file_path).instantiate()
-	new_scene.find_child("Polygon2D").texture = find_child("Polygon2D").texture
+	new_scene.find_child("Polygon2D").texture = visual_polygons[0].texture
 	new_scene.original_area = original_area
 	get_parent().add_child(new_scene)
 	new_scene.global_position = global_position
@@ -119,6 +218,7 @@ func clone(new_polygon:Array):
 		var new_edge = edge.clone()
 		new_scene.shard_edges.add_child(new_edge)
 	new_scene.shattering_in_progress = true
+	new_scene.find_child("Polygon2D").save_data = polygon.save_data
 	return new_scene
 
 func refresh_polygon() -> int:
@@ -165,7 +265,7 @@ func refresh_polygon() -> int:
 func get_random_edge_point() -> Vector2:
 	var dist = randf_range(0, total_edge_length)
 	var i = 0
-	while(dist > 0):
+	while(dist > 0 and i < collision.polygon.size()):
 		var start_pt = collision.polygon[i]
 		var next_pt = collision.polygon[(i+1) % collision.polygon.size()]
 		var cur_len = next_pt.distance_to(start_pt)
@@ -444,8 +544,8 @@ func _find_center() -> Vector2:
 		queue_free()
 	var totalArea = 0
 	center = Vector2.ZERO
-	for area in areas:
-		totalArea += area
+	for a in areas:
+		totalArea += a
 	for i in range(centers.size()):
 		center += centers[i] * (areas[i] / totalArea)
 	bounding_box = Rect2(new_top_left, new_bot_right-new_top_left)
@@ -458,8 +558,8 @@ func _find_center() -> Vector2:
 	center_of_mass = center
 	return center
 
-func add_break_underlay(break_path, clip_polygon, offset=0.1):
-	break_path = Geometry2D.clip_polyline_with_polygon(break_path, Geometry2D.offset_polygon(clip_polygon, 1))
+func add_break_underlay(break_path, clip_polygon, offset=1):
+	break_path = Geometry2D.clip_polyline_with_polygon(break_path, Geometry2D.offset_polygon(clip_polygon, offset))
 	for path_part in break_path:
 		var edge = load("res://ItemShardEdge.tscn").instantiate()
 		var line = load("res://ItemShardEdgeLine.tscn").instantiate()
@@ -473,7 +573,7 @@ func add_break_underlay(break_path, clip_polygon, offset=0.1):
 
 func glue(other:ArcheologyItem):
 	for child in other.get_children():
-		if child is Polygon2D or child is CollisionPolygon2D:
+		if child is ItemPolygon2D or child is CollisionPolygon2D:
 			var child_pos = child.global_position
 			var child_rot = child.global_rotation
 			other.remove_child(child)
@@ -497,14 +597,14 @@ func glue(other:ArcheologyItem):
 				scar.global_position = scar_pos
 				scar.global_rotation = scar_rot
 		elif child.name == "Glue":
-			for glue in child.get_children():
-				var pos = glue.global_position
-				var rot = glue.global_rotation
-				child.remove_child(glue)
-				glue_edges.add_child(glue)
-				glue.global_position = pos
-				glue.global_rotation = rot
-				glue_hashes[glue.find_child("Polygon2D").polygon.hash()] = glue
+			for g in child.get_children():
+				var pos = g.global_position
+				var rot = g.global_rotation
+				child.remove_child(g)
+				glue_edges.add_child(g)
+				g.global_position = pos
+				g.global_rotation = rot
+				glue_hashes[g.find_child("Polygon2D").polygon.hash()] = g
 	visual_polygons = []
 	collision_polygons = []
 	area = 0
@@ -568,7 +668,7 @@ func recalculate_structure_completion():
 	var num_polygons = 0
 	var total_area = 0
 	for child in get_children():
-		if child is Polygon2D:
+		if child is ItemPolygon2D:
 			var total_displacement = 0
 			var num_pts = 0
 			var cur_area = _calculate_area(child.polygon)

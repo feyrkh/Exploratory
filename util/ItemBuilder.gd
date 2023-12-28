@@ -1,4 +1,5 @@
 extends Node
+class_name ImageBuilder
 
 ## Valid entries for the 'type' field of .cfg files
 const VALID_TYPES := ['icon', 'band', 'base']
@@ -7,6 +8,11 @@ const IMAGE_TYPES := VALID_TYPES
 
 var all_items = {}
 var base_item_names = []
+static var __next_unique_id := 0
+
+static func get_next_unique_id() -> int:
+	__next_unique_id += 1
+	return __next_unique_id
 
 class ItemConfig:
 	var item_name
@@ -23,7 +29,9 @@ class ItemConfig:
 		return load(item_dir+item_name+".png")
 	
 	func load_collider_scene():
-		return load(item_dir+item_name+'_collider.tscn').instantiate()
+		var result = load(item_dir+item_name+'_collider.tscn').instantiate()
+		result.queue_free()
+		return result
 	
 	func get_shadow_texture() -> Texture2D:
 		if FileAccess.file_exists(item_dir+item_name+"_shadow.png"):
@@ -31,12 +39,53 @@ class ItemConfig:
 		else:
 			return null
 
+class ImageSaveData:
+	var item_dir:String
+	var item_name:String
+	var type:String
+	var color:Color
+	var position:Vector2
+	var size:Vector2i
+	
+	func _init(placement:DecorationBase = null):
+		if placement:
+			item_dir = placement.item_dir
+			item_name = placement.item_name
+			type = placement.type
+			color = placement.color
+			position = placement.position
+			size = placement.size
+	
+	func to_image_merge_info() -> ImageMerger.ImageMergeInfo:
+		#var img:Image
+		#var position:Vector2
+		#var modulate:Color
+		var info = ImageMerger.ImageMergeInfo.new()
+		info.position = position
+		info.modulate = color
+		info.img = load(item_dir+item_name+".png").get_image()
+		if info.img.get_size() != size:
+			info.img.resize(size.x, size.y)
+		return info
+	
+	func get_save_data():
+		return [item_dir, item_name, type, color, position, size]
+	
+	static func load_save_data(dat:Array):
+		var result = ImageSaveData.new()
+		result.item_dir = dat[0]
+		result.item_name = dat[1]
+		result.type = dat[2]
+		result.color = dat[3]
+		result.position = dat[4]
+		result.size = dat[5]
+		return result
+
 func _ready():
 	reload_definitions()
 
 func filter_options(item_type:String, desired_size:Vector2) -> Array[ItemConfig]:
 	var retval:Array[ItemConfig] = []
-	var items = {}
 	for item_name in all_items:
 		var item = all_items[item_name]
 		if item.type != item_type:
@@ -59,6 +108,11 @@ func correct_collider_position(collider:CollisionPolygon2D, sprite:Sprite2D) -> 
 		retval.append(pt + adjustment)
 	return retval
 
+func build_specific_item(save_data:Array) -> Texture2D: # Array[ImageSaveData] as input
+	var image_details:Array = save_data.map(func(entry): return entry.to_image_merge_info())
+	return ImageMerger.merge_images(image_details)
+	
+
 func build_random_item(base_item_name=null) -> ArcheologyItem:
 	if base_item_name == null:
 		base_item_name = base_item_names.pick_random()
@@ -70,9 +124,8 @@ func build_random_item(base_item_name=null) -> ArcheologyItem:
 	var retval_collider:CollisionPolygon2D = retval.find_child("CollisionPolygon2D")
 	var retval_img:Polygon2D = retval.find_child("Polygon2D")
 	retval_collider.polygon = PackedVector2Array(correct_collider_position(item_collider, collider_scene.find_child("Sprite2D")))
-	var shadow_texture := base_item_cfg.get_shadow_texture()
 	# find out what groups exist
-	var placement_groups = {}
+	var placement_groups:Dictionary = {} # String, DecorationBase
 	var unnamed_group_id = -1
 	for child in collider_scene.get_children():
 		if child is DecorationBase:
@@ -125,13 +178,14 @@ func build_random_item(base_item_name=null) -> ArcheologyItem:
 				smallest_rect.x = cur_rect.x
 			if cur_rect.y < smallest_rect.y:
 				smallest_rect.y = cur_rect.y
-		var options = filter_options(str(img_groups[img_group][0].type), smallest_rect)
+		var options:Array[ItemConfig] = filter_options(str(img_groups[img_group][0].type), smallest_rect)
 		if options.size() >= 1:
 			img_group_choices[img_group] = options.pick_random()
 			if img_group_choices[img_group].colors == null or img_group_choices[img_group].colors.size() == 0:
 				img_group_colors[img_group] = [Color.SADDLE_BROWN, Color.DARK_RED, Color.DIM_GRAY, Color.GREEN_YELLOW, Color.DARK_BLUE, Color.DARK_SLATE_BLUE, Color.MAROON].pick_random()
 			else:
 				img_group_colors[img_group] = img_group_choices[img_group].colors.pick_random()
+
 	# place the images
 	var base_image_details := ImageMerger.ImageMergeInfo.new()
 	base_image_details.img = base_item_cfg.get_texture().get_image()
@@ -140,7 +194,15 @@ func build_random_item(base_item_name=null) -> ArcheologyItem:
 		base_image_details.modulate = [Color.ANTIQUE_WHITE, Color.BROWN, Color.CORAL, Color.FIREBRICK, Color.PERU, Color.SADDLE_BROWN].pick_random()
 	else:
 		base_image_details.modulate = base_item_cfg.colors.pick_random()
+	var save_data:Array[ImageSaveData] = [ImageSaveData.new()]
+	save_data[0].item_dir = base_item_cfg.item_dir
+	save_data[0].item_name = base_item_cfg.item_name
+	save_data[0].type = base_item_cfg.type
+	save_data[0].color = base_image_details.modulate
+	save_data[0].position = base_image_details.position
+	save_data[0].size = base_image_details.img.get_size()
 
+	
 	var image_details:Array[ImageMerger.ImageMergeInfo] = [base_image_details]
 	
 	for placement in placements_used:
@@ -152,7 +214,14 @@ func build_random_item(base_item_name=null) -> ArcheologyItem:
 		info.img.resize(info.img.get_size().x * min(x_scale, y_scale), info.img.get_size().y * min(x_scale, y_scale))
 		info.position = placement.position + placement.get_size()/2 - Vector2(info.img.get_size())/2
 		info.modulate = img_group_colors[placement.img_id]
+		placement.position = info.position
+		placement.size = info.img.get_size()
+		placement.color = info.modulate
+		placement.item_dir = img_group_choices[placement.img_id].item_dir
+		placement.item_name = img_group_choices[placement.img_id].item_name
 		image_details.append(info)
+		var save_data_item = ImageSaveData.new(placement)
+		save_data.append(save_data_item)
 	
 	var shadow = base_item_cfg.get_shadow_texture()
 	if shadow:
@@ -161,9 +230,17 @@ func build_random_item(base_item_name=null) -> ArcheologyItem:
 		shadow_details.position = Vector2.ZERO
 		shadow_details.modulate = Color.WHITE
 		#image_details.append(shadow_details)
+		var save_data_item = ImageSaveData.new()
+		save_data_item.img_dir = shadow_details.item_dir
+		save_data_item.img_name = shadow_details.item_name
+		save_data_item.color = shadow_details.modulate
+		save_data_item.position = shadow_details.position
+		save_data_item.size = shadow_details.img.get_size()
+		save_data.append(save_data_item)
 	
 	var combined_img := ImageMerger.merge_images(image_details)
 	retval_img.texture = combined_img
+	retval.find_child("Polygon2D").save_data = save_data
 	
 	return retval
 

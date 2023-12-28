@@ -8,3 +8,9 @@ class_name DecorationBase
 ## All decorations of the same type with the same image ID will use the same image 
 @export var img_id:String
 
+# Used by save data system
+var item_dir:String
+var item_name:String
+#var color:Color
+#var position:Vector2
+#var size:Vector2

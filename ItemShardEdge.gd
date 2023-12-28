@@ -1,5 +1,22 @@
 extends Node2D
 
+const GLUE_COLOR_FIELD := 0
+const LINE_DATA_FIELD := 1
+
+func get_save_data():
+	var line_data = []
+	var glue_color = []
+	for child in get_children():
+		if child is Line2D:
+			line_data.append(child.points)
+			if child.material != null:
+				# If we have a material, this edge has been converted into glue and we should save its color
+				glue_color.append(child.modulate)
+			else:
+				# otherwise we'll use the normal shard edge texture
+				glue_color.append(null)
+	return {LINE_DATA_FIELD: line_data, GLUE_COLOR_FIELD: glue_color}
+
 func clone():
 	var new_scene = load(scene_file_path).instantiate()
 	for child in get_children():
@@ -8,7 +25,7 @@ func clone():
 		new_scene.add_child(new_line)
 	return new_scene
 	
-func refresh_edge_path(polygon:PackedVector2Array, offset=0.1):
+func refresh_edge_path(polygon:PackedVector2Array):
 	for child in get_children():
 		var cur_line = PackedVector2Array(child.points)
 		if cur_line.size() == 0:

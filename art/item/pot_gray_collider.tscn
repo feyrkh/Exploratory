@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b4eqtnmc0yb0g"]
 
-[ext_resource type="Texture2D" uid="uid://dn1rg4484mtx2" path="res://art/item/pot_gray.png" id="1_seo4w"]
+[ext_resource type="Texture2D" uid="uid://dmu14bv2aais2" path="res://art/item/pot_gray.png" id="1_seo4w"]
 
 [sub_resource type="GDScript" id="GDScript_bsdqt"]
 script/source = "extends DecorationBase

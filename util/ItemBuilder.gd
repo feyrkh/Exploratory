@@ -128,7 +128,7 @@ func build_specific_item(save_data:Array) -> Texture2D: # Array[ImageSaveData] a
 	return await ImageMerger.merge_images(image_details)
 	
 
-func build_random_item(base_item_name=null, should_load_slowly=false) -> ArcheologyItem:
+func build_random_item(base_item_name=null, should_load_slowly=false, noise:FastNoiseLite=null, noise_cutoff:float=1.0) -> ArcheologyItem:
 	if base_item_name == null:
 		base_item_name = base_item_names.pick_random()
 	print("Building random item with ", base_item_name)
@@ -255,7 +255,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false) -> Archeol
 		save_data_item.size = shadow_details.img.get_size()
 		save_data.append(save_data_item)
 	
-	var combined_img := await ImageMerger.merge_images(image_details, null, 1.0, get_tree() if should_load_slowly else null)
+	var combined_img := await ImageMerger.merge_images(image_details, noise, noise_cutoff, get_tree() if should_load_slowly else null)
 	retval_img.texture = combined_img
 	retval.find_child("Polygon2D").save_data = save_data
 
@@ -303,12 +303,14 @@ func read_file(dir_name, file_name):
 		return
 	item.type = data['type']
 	if item.type in IMAGE_TYPES:
-		if !FileAccess.file_exists(dir_name+file_name_prefix+".png"):
+		var texture:Texture2D = load(dir_name+file_name_prefix+".png")
+		if !texture:
 			print("Found an item/deco config file, but it doesn't have a matching .png file, can't use this one!")
 			return
-		item.img_size = load(dir_name+file_name_prefix+".png").get_size()
+		item.img_size = texture.get_size()
 	if item.type == 'base':
-		if !FileAccess.file_exists(dir_name+file_name_prefix+'_collider.tscn'):
+		var scene:PackedScene = load(dir_name+file_name_prefix+'_collider.tscn')
+		if !scene:
 			print("Found a base item config file, but it doesn't have a matching ", file_name_prefix+'_collider.tscn', " file, can't use this one!")
 			return
 	if data.get('min_scale') != null:

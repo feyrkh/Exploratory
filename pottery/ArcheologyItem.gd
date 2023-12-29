@@ -224,11 +224,12 @@ func global_collide(val:bool):
 		collision_mask &= ~1 # prevent this piece from colliding with elements on layer 1
 		#modulate.a = 0.8
 
-func clone(new_polygon:Array):
+func clone(new_polygon:Array, should_clone_slow=false):
 	## TODO: Make this handle cloning glued items
-	var new_scene = load(scene_file_path).instantiate()
+	var new_scene = preload("res://pottery/ArcheologyItem.tscn").instantiate()
 	new_scene.find_child("Polygon2D").texture = visual_polygons[0].texture
 	new_scene.original_area = original_area
+	new_scene.is_display = is_display
 	get_parent().add_child(new_scene)
 	new_scene.global_position = global_position
 	new_scene.global_rotation = global_rotation
@@ -238,15 +239,18 @@ func clone(new_polygon:Array):
 	new_scene.lock_rotation = lock_rotation
 	new_scene.scale = scale
 	new_scene.shatter_size = shatter_size
-	for scar in scars.get_children():
-		var new_scar = scar.clone()
-		new_scene.scars.add_child(new_scar)
+	if should_clone_slow:
+		await get_tree().process_frame
+	#for scar in scars.get_children():
+	#	var new_scar = scar.clone()
+	#	new_scene.scars.add_child(new_scar)
+	if should_clone_slow:
+		await get_tree().process_frame
 	for edge in shard_edges.get_children():
 		var new_edge = edge.clone()
 		new_scene.shard_edges.add_child(new_edge)
 	new_scene.shattering_in_progress = shattering_in_progress
 	new_scene.find_child("Polygon2D").save_data = polygon.save_data
-	new_scene.is_display = is_display
 	
 	return new_scene
 
@@ -437,8 +441,56 @@ func add_scar(scar:ItemScar):
 		#working_polygons = new_polygons
 	#for poly in working_polygons:
 
+func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow:bool=true):
+	shattering_in_progress = false
+	shatter_size = shatter_width
+	var scar_lines:Array = scars.get_children().map(
+		func(scar): 
+			add_unconditional_underlay(scar.get_child(0).points)
+			scar.queue_free()
+			return scar.get_child(0).points
+	)
+	var scar_polys:Array = scar_lines.map(func(scar_line): return MyGeom.inflate_polyline(scar_line, shatter_size))
+	var collision_polygon_list:Array = collision_polygons.map(func(node): return node.polygon)
+	var new_collision_polygons = []
+	#var new_polygons_created = true
+	
+#	while new_polygons_created:
+#		new_polygons_created = false
+	var useful_scars
+	for scar_poly in scar_polys:
+		if should_shatter_slow and randf() < 0.1:
+			await get_tree().process_frame
+		for collision_polygon in collision_polygon_list:
+			# intersect our break path with our existing polygon
+			var clipped_polygons = Geometry2D.clip_polygons(collision_polygon, scar_poly)
+			if clipped_polygons.size() != 1:
+				new_collision_polygons.append_array(clipped_polygons)
+			elif clipped_polygons.size() == 1 :
+				new_collision_polygons.append(clipped_polygons[0])
+		collision_polygon_list = new_collision_polygons
+		new_collision_polygons = []
 
-func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow:bool=false):
+
+	for i in range(0, collision_polygon_list.size()):
+		if should_shatter_slow:
+			await get_tree().process_frame
+		var new_item = await clone(collision_polygon_list[i], should_shatter_slow)
+		new_item.refresh_polygon()
+	queue_free()
+
+func vector_arrays_equal(arr1:PackedVector2Array, arr2:PackedVector2Array) -> bool:
+	if arr1.size() != arr2.size(): 
+		return false
+	var hash1 = 0
+	var hash2 = 0
+	for a in arr1:
+		hash1 += a.length_squared()
+	for b in arr2:
+		hash2 += b.length_squared()
+	return abs(hash1 - hash2) < 0.01
+
+func try_shatter_old(shatter_width:float = Global.shatter_width, should_shatter_slow:bool=false):
 	shattering_in_progress = false
 	shatter_size = shatter_width
 	# look at each scar in turn
@@ -510,7 +562,7 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 	for i in range(1, clipped_polygons.size()):
 		if should_shatter_slow and randf() < 0.5:
 			await get_tree().process_frame
-		var new_item = clone(clipped_polygons[i])
+		var new_item = await clone(clipped_polygons[i])
 		new_item.refresh_polygon()
 		#new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)
 	# replace our current collision polygon with the first polygon we found
@@ -522,9 +574,9 @@ func random_scar():
 	#var start_pos = collision.polygon[start_pos_idx] + randf_range(0, 1) * (collision.polygon[(start_pos_idx+1)%collision.polygon.size()] - collision.polygon[start_pos_idx])
 	var start_pos = get_random_edge_point()
 	var end_pos = center
-	var len = start_pos.distance_to(end_pos)
+	var len = start_pos.distance_to(end_pos) * 2
 	#scar.generate_scar(collision.polygon, start_pos, randf_range(len/2, len*2), start_angle, 0, 1.0, 1.0)
-	specific_scar(start_pos, end_pos + Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * randf_range(len/2, len), PI/6, 0.1, 0.2)
+	specific_scar(start_pos, end_pos + Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * randf_range(len/6, len/5), PI/6, 0.1, 0.2)
 
 func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, min_segment_len:float=1.0, max_segment_len:float=1.0):
 	var start_angle = start_pos.angle_to_point(end_pos)
@@ -608,6 +660,17 @@ func add_break_underlay(break_path, clip_polygon, offset=1):
 		line.points = path_part
 		edge.add_child(line)
 		shard_edges.add_child(edge)
+		
+func add_unconditional_underlay(break_path):
+	var edge = load("res://pottery/ItemShardEdge.tscn").instantiate()
+	var line = load("res://pottery/ItemShardEdgeLine.tscn").instantiate()
+	if break_path.size() == 2:
+		#print("Zero width path found")
+		var new_pt = break_path[0] - (break_path[0] - break_path[1])/2
+		break_path.insert(1, new_pt)
+	line.points = break_path
+	edge.add_child(line)
+	shard_edges.add_child(edge)
 
 func glue(other:ArcheologyItem):
 	for child in other.get_children():

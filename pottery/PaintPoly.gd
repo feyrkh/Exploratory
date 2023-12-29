@@ -10,8 +10,8 @@ func _ready():
 	viewport.add_child(_pen)
 	_pen.draw.connect(_on_draw)
 
-func _process(_delta):
-	_pen.queue_redraw()
+#func _process(_delta):
+#	_pen.queue_redraw()
 
 func resize(new_top_left:Vector2, new_bot_right:Vector2):
 	polygon = [new_top_left, Vector2(new_bot_right.x, new_top_left.y), new_bot_right, Vector2(new_top_left.x, new_bot_right.y)]

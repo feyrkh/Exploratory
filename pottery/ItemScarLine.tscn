@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bekql6wb10r0o"]
 
-[ext_resource type="Curve" uid="uid://dsdudxmixfgk8" path="res://ItemScarLineCurve.tres" id="1_epxta"]
+[ext_resource type="Curve" uid="uid://dsdudxmixfgk8" path="res://pottery/ItemScarLineCurve.tres" id="1_epxta"]
 
 [node name="ItemScarLine" type="Line2D"]
 points = PackedVector2Array(58.4858, 69.9018, 60.8024, 71.7899, 58.764, 73.9566)

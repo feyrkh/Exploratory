@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cop6kl2ttusns"]
 
-[ext_resource type="Script" path="res://ArcheologyItem.gd" id="1_0vev8"]
+[ext_resource type="Script" path="res://pottery/ArcheologyItem.gd" id="1_0vev8"]
 [ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_lfthp"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]

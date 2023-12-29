@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dsqjk8ggv547x"]
 
-[ext_resource type="Script" path="res://CleaningTable.gd" id="1_avayf"]
-[ext_resource type="Script" path="res://CursorArea.gd" id="2_018s2"]
+[ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
+[ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
 radius = 15.0

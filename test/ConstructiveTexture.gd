@@ -35,7 +35,7 @@ func generate_image():
 	noise.fractal_octaves = 8
 	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
 	noise.seed = randf()
-	var final_img := ImageMerger.merge_images([base, band, knot], noise, 0.4)
+	var final_img := await ImageMerger.merge_images([base, band, knot], noise, 0.4)
 	#
 	#var baseSprite:Sprite2D = baseImgAndCollider.find_child("Sprite2D")
 	#var baseImg = baseSprite.texture.get_image()

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://8h4xde2tkngh"]
 
-[ext_resource type="Script" path="res://ItemShardEdge.gd" id="1_76tvu"]
+[ext_resource type="Script" path="res://pottery/ItemShardEdge.gd" id="1_76tvu"]
 
 [node name="ItemShardEdge" type="Node2D"]
 script = ExtResource("1_76tvu")

@@ -10,6 +10,21 @@ var all_items = {}
 var base_item_names = []
 static var __next_unique_id := 0
 
+var cache := {}
+var cache_cleanup_thread := Thread.new()
+@onready var cache_cleanup_timer := get_tree().create_timer(60)
+
+func _cache_cleanup():
+	while(true):
+		for k in cache.keys():
+			var t = cache.get(k)
+			if t == null or t < Time.get_ticks_msec():
+				cache.erase(t)
+		await cache_cleanup_timer.timeout
+
+func update_cache(item):
+	cache[item] = Time.get_ticks_msec() + 1000*60*5
+
 static func get_next_unique_id() -> int:
 	__next_unique_id += 1
 	return __next_unique_id
@@ -28,10 +43,9 @@ class ItemConfig:
 	func get_texture() -> Texture2D:
 		return load(item_dir+item_name+".png")
 	
-	func load_collider_scene():
-		var result = load(item_dir+item_name+'_collider.tscn').instantiate()
-		result.queue_free()
-		return result
+	func load_collider_scene() -> PackedScene:
+		var scene = load(item_dir+item_name+'_collider.tscn')
+		return scene
 	
 	func get_shadow_texture() -> Texture2D:
 		if FileAccess.file_exists(item_dir+item_name+"_shadow.png"):
@@ -83,6 +97,7 @@ class ImageSaveData:
 
 func _ready():
 	reload_definitions()
+	cache_cleanup_thread.start(_cache_cleanup, Thread.PRIORITY_LOW)
 
 func filter_options(item_type:String, desired_size:Vector2) -> Array[ItemConfig]:
 	var retval:Array[ItemConfig] = []
@@ -110,17 +125,19 @@ func correct_collider_position(collider:CollisionPolygon2D, sprite:Sprite2D) -> 
 
 func build_specific_item(save_data:Array) -> Texture2D: # Array[ImageSaveData] as input
 	var image_details:Array = save_data.map(func(entry): return entry.to_image_merge_info())
-	return ImageMerger.merge_images(image_details)
+	return await ImageMerger.merge_images(image_details)
 	
 
-func build_random_item(base_item_name=null) -> ArcheologyItem:
+func build_random_item(base_item_name=null, should_load_slowly=false) -> ArcheologyItem:
 	if base_item_name == null:
 		base_item_name = base_item_names.pick_random()
 	print("Building random item with ", base_item_name)
 	var base_item_cfg:ItemConfig = all_items[base_item_name]
-	var collider_scene = base_item_cfg.load_collider_scene()
+	var collider_scene_file = base_item_cfg.load_collider_scene()
+	update_cache(collider_scene_file)
+	var collider_scene = collider_scene_file.instantiate()
 	var item_collider = collider_scene.find_child("CollisionPolygon2D")
-	var retval:ArcheologyItem = load("res://ArcheologyItem.tscn").instantiate()
+	var retval:ArcheologyItem = load("res://pottery/ArcheologyItem.tscn").instantiate()
 	var retval_collider:CollisionPolygon2D = retval.find_child("CollisionPolygon2D")
 	var retval_img:Polygon2D = retval.find_child("Polygon2D")
 	retval_collider.polygon = PackedVector2Array(correct_collider_position(item_collider, collider_scene.find_child("Sprite2D")))
@@ -238,10 +255,11 @@ func build_random_item(base_item_name=null) -> ArcheologyItem:
 		save_data_item.size = shadow_details.img.get_size()
 		save_data.append(save_data_item)
 	
-	var combined_img := ImageMerger.merge_images(image_details)
+	var combined_img := await ImageMerger.merge_images(image_details, null, 1.0, get_tree() if should_load_slowly else null)
 	retval_img.texture = combined_img
 	retval.find_child("Polygon2D").save_data = save_data
-	
+
+	collider_scene.queue_free()
 	return retval
 
 func reload_definitions():

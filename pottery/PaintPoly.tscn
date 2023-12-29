@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d4jiiof7lwkft"]
 
-[ext_resource type="Script" path="res://PaintPoly.gd" id="1_um5bu"]
+[ext_resource type="Script" path="res://pottery/PaintPoly.gd" id="1_um5bu"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_t0pew"]
 viewport_path = NodePath("SubViewport")

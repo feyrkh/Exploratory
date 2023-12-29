@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://yeusf7ot7b4a"]
 
 [ext_resource type="Texture2D" uid="uid://b5ij3m7w65djn" path="res://art/broken_clay.png" id="1_a0b8r"]
-[ext_resource type="Curve" uid="uid://7o4xbqm6k0c0" path="res://ItemShardEdgeLineCurve.tres" id="1_vnein"]
-[ext_resource type="Script" path="res://ItemShardEdge.gd" id="2_5g4ha"]
+[ext_resource type="Curve" uid="uid://7o4xbqm6k0c0" path="res://pottery/ItemShardEdgeLineCurve.tres" id="1_vnein"]
+[ext_resource type="Script" path="res://pottery/ItemShardEdge.gd" id="2_5g4ha"]
 
 [node name="Line2D" type="Line2D"]
 texture_repeat = 1

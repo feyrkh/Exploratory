@@ -1,7 +1,7 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
-enum Fields {IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA}
+enum Fields {IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE}
 
 # if -1, the mouse is not hovering over this piece
 var hover_idx = -1
@@ -18,16 +18,25 @@ var reset_position = null
 var reset_rotation = null
 var bounding_box:Rect2
 var loading:bool = false
+## This item is being used for display only and can't be interacted with
+var is_display:bool = false:
+	set(val):
+		is_display = val
+		apply_global_settings()
+		if !is_display:
+			set_process(false)
+			set_process_input(false)
 
 const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
-var shattering_in_progress:bool = false:
+var shattering_in_progress:
 	set(val):
 		shattering_in_progress = val
-		set_process(val)
+		set_process(!!val)
+var shatter_size = 0.05
 
 var center:
 	get:
@@ -117,14 +126,15 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 	var me_data = {
 		Fields.POSITION: global_position,
 		Fields.ROTATION: global_rotation,
-		Fields.ORIG_AREA: original_area
+		Fields.ORIG_AREA: original_area,
+		Fields.SHATTER_SIZE: shatter_size
 	}
 	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "me":me_data}
 
 ## item_save = as returned from get_save_data
 ## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), ImageBuilder.ImageSaveData]
 static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, rebuilt_textures:Dictionary) -> ArcheologyItem: 
-	var result = load("res://ArcheologyItem.tscn").instantiate()
+	var result = load("res://pottery/ArcheologyItem.tscn").instantiate()
 	result.find_child("Polygon2D").queue_free()
 	result.find_child("CollisionPolygon2D").queue_free()
 	var poly_data = item_save.get("img", [])
@@ -172,6 +182,7 @@ func _post_load():
 	loading = false
 	for child in $ShardEdges.get_children():
 		child.loading = false
+	apply_global_settings()
 
 func _ready():
 	if !loading:
@@ -181,8 +192,17 @@ func _ready():
 
 func _process(_delta):
 	if shattering_in_progress:
-		shattering_in_progress = false
-		try_shatter()
+		try_shatter(shattering_in_progress[0], shattering_in_progress[1])
+
+func apply_global_settings():
+	if !is_display:
+		lock_rotation = Global.lock_rotation
+		freeze = Global.freeze_pieces
+		global_collide(Global.collide)
+	else:
+		lock_rotation = true
+		freeze = true
+		global_collide(false)
 
 func global_lock_rotation(val:bool):
 	# Called by Global.lock_rotation when rotation locking for fragments is enabled/disabled
@@ -213,14 +233,21 @@ func clone(new_polygon:Array):
 	new_scene.global_position = global_position
 	new_scene.global_rotation = global_rotation
 	new_scene.collision.polygon = new_polygon
+	new_scene.collision_mask = collision_mask
+	new_scene.freeze = freeze
+	new_scene.lock_rotation = lock_rotation
+	new_scene.scale = scale
+	new_scene.shatter_size = shatter_size
 	for scar in scars.get_children():
 		var new_scar = scar.clone()
 		new_scene.scars.add_child(new_scar)
 	for edge in shard_edges.get_children():
 		var new_edge = edge.clone()
 		new_scene.shard_edges.add_child(new_edge)
-	new_scene.shattering_in_progress = true
+	new_scene.shattering_in_progress = shattering_in_progress
 	new_scene.find_child("Polygon2D").save_data = polygon.save_data
+	new_scene.is_display = is_display
+	
 	return new_scene
 
 func refresh_polygon() -> int:
@@ -228,7 +255,7 @@ func refresh_polygon() -> int:
 	area = 0
 	if collision.polygon[0].distance_to(collision.polygon[-1]) < 0.5:
 		# sometimes the last point ends up being identical to the first point, and that can cause problems, so delete it
-		print("Cleaning up duplicate polygon point: ", collision.polygon[0], " vs ", collision.polygon[-1])
+		#print("Cleaning up duplicate polygon point: ", collision.polygon[0], " vs ", collision.polygon[-1])
 		var new_polygon = Array(collision.polygon)
 		new_polygon.pop_back()
 		collision.polygon = new_polygon
@@ -245,22 +272,22 @@ func refresh_polygon() -> int:
 	for i in range(collision.polygon.size()):
 		var j = (i+1) % collision.polygon.size()
 		total_edge_length += collision.polygon[i].distance_to(collision.polygon[j])
-	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, 3)
+	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
 	for edge in shard_edges.get_children():
 		if scar_trim_poly.size() > 0:
 			edge.refresh_edge_path(scar_trim_poly[0])
 	if abs(area) < TOO_SMALL_POLYGON_AREA:
-		print("Too-small shard was created, area is ", area, ", deleting")
+		#print("Too-small shard was created, area is ", area, ", deleting")
 		queue_free()
 		return 0
 	elif abs(area) < total_edge_length*TOO_SMALL_POLYGON_EDGE_RATIO:
-		print("Too-skinny shard was created, area is ", area, " which is smaller than the total edge length ", total_edge_length, " times ", TOO_SMALL_POLYGON_EDGE_RATIO)
+		#print("Too-skinny shard was created, area is ", area, " which is smaller than the total edge length ", total_edge_length, " times ", TOO_SMALL_POLYGON_EDGE_RATIO)
 		queue_free()
 		return 0
 	else:
-		print("Decent-sized shard was created, area is ", area)
+		#print("Decent-sized shard was created, area is ", area)
 		center_of_mass = center
 		return 1
 
@@ -278,6 +305,8 @@ func get_random_edge_point() -> Vector2:
 	return collision.polygon[0]
 
 func _unhandled_input(event):
+	if is_display: 
+		return
 	match Global.click_mode:
 		Global.ClickMode.move: handle_move_input(event)
 
@@ -291,6 +320,7 @@ func handle_move_input(event):
 				drag_start_item = global_position
 				lock_rotation = true
 				freeze = false
+				var prev_top = get_parent().get_child(-1)
 				get_parent().move_child(self, -1)
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
@@ -356,12 +386,16 @@ func _integrate_forces(state):
 		angular_velocity = target_rot * 15
 
 func _on_mouse_shape_entered(shape_idx):
+	if is_display:
+		return
 	if Global.click_mode == Global.ClickMode.move:
 		highlight_visual_polygons()
 	#print("Hovering ", shape_idx)
 	hover_idx = shape_idx
 
 func _on_mouse_shape_exited(shape_idx):
+	if is_display:
+		return
 	if shape_idx == hover_idx:
 		if drag_start_item == null:
 			if Global.click_mode == Global.ClickMode.move:
@@ -404,7 +438,9 @@ func add_scar(scar:ItemScar):
 	#for poly in working_polygons:
 
 
-func try_shatter():
+func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow:bool=false):
+	shattering_in_progress = false
+	shatter_size = shatter_width
 	# look at each scar in turn
 	var scar_count = scars.get_child_count()
 	var break_path
@@ -457,9 +493,8 @@ func try_shatter():
 		scar2.remove_line_segments(scar2_edge_segments, false)
 	
 	# expand our break path
-	# this doesn't work like I want it to, gonna write my own
-	#var break_poly := Geometry2D.offset_polyline(PackedVector2Array(break_path), 5, Geometry2D.JOIN_MITER, Geometry2D.END_JOINED)
-	var break_poly = MyGeom.inflate_polyline(break_path, Global.shatter_width)
+	shattering_in_progress = [shatter_width, should_shatter_slow]
+	var break_poly = MyGeom.inflate_polyline(break_path, shatter_size)
 	# intersect our break path with our existing polygon
 	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
 	for poly in clipped_polygons:
@@ -473,13 +508,14 @@ func try_shatter():
 	add_break_underlay(break_path, clipped_polygons[0])
 	# create a new item out of all but the first polygon we found
 	for i in range(1, clipped_polygons.size()):
+		if should_shatter_slow and randf() < 0.5:
+			await get_tree().process_frame
 		var new_item = clone(clipped_polygons[i])
 		new_item.refresh_polygon()
-		new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)
+		#new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)
 	# replace our current collision polygon with the first polygon we found
 	collision.polygon = clipped_polygons[0]
 	refresh_polygon()
-	shattering_in_progress = true
 
 func random_scar():
 	#var start_pos_idx = randi_range(0, collision.polygon.size() - 2)
@@ -492,8 +528,8 @@ func random_scar():
 
 func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, min_segment_len:float=1.0, max_segment_len:float=1.0):
 	var start_angle = start_pos.angle_to_point(end_pos)
-	var scar:ItemScar = preload("res://ItemScar.tscn").instantiate()
-	print("start=", start_pos, ", end=", end_pos, ", angle=", start_angle)
+	var scar:ItemScar = preload("res://pottery/ItemScar.tscn").instantiate()
+	#print("start=", start_pos, ", end=", end_pos, ", angle=", start_angle)
 	scar.generate_scar(collision.polygon, start_pos, (end_pos-start_pos).length(), start_angle, max_deviation, min_segment_len, max_segment_len)
 	add_scar(scar)
 
@@ -563,10 +599,10 @@ func _find_center() -> Vector2:
 func add_break_underlay(break_path, clip_polygon, offset=1):
 	break_path = Geometry2D.clip_polyline_with_polygon(break_path, Geometry2D.offset_polygon(clip_polygon, offset))
 	for path_part in break_path:
-		var edge = load("res://ItemShardEdge.tscn").instantiate()
-		var line = load("res://ItemShardEdgeLine.tscn").instantiate()
+		var edge = load("res://pottery/ItemShardEdge.tscn").instantiate()
+		var line = load("res://pottery/ItemShardEdgeLine.tscn").instantiate()
 		if path_part.size() == 2:
-			print("Zero width path found")
+			#print("Zero width path found")
 			var new_pt = path_part[0] - (path_part[0] - path_part[1])/2
 			path_part.insert(1, new_pt)
 		line.points = path_part
@@ -641,7 +677,7 @@ func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
 			#if glue_hashes.has(glue_poly.hash()):
 				#continue # polygon already exists (probably...could check the actual values in case of hash collision, but prob not worth it)
 			#print("Creating new glue and adding it")
-			#var new_glue = load("res://ItemGlueEdge.tscn").instantiate()
+			#var new_glue = load("res://pottery/ItemGlueEdge.tscn").instantiate()
 			#new_glue.setup(glue_poly)
 			#$Glue.add_child(new_glue)
 			#glue_hashes[glue_poly.hash()] = new_glue

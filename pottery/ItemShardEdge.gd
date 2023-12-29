@@ -19,13 +19,13 @@ func get_save_data():
 	return [position, rotation, lines]
 
 static func load_save_data(save_data) -> ItemShardEdge:
-	var curve = preload("res://ItemShardEdgeLineCurve.tres")
-	var new_item = load("res://ItemShardEdge.tscn").instantiate()
+	var curve = preload("res://pottery/ItemShardEdgeLineCurve.tres")
+	var new_item = load("res://pottery/ItemShardEdge.tscn").instantiate()
 	new_item.loading = true
 	new_item.position = save_data[0]
 	new_item.rotation = save_data[1]
 	for line_data in save_data[2]:
-		var line = load("res://ItemScarLine.tscn").instantiate()
+		var line = load("res://pottery/ItemScarLine.tscn").instantiate()
 		line.width_curve = curve
 		line.points = line_data[0]
 		line.width = 16
@@ -42,7 +42,7 @@ static func load_save_data(save_data) -> ItemShardEdge:
 func clone():
 	var new_scene = load(scene_file_path).instantiate()
 	for child in get_children():
-		var new_line = load("res://ItemShardEdgeLine.tscn").instantiate()
+		var new_line = load("res://pottery/ItemShardEdgeLine.tscn").instantiate()
 		new_line.points = PackedVector2Array(child.points)
 		new_scene.add_child(new_line)
 	return new_scene
@@ -61,7 +61,7 @@ func refresh_edge_path(polygon:PackedVector2Array):
 			new_lines.pop_front()
 			for extra_line in new_lines: 
 				if extra_line.size() < 2: continue
-				var new_line = load("res://ItemShardEdgeLine.tscn").instantiate()
+				var new_line = load("res://pottery/ItemShardEdgeLine.tscn").instantiate()
 				new_line.points = PackedVector2Array(extra_line)
 				add_child(new_line)
 		else:
@@ -74,7 +74,7 @@ func get_intersecting_edge_lines(global_circle_center:Vector2, circle_radius:flo
 		var pt1 = child.to_global(child.points[0])
 		for i in range(1, child.points.size()):
 			var pt2 = child.to_global(child.points[i])
-			if Geometry2D.segment_intersects_circle(pt1, pt2, global_circle_center, circle_radius) != -1:
+			if Geometry2D.segment_intersects_circle(pt1, pt2, global_circle_center, circle_radius) != -1 || pt1.distance_to(global_circle_center) < circle_radius || pt2.distance_to(global_circle_center) < circle_radius:
 				intersections.append(child)
 				break
 			pt1 = pt2

@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://csal0lcemnv87"]
+
+[ext_resource type="Texture2D" uid="uid://dn1rg4484mtx2" path="res://art/item/pot_gray.png" id="1_faho3"]
+[ext_resource type="Texture2D" uid="uid://tdw6t04erduj" path="res://art/item/shield_knot1.png" id="2_jixcg"]
+[ext_resource type="Texture2D" uid="uid://cvcfalytffp74" path="res://art/item/knot_band1.png" id="3_hk18c"]
+[ext_resource type="Script" path="res://test/ConstructiveTexture.gd" id="4_a156m"]
+
+[node name="BlendImages" type="Node2D"]
+
+[node name="PotGray" type="Sprite2D" parent="."]
+position = Vector2(903, 305.5)
+texture = ExtResource("1_faho3")
+
+[node name="ShieldKnot1" type="Sprite2D" parent="."]
+position = Vector2(901, 403.5)
+texture = ExtResource("2_jixcg")
+
+[node name="KnotBand1" type="Sprite2D" parent="."]
+position = Vector2(896, 230.5)
+texture = ExtResource("3_hk18c")
+
+[node name="ConstructiveTexture" type="Polygon2D" parent="."]
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(0, 0, 500, 0, 500, 500, 0, 500)
+script = ExtResource("4_a156m")

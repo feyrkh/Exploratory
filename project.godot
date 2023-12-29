@@ -11,14 +11,21 @@ config_version=5
 [application]
 
 config/name="Exploratory"
-run/main_scene="res://CleaningTable.tscn"
+run/main_scene="res://pottery/CleaningTable.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
+run/max_fps=30
 config/icon="res://icon.svg"
 
 [autoload]
 
 Global="*res://Global.gd"
 ItemBuilder="*res://util/ItemBuilder.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
 
 [input]
 
@@ -101,3 +108,7 @@ change_click_mode={
 [rendering]
 
 renderer/rendering_method="mobile"
+anti_aliasing/quality/msaa_2d=2
+anti_aliasing/quality/screen_space_aa=1
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true

@@ -9,7 +9,7 @@ var collision_temp_disabled = false
 func _ready():
 	Global.click_mode_changed.connect(update_button_text)
 	update_button_text()
-	var new_item = ItemBuilder.build_random_item()
+	var new_item = await ItemBuilder.build_random_item()
 	new_item.name = "Pot3"
 	$Pieces.add_child(new_item)
 	new_item.position = Vector2(350,150)
@@ -149,7 +149,7 @@ func _on_add_fracture_button_pressed():
 
 func _on_shatter_button_pressed():
 	for child in find_child("Pieces").get_children():
-		child.shattering_in_progress = true
+		child.shattering_in_progress = [Global.shatter_width, false]
 
 
 func _on_shuffle_button_pressed():
@@ -193,7 +193,7 @@ func _on_shuffle_button_pressed():
 		piece.freeze = false #should get reset to whatever it should be after the position is changed
 
 func _on_add_new_button_pressed():
-	var new_item = ItemBuilder.build_random_item()
+	var new_item = await ItemBuilder.build_random_item()
 	$Pieces.add_child(new_item)
 	new_item.position = Vector2(350,150)
 
@@ -226,7 +226,7 @@ func _on_load_button_pressed():
 	var rebuilt_textures = {}
 	for k in image_save_data.keys():
 		image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
-		rebuilt_textures[k] = ItemBuilder.build_specific_item(image_save_data[k])
+		rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
 	var item_save_data = save_file.get_var()
 	for item_save in item_save_data:
 		var new_item = ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)

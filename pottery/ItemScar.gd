@@ -3,15 +3,15 @@ class_name ItemScar
 
 var line:Line2D
 
-func get_save_data() -> PackedVector2Array:
+func get_save_data() -> Array:
 	return [position, rotation, line.points]
 
 static func load_save_data(save_data) -> ItemScar:
-	var new_item = load("res://ItemScar.tscn").instantiate()
+	var new_item = load("res://pottery/ItemScar.tscn").instantiate()
 	if new_item.line != null and is_instance_valid(new_item.line):
 		new_item.line.queue_free()
-	new_item.line = load("res://ItemScarLine.tscn").instantiate()
-	var curve = preload("res://ItemScarLineCurve.tres")
+	new_item.line = load("res://pottery/ItemScarLine.tscn").instantiate()
+	var curve = preload("res://pottery/ItemScarLineCurve.tres")
 	new_item.line.width_curve = curve
 	new_item.position = save_data[0]
 	new_item.rotation = save_data[1]
@@ -21,7 +21,7 @@ static func load_save_data(save_data) -> ItemScar:
 
 func clone() -> ItemScar:
 	var new_scene = load(scene_file_path).instantiate()
-	var new_line = preload("res://ItemScarLine.tscn").instantiate()
+	var new_line = preload("res://pottery/ItemScarLine.tscn").instantiate()
 	new_line.points = Array(line.points)
 	new_scene.add_child(new_line)
 	new_scene.line = new_line
@@ -31,7 +31,7 @@ func clone() -> ItemScar:
 func generate_scar(polygon:PackedVector2Array, start_pos:Vector2, len:float, initial_angle_radians:float, max_deviation_radians:float=PI/6, min_segment_len_percent:float=0.2, max_segment_len_percent:float=0.3):
 	var generated_points:Array[Vector2] = [start_pos]
 	var consumed_pct:float = 0
-	line = preload("res://ItemScarLine.tscn").instantiate()
+	line = preload("res://pottery/ItemScarLine.tscn").instantiate()
 	add_child(line)
 	while consumed_pct < 1:
 		var new_consumed = min(randf_range(min_segment_len_percent, max_segment_len_percent), 1-consumed_pct)

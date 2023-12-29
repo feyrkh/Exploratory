@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://lxehddere6da"]
 
-[ext_resource type="Script" path="res://ArcheologyItem.gd" id="1_yx51a"]
-[ext_resource type="PackedScene" uid="uid://d4jiiof7lwkft" path="res://PaintPoly.tscn" id="2_2ppsp"]
+[ext_resource type="Script" path="res://pottery/ArcheologyItem.gd" id="1_yx51a"]
+[ext_resource type="PackedScene" uid="uid://d4jiiof7lwkft" path="res://pottery/PaintPoly.tscn" id="2_2ppsp"]
 [ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_bwwpx"]
-[ext_resource type="Script" path="res://ItemPolygon2D.gd" id="3_h7ita"]
+[ext_resource type="Script" path="res://pottery/ItemPolygon2D.gd" id="3_h7ita"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]
 rough = true

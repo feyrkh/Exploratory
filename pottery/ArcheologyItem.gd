@@ -198,11 +198,11 @@ func _process(_delta):
 func apply_global_settings():
 	if !is_display:
 		lock_rotation = Global.lock_rotation
-		freeze = Global.freeze_pieces
+		set_deferred("freeze", Global.freeze_pieces)
 		global_collide(Global.collide)
 	else:
 		lock_rotation = true
-		freeze = true
+		set_deferred("freeze", true)
 		global_collide(false)
 
 func global_lock_rotation(val:bool):
@@ -214,7 +214,7 @@ func global_lock_rotation(val:bool):
 func global_freeze_pieces(val:bool):
 	# Called by Global.freeze_pieces. Only applied if we're not already interacting with the current item.
 	if drag_start_item == null and rotate_start_item == null:
-		freeze = val
+		set_deferred("freeze", val)
 		
 func global_collide(val:bool):
 	# Called by Global.collide when piece collisions should be disabled
@@ -237,7 +237,7 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.global_rotation = global_rotation
 	new_scene.collision.polygon = new_polygon
 	new_scene.collision_mask = collision_mask
-	new_scene.freeze = freeze
+	new_scene.set_deferred("freeze", freeze)
 	new_scene.lock_rotation = lock_rotation
 	new_scene.scale = scale
 	new_scene.shatter_size = shatter_size
@@ -324,7 +324,7 @@ func handle_move_input(event):
 				drag_start_mouse = get_global_mouse_position()
 				drag_start_item = global_position
 				lock_rotation = true
-				freeze = false
+				set_deferred("freeze", false)
 				var prev_top = get_parent().get_child(-1)
 				get_parent().move_child(self, -1)
 				get_viewport().set_input_as_handled()
@@ -335,7 +335,7 @@ func handle_move_input(event):
 				rotate_start_item = global_rotation
 				rotate_start_item_com_position = to_global(center_of_mass)
 				lock_rotation = false
-				freeze = false
+				set_deferred("freeze", false)
 				print("Mouse at ", get_global_mouse_position(), ", COM at ", to_global(center_of_mass))
 				print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rad_to_deg(rotate_start_mouse))
 		if drag_start_mouse != null and event.is_action_released("drag_start"):
@@ -345,14 +345,14 @@ func handle_move_input(event):
 			if hover_idx == -1:
 				_on_mouse_shape_exited(-1)
 			lock_rotation = Global.lock_rotation
-			freeze = Global.freeze_pieces
+			set_deferred("freeze", Global.freeze_pieces)
 			#print("Ending drag")
 		elif rotate_start_mouse != null and event.is_action_released("rotate_start"):
 			rotate_start_mouse = null
 			rotate_start_item = null
 			target_rot = null
 			lock_rotation = Global.lock_rotation
-			freeze = Global.freeze_pieces
+			set_deferred("freeze", Global.freeze_pieces)
 			print("Stopping rotate")
 	elif drag_start_mouse != null and event is InputEventMouseMotion:
 		target_pos = get_global_mouse_position()

@@ -19,22 +19,35 @@ func _ready():
 	if settings == null:
 		settings = {}
 	
+	var fade_rect:ColorRect = find_child("FadeRect")
+	var fade_label:Label = find_child("FadeLabel")
+	fade_rect.visible = true
+	fade_rect.modulate.a = 1.0
+	
 	PhysicsServer2D.set_active(false)
 	Global.click_mode_changed.connect(update_button_text)
 	update_button_text()
 	var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
-	for i in range(settings.get(ITEM_COUNT_SETTING, 1)):
+	var total_items = settings.get(ITEM_COUNT_SETTING, 1)
+	for i in range(total_items):
+		fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nGenerating..."
+		await get_tree().process_frame
 		var new_item = await ItemBuilder.build_random_item(null, false)
 		$Pieces.add_child(new_item)
 		new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
+		fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
 		await get_tree().process_frame
 		for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
 			new_item.random_scar()
 		await new_item.try_shatter(Global.shatter_width, true)
 	
 	PhysicsServer2D.set_active(true)
+	fade_label.text = "Shuffling..."
+	await get_tree().process_frame
 	_on_shuffle_button_pressed()
-	
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
+	tween.tween_callback(fade_rect.queue_free)
 #	var new_item = await ItemBuilder.build_random_item()
 #	new_item.name = "Pot3"
 #	$Pieces.add_child(new_item)

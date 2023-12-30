@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=7 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
+[ext_resource type="Theme" uid="uid://ds00llpm4138j" path="res://theme/loading_screen.tres" id="3_dm5cm"]
 [ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
@@ -13,8 +14,8 @@ size = Vector2(3272, 9187)
 [node name="CleaningTable" type="Node2D"]
 script = ExtResource("1_avayf")
 camera_top_left_limit = Vector2(-400, -250)
-metadata/_edit_vertical_guides_ = [4383.0, 352.0, -362.0, 3700.0, 2055.0]
-metadata/_edit_horizontal_guides_ = [-294.0, 3199.0, 1523.0]
+metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0]
+metadata/_edit_horizontal_guides_ = [3199.0, 1523.0]
 
 [node name="TextureRect" type="TextureRect" parent="."]
 z_index = -4096
@@ -119,6 +120,24 @@ text = "camera=wasd, leftclick+drag=move piece, rightclick+drag=rotate piece, mo
 tab=toggle mouse mode
 move/rotate/collide buttons toggle whether pieces are locked in place when bumped for movement & rotation, or whether collisions 
 happen at all"
+
+[node name="FadeRect" type="ColorRect" parent="CanvasLayer"]
+offset_left = -1093.0
+offset_top = -390.0
+offset_right = 5176.0
+offset_bottom = 3396.0
+color = Color(0, 0, 0, 1)
+
+[node name="FadeLabel" type="Label" parent="CanvasLayer/FadeRect"]
+layout_mode = 0
+offset_left = 1094.0
+offset_top = 591.0
+offset_right = 2374.0
+offset_bottom = 842.0
+theme = ExtResource("3_dm5cm")
+text = "Loading...."
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0

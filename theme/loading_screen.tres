@@ -1,0 +1,9 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://ds00llpm4138j"]
+
+[ext_resource type="FontFile" uid="uid://31qwtk37jy7j" path="res://theme/Crackvetica.ttf" id="1_a8f6n"]
+[ext_resource type="StyleBox" uid="uid://cvj8odrh2o2ir" path="res://theme/style_box_invisible.tres" id="2_kr3j0"]
+
+[resource]
+Label/font_sizes/font_size = 60
+Label/fonts/font = ExtResource("1_a8f6n")
+Label/styles/normal = ExtResource("2_kr3j0")

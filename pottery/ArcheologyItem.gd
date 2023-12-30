@@ -669,7 +669,6 @@ func add_unconditional_underlay(break_path):
 		#print("Zero width path found")
 		var new_pt = break_path[0] - (break_path[0] - break_path[1])/2
 		break_path.insert(1, new_pt)
-	
 	if !Geometry2D.is_point_in_polygon(break_path[0], original_boundary_polygon):
 		break_path[0] = break_path[0] + (break_path[1] - break_path[0]).normalized() * 2
 	if !Geometry2D.is_point_in_polygon(break_path[-1], original_boundary_polygon):

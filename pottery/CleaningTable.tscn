@@ -1,13 +1,28 @@
-[gd_scene load_steps=4 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=6 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
+[ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
 radius = 15.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wqvk2"]
+size = Vector2(3272, 9187)
+
 [node name="CleaningTable" type="Node2D"]
 script = ExtResource("1_avayf")
+camera_top_left_limit = Vector2(-400, -250)
+metadata/_edit_vertical_guides_ = [4383.0, 352.0, -362.0, 3700.0]
+metadata/_edit_horizontal_guides_ = [-294.0, 3199.0]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -4096
+offset_left = -353.0
+offset_top = -109.0
+offset_right = 4380.0
+offset_bottom = 3198.0
+texture = ExtResource("3_g5nv7")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(578, 328)
@@ -112,6 +127,26 @@ script = ExtResource("2_018s2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CursorArea"]
 shape = SubResource("CircleShape2D_tahv2")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-2007, 1513)
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(6021, 1425)
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(2040, -1737)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1913, 4837)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_wqvk2")
 
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ClickModeButton" to="." method="_on_click_mode_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddNewButton" to="." method="_on_add_new_button_pressed"]

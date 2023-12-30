@@ -5,22 +5,21 @@ var should_load_slowly = true
 
 func _ready():
 	var noise:FastNoiseLite = null
-	if randf() < 0.3:
-		noise = FastNoiseLite.new()
-		noise.noise_type = FastNoiseLite.TYPE_PERLIN
-		noise.frequency = 0.1
-		noise.fractal_lacunarity = 2
-		noise.fractal_gain = 0.5
-		noise.fractal_octaves = 8
-		noise.fractal_type = FastNoiseLite.FRACTAL_FBM
-		noise.seed = randf()
+	noise = FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	noise.frequency = 0.1
+	noise.fractal_lacunarity = 2
+	noise.fractal_gain = 0.5
+	noise.fractal_octaves = 8
+	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	noise.seed = randf()
 	var tree_to_use
 	var num_items = randi_range(2, 5)
 	num_items=5
 	var start_slot = randi_range(0, 4)
 	var prime = primes.pick_random()
 	for i in range(num_items):
-		var item := await ItemBuilder.build_random_item(null, should_load_slowly, noise, randf_range(0.1, 1.0))
+		var item := await ItemBuilder.build_random_item(null, should_load_slowly, noise if randf() < 0.3 else null, randf_range(0.1, 1.0))
 		item.is_display = true
 		item.scale = (Vector2(0.5, 0.5))
 		var slot = find_child("Slot"+str(start_slot))

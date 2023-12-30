@@ -1,8 +1,10 @@
 extends Node2D
-const CAMERA_MOVE_SPEED := 10
+const CAMERA_MOVE_SPEED := 25
 const ZOOM_INCREMENT := Vector2(0.1, 0.1)
 @onready var camera:Camera2D = find_child("Camera2D")
 @onready var cursor_area:CursorArea = find_child("CursorArea")
+@export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
+@export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
 var collision_temp_disabled = false
 
 # Called when the node enters the scene tree for the first time.
@@ -54,7 +56,41 @@ func _ready():
 func _process(_delta):
 	var movement = Input.get_vector("left", "right", "up", "down")
 	if movement != Vector2.ZERO:
+		var view_rect = camera.get_viewport_rect()
+		view_rect.position += camera.get_screen_center_position()
+		view_rect.size /= camera.zoom.x
+		var camera_top_left = view_rect.position - view_rect.size / 2
+		var camera_bot_right = view_rect.position + view_rect.size / 2
+		if movement.x < 0 and camera_top_left.x < camera_top_left_limit.x:
+			movement.x = 0
+		if movement.x > 0 and camera_bot_right.x > camera_bot_right_limit.x:
+			movement.x = 0
+		if movement.y < 0 and camera_top_left.y < camera_top_left_limit.y:
+			movement.y = 0
+		if movement.y > 0 and camera_bot_right.y > camera_bot_right_limit.y:
+			movement.y = 0
+		
 		camera.position += movement * CAMERA_MOVE_SPEED / camera.zoom.x
+		adjust_camera_limits()
+
+func adjust_camera_limits():
+		var view_rect = camera.get_viewport_rect()
+		view_rect.position += camera.get_target_position()
+		view_rect.size /= camera.zoom.x
+		var camera_top_left = view_rect.position - view_rect.size / 2
+		var camera_bot_right = view_rect.position + view_rect.size / 2
+		if camera_top_left.x <= camera_top_left_limit.x and camera_bot_right.x >= camera_bot_right_limit.x:
+			camera.position.x = (camera_top_left_limit.x + camera_bot_right_limit.x) / 2
+		elif camera_top_left.x < camera_top_left_limit.x:
+			camera.position.x = camera_top_left_limit.x + view_rect.size.x / 2
+		elif camera_bot_right.x > camera_bot_right_limit.x:
+			camera.position.x = camera_bot_right_limit.x - view_rect.size.x / 2
+		if camera_top_left.y <= camera_top_left_limit.y and camera_bot_right.y >= camera_bot_right_limit.y:
+			camera.position.y = (camera_top_left_limit.y + camera_bot_right_limit.y) / 2
+		elif camera_top_left.y < camera_top_left_limit.y:
+			camera.position.y = camera_top_left_limit.y + view_rect.size.y / 2
+		elif camera_bot_right.y > camera_bot_right_limit.y:
+			camera.position.y = camera_bot_right_limit.y - view_rect.size.y / 2
 
 func _unhandled_input(event):
 	if event.is_action_pressed("change_click_mode"):
@@ -85,18 +121,25 @@ func handle_glue_input(event):
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 
 func handle_camera_input(event):
-	if event.is_action("zoom_in"):
-		camera.zoom += ZOOM_INCREMENT
-		if camera.zoom.x > 4.0:
-			camera.zoom = Vector2(4, 4)
-		Global.camera_zoom_changed.emit(camera.zoom.x)
-		get_viewport().set_input_as_handled()
-	elif event.is_action("zoom_out"):
-		camera.zoom -= ZOOM_INCREMENT
-		if camera.zoom.x < 0.2:
-			camera.zoom = Vector2(0.2, 0.2)
-		Global.camera_zoom_changed.emit(camera.zoom.x)
-		get_viewport().set_input_as_handled()
+	if event is InputEventMouseButton:
+		if event.is_action_pressed("zoom_in"):
+			if camera.zoom.x >= 2:
+				camera.zoom += ZOOM_INCREMENT * 2
+			camera.zoom += ZOOM_INCREMENT
+			if camera.zoom.x > 4.0:
+				camera.zoom = Vector2(4, 4)
+			Global.camera_zoom_changed.emit(camera.zoom.x)
+			adjust_camera_limits()
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("zoom_out"):
+			if camera.zoom.x > 2:
+				camera.zoom -= ZOOM_INCREMENT * 2
+			camera.zoom -= ZOOM_INCREMENT
+			if camera.zoom.x < 0.3:
+				camera.zoom = Vector2(0.3, 0.3)
+			Global.camera_zoom_changed.emit(camera.zoom.x)
+			adjust_camera_limits()
+			get_viewport().set_input_as_handled()
 
 func handle_move_input(event):
 	if Global.collide == true and event.is_action_pressed("disable_collision"):
@@ -155,9 +198,9 @@ func _on_shatter_button_pressed():
 func _on_shuffle_button_pressed():
 	var pieces = find_child("Pieces").get_children()
 	pieces.shuffle()
-	var cur_min_x = 150
-	var cur_min_y = 100
-	var max_x = get_viewport_rect().size.x
+	var cur_min_x = 350
+	var cur_min_y = 300
+	var max_x = 3700
 	var cur_row_height = 0
 	for piece:ArcheologyItem in pieces:
 		var orig_rotation = piece.global_rotation

@@ -1,6 +1,202 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf3wlna5ki846"]
+[gd_scene load_steps=3 format=3 uid="uid://cf3wlna5ki846"]
 
 [ext_resource type="Script" path="res://menu/TitleScreen.gd" id="1_mpvbx"]
+[ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_7feem"]
 
 [node name="TitleScreen" type="Node2D"]
 script = ExtResource("1_mpvbx")
+
+[node name="OptionsContainer" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 512.0
+offset_top = 684.0
+offset_right = 800.0
+offset_bottom = 684.0
+
+[node name="OptionsGrid" type="GridContainer" parent="OptionsContainer"]
+offset_left = -182.0
+offset_top = -619.0
+offset_right = 453.0
+offset_bottom = -25.0
+columns = 4
+metadata/_edit_lock_ = true
+
+[node name="ItemCountLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+theme = ExtResource("2_7feem")
+text = "Items"
+metadata/_edit_lock_ = true
+
+[node name="ItemCountDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "<"
+
+[node name="ItemCountAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_7feem")
+text = "1"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="ItemCountIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = ">"
+
+[node name="RotationLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+theme = ExtResource("2_7feem")
+text = "Rotation"
+metadata/_edit_lock_ = true
+
+[node name="RotationDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "<"
+
+[node name="RotationAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_7feem")
+text = "yes"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="RotationIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = ">"
+
+[node name="CrackWidthLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+theme = ExtResource("2_7feem")
+text = "Crack Width "
+metadata/_edit_lock_ = true
+
+[node name="CrackWidthDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "<"
+
+[node name="CrackWidthAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_7feem")
+text = "Thin"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="CrackWidthIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = ">"
+
+[node name="CrackAmtLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+theme = ExtResource("2_7feem")
+text = "Crack Count "
+metadata/_edit_lock_ = true
+
+[node name="CrackAmtDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "<"
+
+[node name="CrackAmtAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_7feem")
+text = "6"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="CrackAmtIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = ">"
+
+[node name="StartButton" type="Button" parent="OptionsContainer"]
+layout_mode = 2
+offset_left = -104.0
+offset_top = -249.0
+offset_right = 36.0
+offset_bottom = -210.0
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Start"
+alignment = 0
+
+[node name="BackButton" type="Button" parent="OptionsContainer"]
+layout_mode = 2
+offset_left = 202.0
+offset_top = -247.0
+offset_right = 344.0
+offset_bottom = -208.0
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Back"
+alignment = 0
+
+[node name="MainMenu" type="VBoxContainer" parent="."]
+offset_left = 514.0
+offset_top = 538.0
+offset_right = 802.0
+offset_bottom = 726.0
+
+[node name="ZenButton" type="Button" parent="MainMenu"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Zen Mode"
+metadata/_edit_lock_ = true
+
+[node name="TimeButton" type="Button" parent="MainMenu"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Time Attack"
+metadata/_edit_lock_ = true
+
+[node name="OptionsButton" type="Button" parent="MainMenu"]
+visible = false
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Options"
+metadata/_edit_lock_ = true
+
+[node name="ExitButton" type="Button" parent="MainMenu"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Exit"
+metadata/_edit_lock_ = true
+
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_decrease_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountIncrease" to="." method="_on_item_count_increase_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/RotationDecrease" to="." method="_on_rotation_decrease_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/RotationIncrease" to="." method="_on_rotation_decrease_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthDecrease" to="." method="_on_crack_width_decrease_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthIncrease" to="." method="_on_crack_width_increase_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtDecrease" to="." method="_on_crack_amt_decrease_pressed"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_increase_pressed"]
+[connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="OptionsContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MainMenu/ZenButton" to="." method="_on_zen_button_pressed"]
+[connection signal="pressed" from="MainMenu/TimeButton" to="." method="_on_time_button_pressed"]
+[connection signal="pressed" from="MainMenu/ExitButton" to="." method="_on_exit_button_pressed"]

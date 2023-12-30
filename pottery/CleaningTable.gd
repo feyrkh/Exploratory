@@ -1,7 +1,7 @@
 extends Node2D
 class_name CleaningTable
 
-const CAMERA_MOVE_SPEED := 25
+const CAMERA_MOVE_SPEED := 55
 const ZOOM_INCREMENT := Vector2(0.1, 0.1)
 
 const CRACK_COUNT_SETTING := "crack_count"
@@ -12,6 +12,8 @@ const ITEM_COUNT_SETTING := "item_count"
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
 var collision_temp_disabled = false
+var camera_drag_mouse_start = null
+var camera_drag_camera_start = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -90,25 +92,48 @@ func _ready():
 	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
 
+func set_camera_position(new_pos:Vector2):
+	var view_rect = camera.get_viewport_rect()
+	view_rect.position += new_pos
+	view_rect.size /= camera.zoom.x
+	var camera_top_left = view_rect.position - view_rect.size / 2
+	var camera_bot_right = view_rect.position + view_rect.size / 2
+	if camera_top_left.x <= camera_top_left_limit.x and camera_bot_right.x >= camera_bot_right_limit.x:
+		new_pos.x = (camera_top_left_limit.x + camera_bot_right_limit.x) / 2
+	elif camera_top_left.x < camera_top_left_limit.x:
+		new_pos.x = camera_top_left_limit.x + view_rect.size.x / 2
+	elif camera_bot_right.x > camera_bot_right_limit.x:
+		new_pos.x = camera_bot_right_limit.x - view_rect.size.x / 2
+	if camera_top_left.y <= camera_top_left_limit.y and camera_bot_right.y >= camera_bot_right_limit.y:
+		new_pos.y = (camera_top_left_limit.y + camera_bot_right_limit.y) / 2
+	elif camera_top_left.y < camera_top_left_limit.y:
+		new_pos.y = camera_top_left_limit.y + view_rect.size.y / 2
+	elif camera_bot_right.y > camera_bot_right_limit.y:
+		new_pos.y = camera_bot_right_limit.y - view_rect.size.y / 2
+	camera.position = new_pos
+
 func _process(_delta):
-	var movement = Input.get_vector("left", "right", "up", "down")
-	if movement != Vector2.ZERO:
-		var view_rect = camera.get_viewport_rect()
-		view_rect.position += camera.get_screen_center_position()
-		view_rect.size /= camera.zoom.x
-		var camera_top_left = view_rect.position - view_rect.size / 2
-		var camera_bot_right = view_rect.position + view_rect.size / 2
-		if movement.x < 0 and camera_top_left.x < camera_top_left_limit.x:
-			movement.x = 0
-		if movement.x > 0 and camera_bot_right.x > camera_bot_right_limit.x:
-			movement.x = 0
-		if movement.y < 0 and camera_top_left.y < camera_top_left_limit.y:
-			movement.y = 0
-		if movement.y > 0 and camera_bot_right.y > camera_bot_right_limit.y:
-			movement.y = 0
-		
-		camera.position += movement * CAMERA_MOVE_SPEED / camera.zoom.x
-		adjust_camera_limits()
+	if camera_drag_mouse_start != null:
+		var offset = get_viewport().get_mouse_position() - camera_drag_mouse_start
+		offset = offset/camera.zoom.x
+		set_camera_position(camera_drag_camera_start - offset)
+	else:
+		var movement = Input.get_vector("left", "right", "up", "down")
+		if movement != Vector2.ZERO:
+			var view_rect = camera.get_viewport_rect()
+			view_rect.position += camera.get_screen_center_position()
+			view_rect.size /= camera.zoom.x
+			var camera_top_left = view_rect.position - view_rect.size / 2
+			var camera_bot_right = view_rect.position + view_rect.size / 2
+			if movement.x < 0 and camera_top_left.x < camera_top_left_limit.x:
+				movement.x = 0
+			if movement.x > 0 and camera_bot_right.x > camera_bot_right_limit.x:
+				movement.x = 0
+			if movement.y < 0 and camera_top_left.y < camera_top_left_limit.y:
+				movement.y = 0
+			if movement.y > 0 and camera_bot_right.y > camera_bot_right_limit.y:
+				movement.y = 0
+			set_camera_position(camera.position + movement * CAMERA_MOVE_SPEED / camera.zoom.x)
 
 func adjust_camera_limits():
 		var view_rect = camera.get_viewport_rect()
@@ -177,6 +202,12 @@ func handle_camera_input(event):
 			Global.camera_zoom_changed.emit(camera.zoom.x)
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("camera_drag"):
+			camera_drag_mouse_start = get_viewport().get_mouse_position()
+			camera_drag_camera_start = camera.position
+		elif event.is_action_released("camera_drag"):
+			camera_drag_mouse_start = null
+			camera_drag_camera_start = null
 
 func handle_move_input(event):
 	if Global.collide == true and event.is_action_pressed("disable_collision"):
@@ -191,8 +222,6 @@ func handle_move_input(event):
 func _on_freeze_button_pressed():
 	Global.freeze_pieces = !Global.freeze_pieces
 	update_button_text()
-
-
 
 func _on_lock_rotate_button_pressed():
 	Global.lock_rotation = !Global.lock_rotation

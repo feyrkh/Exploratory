@@ -1,6 +1,9 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
+const TOO_SMALL_POLYGON_AREA := 35
+const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
+
 enum Fields {IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE}
 
 # if -1, the mouse is not hovering over this piece
@@ -27,8 +30,6 @@ var is_display:bool = false:
 			set_process(false)
 			set_process_input(false)
 
-const TOO_SMALL_POLYGON_AREA := 35
-const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
 var original_boundary_polygon
 
 # Length of all the edges in pixels, used for picking random spots on the edge

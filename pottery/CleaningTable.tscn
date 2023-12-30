@@ -122,6 +122,7 @@ move/rotate/collide buttons toggle whether pieces are locked in place when bumpe
 happen at all"
 
 [node name="FadeRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
 offset_left = -1093.0
 offset_top = -390.0
 offset_right = 5176.0

@@ -1,6 +1,12 @@
 extends Node2D
+class_name CleaningTable
+
 const CAMERA_MOVE_SPEED := 25
 const ZOOM_INCREMENT := Vector2(0.1, 0.1)
+
+const CRACK_COUNT_SETTING := "crack_count"
+const ITEM_COUNT_SETTING := "item_count"
+
 @onready var camera:Camera2D = find_child("Camera2D")
 @onready var cursor_area:CursorArea = find_child("CursorArea")
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
@@ -9,12 +15,30 @@ var collision_temp_disabled = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	var settings = Global.next_scene_settings
+	if settings == null:
+		settings = {}
+	
+	PhysicsServer2D.set_active(false)
 	Global.click_mode_changed.connect(update_button_text)
 	update_button_text()
-	var new_item = await ItemBuilder.build_random_item()
-	new_item.name = "Pot3"
-	$Pieces.add_child(new_item)
-	new_item.position = Vector2(350,150)
+	var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
+	for i in range(settings.get(ITEM_COUNT_SETTING, 1)):
+		var new_item = await ItemBuilder.build_random_item(null, false)
+		$Pieces.add_child(new_item)
+		new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
+		await get_tree().process_frame
+		for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
+			new_item.random_scar()
+		await new_item.try_shatter(Global.shatter_width, true)
+	
+	PhysicsServer2D.set_active(true)
+	_on_shuffle_button_pressed()
+	
+#	var new_item = await ItemBuilder.build_random_item()
+#	new_item.name = "Pot3"
+#	$Pieces.add_child(new_item)
+#	new_item.position = Vector2(350,150)
 	#var pot1:ArcheologyItem = find_child("Pot1")
 	#var poly := pot1.collision.polygon
 	#for i in range(30):
@@ -32,14 +56,14 @@ func _ready():
 	#pot2.collision.polygon = poly
 	#pot2.refresh_polygon()
 	
-	var pot3:ArcheologyItem = new_item
+#	var pot3:ArcheologyItem = new_item
 	#var pot_area = pot3.area
 	#pot1.mass = pot3.mass * pot1.area / pot3.area
 	#pot2.mass = pot3.mass * pot2.area / pot3.area
-	for i in range(4):
+#	for i in range(4):
 		#pot1.random_scar()
 		#pot2.random_scar()
-		pot3.random_scar()
+#		pot3.random_scar()
 	
 	#var square = find_child("Square")
 	#square.specific_scar(Vector2(100, 151), Vector2(160, 150), 0, 0.5, 0.5) # from left
@@ -196,11 +220,13 @@ func _on_shatter_button_pressed():
 
 
 func _on_shuffle_button_pressed():
+	#PhysicsServer2D.set_active(false)
 	var pieces = find_child("Pieces").get_children()
 	pieces.shuffle()
-	var cur_min_x = 350
-	var cur_min_y = 300
-	var max_x = 3700
+	var largest_x_seen = 0
+	var cur_min_x = 0
+	var cur_min_y = 0
+	var max_x = 3500
 	var cur_row_height = 0
 	for piece:ArcheologyItem in pieces:
 		var orig_rotation = piece.global_rotation
@@ -222,8 +248,10 @@ func _on_shuffle_button_pressed():
 				if pt.y > bb_ymax: bb_ymax = pt.y
 		# check if there's room left on this row
 		var space_needed = bb_xmax - bb_xmin + 20
+		if largest_x_seen < cur_min_x:
+			largest_x_seen = cur_min_x
 		if space_needed + cur_min_x > max_x:
-			cur_min_x = 200
+			cur_min_x = space_needed
 			cur_min_y += cur_row_height
 			cur_row_height = 0
 		else:
@@ -234,7 +262,14 @@ func _on_shuffle_button_pressed():
 		piece.reset_rotation = piece.global_rotation
 		piece.global_rotation = orig_rotation
 		piece.freeze = false #should get reset to whatever it should be after the position is changed
-
+	var area_center = camera_top_left_limit + (camera_bot_right_limit - camera_top_left_limit)/2
+	var y_offset = area_center.y - ((cur_min_y + cur_row_height) / 2)
+	var x_offset = area_center.x - (largest_x_seen / 2)
+	for piece:ArcheologyItem in pieces:
+		piece.reset_position.y += y_offset
+		piece.reset_position.x += x_offset
+	#PhysicsServer2D.set_active(true)
+	
 func _on_add_new_button_pressed():
 	var new_item = await ItemBuilder.build_random_item()
 	$Pieces.add_child(new_item)

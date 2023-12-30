@@ -7,9 +7,9 @@ var tables = []
 enum CrackWidth {HAIRLINE, THIN, MEDIUM, THICK}
 const crack_widths = {
 	CrackWidth.HAIRLINE: 0.05,
-	CrackWidth.THIN: 0.5,
-	CrackWidth.MEDIUM: 1.5,
-	CrackWidth.THICK: 3,
+	CrackWidth.THIN: 0.2,
+	CrackWidth.MEDIUM: 0.75,
+	CrackWidth.THICK: 1.5,
 }
 const crack_width_descs = {
 	CrackWidth.HAIRLINE: "hairline",
@@ -19,17 +19,17 @@ const crack_width_descs = {
 }
 
 const zen_min_settings = {
-	"crack_amount": 0
+	"crack_count": 0
 }
 
 const time_attack_min_settings = {
-	"crack_amount": 5
+	"crack_count": 5
 }
 
 var item_count := 1
 var rotation_enabled := true
 var crack_width := CrackWidth.THIN
-var crack_amount := 8
+var crack_count := 8
 
 var config_file := ConfigFile.new()
 var mode := "zen"
@@ -57,13 +57,13 @@ func load_config():
 	item_count = config_file.get_value(mode, "item_count", 1)
 	rotation_enabled = config_file.get_value(mode, "rotation_enabled", true)
 	crack_width = config_file.get_value(mode, "crack_width", CrackWidth.THIN)
-	crack_amount = config_file.get_value(mode, "crack_amount", 8)
+	crack_count = config_file.get_value(mode, "crack_count", 8)
 
 func save_config():
 	config_file.set_value(mode, "item_count", item_count)
 	config_file.set_value(mode, "rotation_enabled", rotation_enabled)
 	config_file.set_value(mode, "crack_width", crack_width)
-	config_file.set_value(mode, "crack_amount", crack_amount)
+	config_file.set_value(mode, "crack_count", crack_count)
 	config_file.save(SETTINGS_PATH)
 
 func _process(delta):
@@ -80,7 +80,7 @@ func update_labels():
 	find_child("ItemCountAmount").text = str(item_count)
 	find_child("RotationAmount").text = "yes" if rotation_enabled else "no"
 	find_child("CrackWidthAmount").text = crack_width_descs.get(crack_width, "???")
-	find_child("CrackAmtAmount").text = str(crack_amount)
+	find_child("CrackAmtAmount").text = str(crack_count)
 
 func _on_item_count_decrease_pressed():
 	var amt = 1
@@ -118,14 +118,14 @@ func _on_crack_amt_decrease_pressed():
 	var amt = 1
 	if Input.is_key_pressed(KEY_SHIFT):
 		amt = 5
-	crack_amount = max(min_allowed, crack_amount-amt)
+	crack_count = max(min_allowed, crack_count-amt)
 	update_labels()
 
 func _on_crack_amt_increase_pressed():
 	var amt = 1
 	if Input.is_key_pressed(KEY_SHIFT):
 		amt = 5
-	crack_amount = min(50, crack_amount+amt)
+	crack_count = min(50, crack_count+amt)
 	update_labels()
 
 func _on_back_button_pressed():
@@ -147,3 +147,24 @@ func load_options_menu():
 	find_child("OptionsContainer").visible = true
 	find_child("MainMenu").visible = false
 	
+func _on_start_button_pressed():
+	save_config()
+	var settings = {}
+	match mode:
+		"zen":
+			settings["mode"] = "zen"
+			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
+			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
+		"time":
+			settings["mode"] = "zen"
+			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
+			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
+	var scene = load("res://pottery/CleaningTable.tscn")
+	Global.shatter_width = crack_widths[crack_width]
+	Global.rotate_with_shuffle = rotation_enabled
+	Global.lock_rotation = !rotation_enabled
+	Global.freeze_pieces = false
+	Global.collide = true
+	Global.click_mode = Global.ClickMode.move
+	Global.next_scene_settings = settings
+	get_tree().change_scene_to_packed(scene)

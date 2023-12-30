@@ -16,6 +16,7 @@ offset_right = 800.0
 offset_bottom = 684.0
 
 [node name="OptionsGrid" type="GridContainer" parent="OptionsContainer"]
+layout_mode = 0
 offset_left = -182.0
 offset_top = -619.0
 offset_right = 453.0
@@ -195,7 +196,7 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthIncrease" to="." method="_on_crack_width_increase_pressed"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtDecrease" to="." method="_on_crack_amt_decrease_pressed"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_increase_pressed"]
-[connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="OptionsContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MainMenu/ZenButton" to="." method="_on_zen_button_pressed"]
 [connection signal="pressed" from="MainMenu/TimeButton" to="." method="_on_time_button_pressed"]

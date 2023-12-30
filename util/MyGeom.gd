@@ -41,3 +41,7 @@ static func inflate_polyline(pts, offset):
 	bottom_line.reverse()
 	result.append_array(bottom_line)
 	return result
+
+static func shorten_path(path_part, shorten_amt:float):
+	path_part[0] =  path_part[0] + (path_part[1] - path_part[0]).normalized() * shorten_amt
+	path_part[-1] = path_part[-1] + (path_part[-2] - path_part[-1]).normalized() * shorten_amt

@@ -3,7 +3,8 @@ extends Node
 signal click_mode_changed()
 signal camera_zoom_changed(cur_zoom:float)
 
-var shatter_width = 0.5
+var next_scene_settings
+var shatter_width:float = 0.5
 var rotate_with_shuffle = true
 
 var lock_rotation = true:

@@ -29,6 +29,7 @@ var is_display:bool = false:
 
 const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
+var original_boundary_polygon
 
 # Length of all the edges in pixels, used for picking random spots on the edge
 var total_edge_length:float = 0
@@ -230,6 +231,7 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.find_child("Polygon2D").texture = visual_polygons[0].texture
 	new_scene.original_area = original_area
 	new_scene.is_display = is_display
+	new_scene.original_boundary_polygon = original_boundary_polygon
 	get_parent().add_child(new_scene)
 	new_scene.global_position = global_position
 	new_scene.global_rotation = global_rotation
@@ -251,7 +253,6 @@ func clone(new_polygon:Array, should_clone_slow=false):
 		new_scene.shard_edges.add_child(new_edge)
 	new_scene.shattering_in_progress = shattering_in_progress
 	new_scene.find_child("Polygon2D").save_data = polygon.save_data
-	
 	return new_scene
 
 func refresh_polygon() -> int:
@@ -443,6 +444,8 @@ func add_scar(scar:ItemScar):
 
 func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow:bool=true):
 	shattering_in_progress = false
+	if original_boundary_polygon == null:
+		original_boundary_polygon = Geometry2D.offset_polygon(collision.polygon, -0.1)[0]
 	shatter_size = shatter_width
 	var scar_lines:Array = scars.get_children().map(
 		func(scar): 
@@ -457,7 +460,6 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 	
 #	while new_polygons_created:
 #		new_polygons_created = false
-	var useful_scars
 	for scar_poly in scar_polys:
 		if should_shatter_slow and randf() < 0.1:
 			await get_tree().process_frame
@@ -470,7 +472,6 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 				new_collision_polygons.append(clipped_polygons[0])
 		collision_polygon_list = new_collision_polygons
 		new_collision_polygons = []
-
 
 	for i in range(0, collision_polygon_list.size()):
 		if should_shatter_slow:
@@ -668,6 +669,11 @@ func add_unconditional_underlay(break_path):
 		#print("Zero width path found")
 		var new_pt = break_path[0] - (break_path[0] - break_path[1])/2
 		break_path.insert(1, new_pt)
+	
+	if !Geometry2D.is_point_in_polygon(break_path[0], original_boundary_polygon):
+		break_path[0] = break_path[0] + (break_path[1] - break_path[0]).normalized() * 2
+	if !Geometry2D.is_point_in_polygon(break_path[-1], original_boundary_polygon):
+		break_path[-1] = break_path[-1] + (break_path[-2] - break_path[-1]).normalized() * 2
 	line.points = break_path
 	edge.add_child(line)
 	shard_edges.add_child(edge)

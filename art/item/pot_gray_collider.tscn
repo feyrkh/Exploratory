@@ -17,6 +17,7 @@ metadata/_edit_lock_ = true
 metadata/_edit_horizontal_guides_ = [51.0, 130.0]
 
 [node name="band_1" type="ColorRect" parent="."]
+visible = false
 offset_left = 2.0
 offset_top = 47.0
 offset_right = 350.0
@@ -26,6 +27,7 @@ script = SubResource("GDScript_bsdqt")
 img_id = "edge bands"
 
 [node name="band_1_2" type="ColorRect" parent="."]
+visible = false
 offset_left = 1.0
 offset_top = 285.0
 offset_right = 356.0
@@ -35,6 +37,7 @@ script = SubResource("GDScript_bsdqt")
 img_id = "edge bands"
 
 [node name="band_2_1" type="ColorRect" parent="."]
+visible = false
 offset_left = -1.0
 offset_top = 161.0
 offset_right = 354.0
@@ -44,6 +47,7 @@ script = SubResource("GDScript_bsdqt")
 img_id = "middle band"
 
 [node name="band_2_2" type="ColorRect" parent="."]
+visible = false
 offset_left = -1.0
 offset_top = 161.0
 offset_right = 354.0
@@ -53,6 +57,7 @@ script = SubResource("GDScript_bsdqt")
 img_id = "middle band"
 
 [node name="band_2_3" type="ColorRect" parent="."]
+visible = false
 offset_left = -1.0
 offset_top = 161.0
 offset_right = 354.0
@@ -67,6 +72,7 @@ centered = false
 metadata/_edit_lock_ = true
 
 [node name="icon_1" type="ColorRect" parent="."]
+visible = false
 offset_left = 109.0
 offset_top = 166.0
 offset_right = 238.0
@@ -76,6 +82,7 @@ script = SubResource("GDScript_tnmp8")
 img_id = "big icon"
 
 [node name="icon_2_1" type="ColorRect" parent="."]
+visible = false
 offset_left = 17.0
 offset_top = 173.0
 offset_right = 101.0
@@ -86,6 +93,7 @@ group = "triple icon"
 img_id = "triple icon"
 
 [node name="icon_2_2" type="ColorRect" parent="."]
+visible = false
 offset_left = 247.0
 offset_top = 173.0
 offset_right = 331.0
@@ -96,6 +104,7 @@ group = "triple icon"
 img_id = "triple icon"
 
 [node name="icon_3_1" type="ColorRect" parent="."]
+visible = false
 offset_left = 134.0
 offset_top = 189.0
 offset_right = 218.0
@@ -106,4 +115,4 @@ img_id = "triple icon"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2(-20, -31)
-polygon = PackedVector2Array(84, 74, 75, 67, 73, 57, 72, 44, 86, 38, 170, 31, 217, 31, 301, 42, 306, 49, 314, 54, 315, 75, 307, 81, 308, 99, 315, 120, 351, 185, 362, 211, 369, 238, 371, 259, 367, 293, 355, 326, 332, 362, 306, 389, 279, 408, 267, 414, 267, 425, 257, 429, 219, 432, 168, 432, 137, 427, 135, 418, 121, 414, 122, 407, 83, 377, 63, 358, 45, 332, 27, 297, 21, 272, 20, 237, 29, 199, 50, 157, 74, 115, 81, 93)
+polygon = PackedVector2Array(84, 76, 75, 67, 73, 59, 76, 55, 72, 48, 82, 40, 87, 40, 101, 37, 170, 32, 219, 33, 263, 36, 301, 42, 306, 52, 315, 56, 316, 75, 307, 81, 308, 99, 314, 121, 349, 185, 361, 211, 369, 238, 371, 259, 367, 293, 355, 326, 332, 362, 306, 389, 279, 408, 267, 414, 267, 425, 257, 429, 219, 432, 168, 432, 137, 427, 135, 418, 124, 415, 122, 407, 84, 376, 64, 357, 46, 331, 29, 297, 23, 272, 23, 229, 30, 201, 51, 157, 75, 115, 83, 93)

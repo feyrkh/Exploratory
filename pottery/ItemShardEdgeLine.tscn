@@ -11,5 +11,4 @@ width_curve = ExtResource("1_vnein")
 default_color = Color(0.454902, 0.192157, 0.137255, 1)
 texture = ExtResource("1_a0b8r")
 texture_mode = 1
-joint_mode = 2
 script = ExtResource("2_5g4ha")

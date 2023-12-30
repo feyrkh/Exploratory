@@ -57,10 +57,12 @@ func refresh_edge_path(polygon:PackedVector2Array):
 			return
 		var new_lines = Geometry2D.intersect_polyline_with_polygon(cur_line, polygon)
 		if new_lines.size() > 0:
+			MyGeom.shorten_path(new_lines[0], -2)
 			child.points = new_lines[0]
 			new_lines.pop_front()
 			for extra_line in new_lines: 
 				if extra_line.size() < 2: continue
+				MyGeom.shorten_path(extra_line, -2)
 				var new_line = load("res://pottery/ItemShardEdgeLine.tscn").instantiate()
 				new_line.points = PackedVector2Array(extra_line)
 				add_child(new_line)

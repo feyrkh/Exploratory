@@ -669,10 +669,11 @@ func add_unconditional_underlay(break_path):
 		#print("Zero width path found")
 		var new_pt = break_path[0] - (break_path[0] - break_path[1])/2
 		break_path.insert(1, new_pt)
+	MyGeom.shorten_path(break_path, -shatter_size)
 	if !Geometry2D.is_point_in_polygon(break_path[0], original_boundary_polygon):
-		break_path[0] = break_path[0] + (break_path[1] - break_path[0]).normalized() * 2
+		break_path[0] = break_path[0] + (break_path[1] - break_path[0]).normalized() * (2.5+shatter_size)
 	if !Geometry2D.is_point_in_polygon(break_path[-1], original_boundary_polygon):
-		break_path[-1] = break_path[-1] + (break_path[-2] - break_path[-1]).normalized() * 2
+		break_path[-1] = break_path[-1] + (break_path[-2] - break_path[-1]).normalized() * (2.5+shatter_size)
 	line.points = break_path
 	edge.add_child(line)
 	shard_edges.add_child(edge)

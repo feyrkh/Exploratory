@@ -3,6 +3,7 @@
 [ext_resource type="Curve" uid="uid://dsdudxmixfgk8" path="res://pottery/ItemScarLineCurve.tres" id="1_epxta"]
 
 [node name="ItemScarLine" type="Line2D"]
+visibility_layer = 3
 points = PackedVector2Array(58.4858, 69.9018, 60.8024, 71.7899, 58.764, 73.9566)
 width = 2.0
 width_curve = ExtResource("1_epxta")

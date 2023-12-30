@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://2eslbdqguc5x"]
+
+[ext_resource type="Script" path="res://util/ScreenshotViewport.gd" id="1_e3fr8"]
+
+[node name="ScreenshotViewport" type="SubViewport"]
+transparent_bg = true
+handle_input_locally = false
+canvas_cull_mask = 4293918722
+render_target_update_mode = 4
+script = ExtResource("1_e3fr8")
+
+[node name="ScreenshotCamera" type="Camera2D" parent="."]
+anchor_mode = 0
+ignore_rotation = false

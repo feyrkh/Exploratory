@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://pottery/ItemScar.gd" id="1_38uo7"]
 
 [node name="ItemScar" type="Node2D"]
+visibility_layer = 3
 script = ExtResource("1_38uo7")

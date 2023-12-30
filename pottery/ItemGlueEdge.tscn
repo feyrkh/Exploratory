@@ -3,8 +3,10 @@
 [ext_resource type="Script" path="res://pottery/ItemGlueEdge.gd" id="1_1dnxn"]
 
 [node name="ItemGlueEdge" type="Node2D"]
+visibility_layer = 3
 script = ExtResource("1_1dnxn")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
+visibility_layer = 3
 color = Color(1, 0.94902, 0.345098, 1)
 polygon = PackedVector2Array(294, 277, 299.315, 328.6, 275.281, 275.147, 280.809, 328.539)

@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://pottery/ItemShardEdge.gd" id="2_5g4ha"]
 
 [node name="Line2D" type="Line2D"]
+visibility_layer = 3
 texture_repeat = 1
 width = 16.0
 width_curve = ExtResource("1_vnein")

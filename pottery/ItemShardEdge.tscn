@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://pottery/ItemShardEdge.gd" id="1_76tvu"]
 
 [node name="ItemShardEdge" type="Node2D"]
+visibility_layer = 3
 script = ExtResource("1_76tvu")

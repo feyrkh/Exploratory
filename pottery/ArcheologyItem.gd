@@ -148,6 +148,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, reb
 	result.original_area = me_data[Fields.ORIG_AREA]
 	for data in poly_data:
 		var new_polygon = ItemPolygon2D.new()
+		new_polygon.visibility_layer = 3 # Visible on layers 1 (normal view) and 2 (screenshot view)
 		new_polygon.save_data = image_save_data[data[Fields.IMG_DATA]]
 		new_polygon.texture = rebuilt_textures[data[Fields.IMG_DATA]]
 		new_polygon.position = data[Fields.POSITION]
@@ -792,3 +793,12 @@ func recalculate_structure_completion():
 
 func _on_timer_timeout():
 	recalculate_structure_completion()
+
+
+
+
+
+
+
+
+

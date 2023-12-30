@@ -8,6 +8,7 @@ const CRACK_COUNT_SETTING := "crack_count"
 const ITEM_COUNT_SETTING := "item_count"
 
 @onready var camera:Camera2D = find_child("Camera2D")
+@onready var screenshot_camera:Camera2D = find_child("ScreenshotCamera")
 @onready var cursor_area:CursorArea = find_child("CursorArea")
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
@@ -122,17 +123,6 @@ func _process(_delta):
 		if movement != Vector2.ZERO:
 			var view_rect = camera.get_viewport_rect()
 			view_rect.position += camera.get_screen_center_position()
-			view_rect.size /= camera.zoom.x
-			var camera_top_left = view_rect.position - view_rect.size / 2
-			var camera_bot_right = view_rect.position + view_rect.size / 2
-			if movement.x < 0 and camera_top_left.x < camera_top_left_limit.x:
-				movement.x = 0
-			if movement.x > 0 and camera_bot_right.x > camera_bot_right_limit.x:
-				movement.x = 0
-			if movement.y < 0 and camera_top_left.y < camera_top_left_limit.y:
-				movement.y = 0
-			if movement.y > 0 and camera_bot_right.y > camera_bot_right_limit.y:
-				movement.y = 0
 			set_camera_position(camera.position + movement * CAMERA_MOVE_SPEED / camera.zoom.x)
 
 func adjust_camera_limits():
@@ -182,9 +172,9 @@ func handle_glue_input(event):
 			print("Filling glue in cracks, maybe")
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 
-func handle_camera_input(event):
-	if event is InputEventMouseButton:
-		if event.is_action_pressed("zoom_in"):
+func handle_camera_input(event:InputEvent):
+	#if event is InputEventMouseButton:
+		if event.is_action_pressed("zoom_in", true):
 			if camera.zoom.x >= 2:
 				camera.zoom += ZOOM_INCREMENT * 2
 			camera.zoom += ZOOM_INCREMENT
@@ -193,7 +183,7 @@ func handle_camera_input(event):
 			Global.camera_zoom_changed.emit(camera.zoom.x)
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("zoom_out"):
+		elif event.is_action_pressed("zoom_out", true):
 			if camera.zoom.x > 2:
 				camera.zoom -= ZOOM_INCREMENT * 2
 			camera.zoom -= ZOOM_INCREMENT
@@ -303,7 +293,7 @@ func _on_shuffle_button_pressed():
 		piece.reset_position = Vector2(cur_min_x - space_needed, cur_min_y) - piece.center_of_mass.rotated(piece.global_rotation) + Vector2(bb_xmax-bb_xmin, bb_ymax-bb_ymin)/2
 		piece.reset_rotation = piece.global_rotation
 		piece.global_rotation = orig_rotation
-		piece.freeze = false #should get reset to whatever it should be after the position is changed
+		set_deferred("freeze", false) #should get reset to whatever it should be after the position is changed
 	var area_center = camera_top_left_limit + (camera_bot_right_limit - camera_top_left_limit)/2
 	var y_offset = area_center.y - ((cur_min_y + cur_row_height) / 2)
 	var x_offset = area_center.x - (largest_x_seen / 2)
@@ -352,3 +342,9 @@ func _on_load_button_pressed():
 		var new_item = ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
 		$Pieces.add_child(new_item)
 	save_file.close()
+
+func take_screenshot_of_piece(piece) -> Image:
+	if piece == null or !is_instance_valid(piece): 
+		return
+	return await ScreenshotUtil.take_screenshot(camera, piece.global_position + piece.bounding_box.position - Vector2(10, 10), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
+	

@@ -255,6 +255,7 @@ func clone(new_polygon:Array, should_clone_slow=false):
 		new_scene.shard_edges.add_child(new_edge)
 	new_scene.shattering_in_progress = shattering_in_progress
 	new_scene.find_child("Polygon2D").save_data = polygon.save_data
+	#await get_tree().physics_frame
 	return new_scene
 
 func refresh_polygon() -> int:
@@ -370,7 +371,8 @@ func _integrate_forces(state):
 		state.transform = state.transform.rotated(reset_rotation)
 		state.transform.origin = reset_position
 		reset_position = null
-		safe_freeze(Global.freeze_pieces)
+		#safe_freeze(Global.freeze_pieces)
+		set_deferred("freeze", Global.freeze_pieces)
 	if target_pos != null:
 		var desired_motion = drag_start_item - global_position + target_pos - drag_start_mouse
 		state.linear_velocity = desired_motion * 25
@@ -801,3 +803,4 @@ func safe_freeze(val:bool):
 			set_deferred("freeze", val)
 	elif cur_mode != PhysicsServer2D.BodyMode.BODY_MODE_STATIC: 
 			set_deferred("freeze", val)
+

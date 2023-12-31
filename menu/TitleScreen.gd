@@ -28,6 +28,7 @@ const time_attack_min_settings = {
 
 var item_count := 1
 var rotation_enabled := true
+var bump_enabled := true
 var crack_width := CrackWidth.THIN
 var crack_count := 8
 
@@ -56,12 +57,14 @@ func load_config():
 	var err = config_file.load(SETTINGS_PATH)
 	item_count = config_file.get_value(mode, "item_count", 1)
 	rotation_enabled = config_file.get_value(mode, "rotation_enabled", true)
+	bump_enabled = config_file.get_value(mode, "bump_enabled", true)
 	crack_width = config_file.get_value(mode, "crack_width", CrackWidth.THIN)
 	crack_count = config_file.get_value(mode, "crack_count", 8)
 
 func save_config():
 	config_file.set_value(mode, "item_count", item_count)
 	config_file.set_value(mode, "rotation_enabled", rotation_enabled)
+	config_file.set_value(mode, "bump_enabled", bump_enabled)
 	config_file.set_value(mode, "crack_width", crack_width)
 	config_file.set_value(mode, "crack_count", crack_count)
 	config_file.save(SETTINGS_PATH)
@@ -78,7 +81,8 @@ func _on_exit_button_pressed():
 
 func update_labels():
 	find_child("ItemCountAmount").text = str(item_count)
-	find_child("RotationAmount").text = "yes" if rotation_enabled else "no"
+	find_child("RotationValue").text = "yes" if rotation_enabled else "no"
+	find_child("BumpValue").text = "yes" if bump_enabled else "no"
 	find_child("CrackWidthAmount").text = crack_width_descs.get(crack_width, "???")
 	find_child("CrackAmtAmount").text = str(crack_count)
 
@@ -99,6 +103,7 @@ func _on_item_count_increase_pressed():
 func _on_rotation_decrease_pressed():
 	rotation_enabled = !rotation_enabled
 	update_labels()
+	_on_rotation_label_mouse_entered()
 
 func _on_crack_width_decrease_pressed():
 	crack_width = (crack_width - 1)
@@ -163,8 +168,55 @@ func _on_start_button_pressed():
 	Global.shatter_width = crack_widths[crack_width]
 	Global.rotate_with_shuffle = rotation_enabled
 	Global.lock_rotation = !rotation_enabled
-	Global.freeze_pieces = false
+	Global.freeze_pieces = !bump_enabled
 	Global.collide = true
 	Global.click_mode = Global.ClickMode.move
 	Global.next_scene_settings = settings
 	get_tree().change_scene_to_packed(scene)
+
+
+func _on_bump_decrease_pressed():
+	bump_enabled = !bump_enabled
+	update_labels()
+	_on_bump_label_mouse_entered()
+
+
+func _on_bump_increase_pressed():
+	bump_enabled = !bump_enabled
+	update_labels()
+	_on_bump_label_mouse_entered()
+
+func hover_tooltip(str:String):
+	find_child("HoverDescription").text = str
+
+func _on_item_count_label_mouse_entered():
+	hover_tooltip("Change how many items are generated for you to reassemble.\n\nThe fragments will be mixed together - add more items for a greater challenge!")
+
+func _on_rotation_label_mouse_entered():
+	if !rotation_enabled:
+		hover_tooltip("Fragments will not rotate when they collide with other pieces that you are moving\n\nWhen shuffled, fragments will always be oriented so that they will fit together without rotation\n\nAn easier, more meditative experience")
+	else:
+		hover_tooltip("Fragments may rotate when they collide with other pieces that you are moving\n\nWhen shuffled, fragments will be randomly oriented, and you will need to rotate to fit them together\n\nA more engaging experience")
+
+func _on_bump_label_mouse_entered():
+	if !bump_enabled:
+		hover_tooltip("Fragments will not move when bumped by a piece you are moving\n\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
+	else:
+		hover_tooltip("Fragments will be bumped out of the way by a piece you are moving\n\nTake care when fitting pieces together\n\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
+
+func _on_crack_width_label_mouse_entered():
+	hover_tooltip("Adjust the thickness of the fracture lines\n\nThinner fractures fit together more perfectly, but thicker fractures more room for adjustment\n\nFind beauty in imperfection")
+
+func _on_crack_amt_label_mouse_entered():
+	hover_tooltip("Adjust the number of fracture lines on each item")
+
+
+func _on_start_button_mouse_entered():
+	if mode == "zen":
+		hover_tooltip("Begin a calm and reflective meditation on imperfection\n\nNo time limit, discard fragments freely, and bring new broken items into the mix as you wish\n\nSave completed pieces to your gallery")
+	else:
+		hover_tooltip("Begin a frantic rush to repair what has been broken\n\nThe timer will start when you move the first fragment\n\nSave completed pieces to your gallery, along with your score")
+
+
+func _on_back_button_mouse_entered():
+	hover_tooltip("Return to the main menu")

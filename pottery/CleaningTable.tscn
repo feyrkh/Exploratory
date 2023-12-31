@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=9 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
 [ext_resource type="Theme" uid="uid://ds00llpm4138j" path="res://theme/loading_screen.tres" id="3_dm5cm"]
 [ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
+[ext_resource type="Theme" uid="uid://dwad5m8etc8jg" path="res://theme/toolbox_theme.tres" id="4_smbbr"]
+[ext_resource type="Script" path="res://pottery/ToolboxContainer.gd" id="5_02g13"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
 radius = 15.0
@@ -124,6 +126,7 @@ tab=toggle mouse mode
 
 [node name="FadeRect" type="ColorRect" parent="CanvasLayer"]
 visible = false
+z_index = 4096
 offset_left = -1093.0
 offset_top = -390.0
 offset_right = 5176.0
@@ -140,6 +143,14 @@ theme = ExtResource("3_dm5cm")
 text = "Loading...."
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ToolboxContainer" type="PanelContainer" parent="CanvasLayer"]
+offset_left = 293.0
+offset_top = 678.0
+offset_right = 919.0
+offset_bottom = 964.0
+theme = ExtResource("4_smbbr")
+script = ExtResource("5_02g13")
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0
@@ -170,15 +181,6 @@ position = Vector2(1913, 4837)
 rotation = 1.5708
 shape = SubResource("RectangleShape2D_wqvk2")
 
-[node name="ScreenshotTextureRect" type="TextureRect" parent="."]
-offset_left = 1897.0
-offset_top = 1372.0
-offset_right = 2197.0
-offset_bottom = 1672.0
-
-[node name="ScreenshotTimer" type="Timer" parent="ScreenshotTextureRect"]
-autostart = true
-
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ClickModeButton" to="." method="_on_click_mode_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddNewButton" to="." method="_on_add_new_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/DeleteAllButton" to="." method="_on_delete_all_button_pressed"]
@@ -190,6 +192,7 @@ autostart = true
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="mouse_entered" from="CanvasLayer/ToolboxContainer" to="CanvasLayer/ToolboxContainer" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/ToolboxContainer" to="CanvasLayer/ToolboxContainer" method="_on_mouse_exited"]
 [connection signal="body_entered" from="CursorArea" to="CursorArea" method="_on_body_entered"]
 [connection signal="body_exited" from="CursorArea" to="CursorArea" method="_on_body_exited"]
-[connection signal="timeout" from="ScreenshotTextureRect/ScreenshotTimer" to="." method="_on_screenshot_timer_timeout"]

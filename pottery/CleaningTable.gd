@@ -51,6 +51,9 @@ func _ready():
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
 	tween.tween_callback(fade_rect.queue_free)
+	await tween.finished
+	await get_tree().physics_frame
+	set_piece_freeze()
 #	var new_item = await ItemBuilder.build_random_item()
 #	new_item.name = "Pot3"
 #	$Pieces.add_child(new_item)
@@ -92,6 +95,10 @@ func _ready():
 
 	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
+
+func set_piece_freeze():
+	for child in $Pieces.get_children():
+		child.safe_freeze(Global.freeze_pieces)
 
 func set_camera_position(new_pos:Vector2):
 	var view_rect = camera.get_viewport_rect()
@@ -171,6 +178,8 @@ func handle_glue_input(event):
 		elif pieces.size() == 1:
 			print("Filling glue in cracks, maybe")
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+	elif event.is_action_pressed("rotate_start"):
+		Global.reset_click_mode()
 
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:

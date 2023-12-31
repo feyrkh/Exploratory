@@ -7,7 +7,6 @@
 script = ExtResource("1_mpvbx")
 
 [node name="OptionsContainer" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 512.0
@@ -26,6 +25,7 @@ metadata/_edit_lock_ = true
 
 [node name="ItemCountLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "Items"
 metadata/_edit_lock_ = true
@@ -39,6 +39,7 @@ text = "<"
 [node name="ItemCountAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "1"
 horizontal_alignment = 1
@@ -52,6 +53,7 @@ text = ">"
 
 [node name="RotationLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "Rotation"
 metadata/_edit_lock_ = true
@@ -62,9 +64,10 @@ focus_mode = 0
 theme = ExtResource("2_7feem")
 text = "<"
 
-[node name="RotationAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
+[node name="RotationValue" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "yes"
 horizontal_alignment = 1
@@ -76,8 +79,37 @@ focus_mode = 0
 theme = ExtResource("2_7feem")
 text = ">"
 
+[node name="BumpLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+mouse_filter = 1
+theme = ExtResource("2_7feem")
+text = "Piece Bumping"
+metadata/_edit_lock_ = true
+
+[node name="BumpDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "<"
+
+[node name="BumpValue" type="Label" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+theme = ExtResource("2_7feem")
+text = "yes"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="BumpIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = ">"
+
 [node name="CrackWidthLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "Crack Width "
 metadata/_edit_lock_ = true
@@ -91,6 +123,7 @@ text = "<"
 [node name="CrackWidthAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "Thin"
 horizontal_alignment = 1
@@ -104,6 +137,7 @@ text = ">"
 
 [node name="CrackAmtLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "Crack Count "
 metadata/_edit_lock_ = true
@@ -117,6 +151,7 @@ text = "<"
 [node name="CrackAmtAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 theme = ExtResource("2_7feem")
 text = "6"
 horizontal_alignment = 1
@@ -150,7 +185,18 @@ theme = ExtResource("2_7feem")
 text = "Back"
 alignment = 0
 
+[node name="HoverDescription" type="Label" parent="OptionsContainer"]
+layout_mode = 0
+offset_left = -511.0
+offset_top = -128.0
+offset_right = 2049.0
+offset_bottom = 170.0
+scale = Vector2(0.5, 0.5)
+theme = ExtResource("2_7feem")
+horizontal_alignment = 1
+
 [node name="MainMenu" type="VBoxContainer" parent="."]
+visible = false
 offset_left = 514.0
 offset_top = 538.0
 offset_right = 802.0
@@ -188,15 +234,39 @@ theme = ExtResource("2_7feem")
 text = "Exit"
 metadata/_edit_lock_ = true
 
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountLabel" to="." method="_on_item_count_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_decrease_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountAmount" to="." method="_on_item_count_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountIncrease" to="." method="_on_item_count_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountIncrease" to="." method="_on_item_count_increase_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationLabel" to="." method="_on_rotation_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationDecrease" to="." method="_on_rotation_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/RotationDecrease" to="." method="_on_rotation_decrease_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationValue" to="." method="_on_rotation_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationIncrease" to="." method="_on_rotation_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/RotationIncrease" to="." method="_on_rotation_decrease_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpLabel" to="." method="_on_bump_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpDecrease" to="." method="_on_bump_label_mouse_entered"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/BumpDecrease" to="." method="_on_bump_decrease_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpValue" to="." method="_on_bump_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpIncrease" to="." method="_on_bump_label_mouse_entered"]
+[connection signal="pressed" from="OptionsContainer/OptionsGrid/BumpIncrease" to="." method="_on_bump_increase_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthLabel" to="." method="_on_crack_width_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthDecrease" to="." method="_on_crack_width_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthDecrease" to="." method="_on_crack_width_decrease_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthAmount" to="." method="_on_crack_width_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthIncrease" to="." method="_on_crack_width_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthIncrease" to="." method="_on_crack_width_increase_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtLabel" to="." method="_on_crack_amt_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtDecrease" to="." method="_on_crack_amt_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtDecrease" to="." method="_on_crack_amt_decrease_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtAmount" to="." method="_on_crack_amt_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_increase_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/StartButton" to="." method="_on_start_button_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="mouse_entered" from="OptionsContainer/BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MainMenu/ZenButton" to="." method="_on_zen_button_pressed"]
 [connection signal="pressed" from="MainMenu/TimeButton" to="." method="_on_time_button_pressed"]

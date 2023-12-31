@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://cf3wlna5ki846"]
+[gd_scene load_steps=4 format=3 uid="uid://cf3wlna5ki846"]
 
 [ext_resource type="Script" path="res://menu/TitleScreen.gd" id="1_mpvbx"]
 [ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_7feem"]
+
+[sub_resource type="Environment" id="Environment_huhv1"]
+background_mode = 1
 
 [node name="TitleScreen" type="Node2D"]
 script = ExtResource("1_mpvbx")
@@ -233,6 +236,12 @@ focus_mode = 0
 theme = ExtResource("2_7feem")
 text = "Exit"
 metadata/_edit_lock_ = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_huhv1")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
 
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountLabel" to="." method="_on_item_count_label_mouse_entered"]
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_label_mouse_entered"]

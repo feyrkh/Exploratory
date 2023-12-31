@@ -226,38 +226,29 @@ func _on_lock_rotate_button_pressed():
 	Global.lock_rotation = !Global.lock_rotation
 	update_button_text()
 
-
-func _on_collide_button_pressed():
-	Global.collide = !Global.collide
-	update_button_text()
-
 func update_button_text():
+	pass
 	if Global.freeze_pieces:
-		find_child("FreezeButton").text = "Move: Locked"
+		find_child("FreezeButton").text = "Bump\nOn"
 	else:
-		find_child("FreezeButton").text = "Move: Free"
-	if Global.collide:
-		find_child("CollideButton").text = "Collide: Yes"
-	else:
-		find_child("CollideButton").text = "Collide: No"
+		find_child("FreezeButton").text = "Bump\nOff"
+	#if Global.collide:
+		#find_child("CollideButton").text = "Collide: Yes"
+	#else:
+		#find_child("CollideButton").text = "Collide: No"
 	if Global.lock_rotation:
-		find_child("LockRotateButton").text = "Rotate: Locked"
+		find_child("LockRotateButton").text = "Rotate\nOff"
 	else:
-		find_child("LockRotateButton").text = "Rotate: Free"
-	match Global.click_mode:
-		Global.ClickMode.move: find_child("ClickModeButton").text = "Click: Move"
-		Global.ClickMode.glue: find_child("ClickModeButton").text = "Click: Glue"
-		Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
-		_: find_child("ClickModeButton").text = "Click: Unknown?"
+		find_child("LockRotateButton").text = "Rotate\nOn"
+	#match Global.click_mode:
+		#Global.ClickMode.move: find_child("ClickModeButton").text = "Click: Move"
+		#Global.ClickMode.glue: find_child("ClickModeButton").text = "Click: Glue"
+		#Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
+		#_: find_child("ClickModeButton").text = "Click: Unknown?"
 
-
-func _on_add_fracture_button_pressed():
-	find_child("Pieces").get_children().pick_random().random_scar()
-
-
-func _on_shatter_button_pressed():
-	for child in find_child("Pieces").get_children():
-		child.shattering_in_progress = [Global.shatter_width, false]
+#func _on_shatter_button_pressed():
+	#for child in find_child("Pieces").get_children():
+		#child.shattering_in_progress = [Global.shatter_width, false]
 
 
 func _on_shuffle_button_pressed():
@@ -321,10 +312,7 @@ func _on_delete_all_button_pressed():
 	for child in $Pieces.get_children():
 		child.queue_free()
 
-func _on_click_mode_pressed():
-	Global.rotate_click_mode()
-
-func _on_save_button_pressed():
+func save_workspace():
 	var image_save_data := {} # ImageBuilder.ImageSaveData -> int index
 	var item_save_data = []
 	for item in $Pieces.get_children():
@@ -337,7 +325,7 @@ func _on_save_button_pressed():
 	save_file.store_var((item_save_data))
 	save_file.close()
 
-func _on_load_button_pressed():
+func load_workspace():
 	for child in $Pieces.get_children():
 		child.queue_free()
 	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)

@@ -7,11 +7,6 @@ const ANIMATE_TIME := 0.5
 @onready var normal_distance = extended_position.distance_to(resting_position)
 var cur_tween:Tween
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
 func _on_mouse_entered():
 	if cur_tween and cur_tween.is_running():
 		cur_tween.stop()

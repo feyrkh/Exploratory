@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=14 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
@@ -6,6 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
 [ext_resource type="Theme" uid="uid://dwad5m8etc8jg" path="res://theme/toolbox_theme.tres" id="4_smbbr"]
 [ext_resource type="Script" path="res://pottery/ToolboxContainer.gd" id="5_02g13"]
+[ext_resource type="Texture2D" uid="uid://din2bwl03yjl4" path="res://art/icon/new_item.png" id="6_ykwqm"]
+[ext_resource type="Texture2D" uid="uid://c7pq1fo4eb4qh" path="res://art/icon/bump.png" id="8_20xbj"]
+[ext_resource type="Texture2D" uid="uid://dpl0pib8s34xv" path="res://art/icon/rotate.png" id="9_t8akh"]
+[ext_resource type="Texture2D" uid="uid://svocl7vr3n7r" path="res://art/icon/shuffle.png" id="10_03ju3"]
+[ext_resource type="Texture2D" uid="uid://n7h30whidhfi" path="res://art/icon/glue_pot.png" id="10_6y6y3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
 radius = 15.0
@@ -43,79 +48,6 @@ metadata/_edit_lock_ = true
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainer"]
-layout_mode = 2
-
-[node name="ClickModeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Mode: Move
-"
-alignment = 0
-
-[node name="AddNewButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "Add Item"
-alignment = 0
-
-[node name="DeleteAllButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "Delete All"
-alignment = 0
-
-[node name="FreezeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "Move: Free"
-alignment = 0
-
-[node name="LockRotateButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Rotate: Locked"
-alignment = 0
-
-[node name="CollideButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Collide: Yes"
-alignment = 0
-
-[node name="AddFractureButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Add Fracture"
-alignment = 0
-
-[node name="ShatterButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Shatter"
-alignment = 0
-
-[node name="ShuffleButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Shuffle"
-alignment = 0
-
-[node name="SaveButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Save"
-alignment = 0
-
-[node name="LoadButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Load"
-alignment = 0
-
 [node name="Label" type="Label" parent="CanvasLayer"]
 offset_left = 130.0
 offset_right = 1141.0
@@ -152,6 +84,145 @@ offset_bottom = 964.0
 theme = ExtResource("4_smbbr")
 script = ExtResource("5_02g13")
 
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ToolboxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 35
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ToolboxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Tools" type="GridContainer" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+columns = 4
+
+[node name="FreezeButton" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "bump
+off"
+icon = ExtResource("8_20xbj")
+alignment = 0
+
+[node name="LockRotateButton" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "rotate
+off"
+icon = ExtResource("9_t8akh")
+alignment = 0
+
+[node name="AddNewButton" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("4_smbbr")
+text = "New
+Item"
+icon = ExtResource("6_ykwqm")
+alignment = 0
+
+[node name="ShuffleButton" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "shuffle"
+icon = ExtResource("10_03ju3")
+alignment = 0
+
+[node name="GlueClear" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+clear"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueWhite" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+white"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueGold" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+self_modulate = Color(1, 0.858824, 0.0705882, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+gold"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueRed" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+self_modulate = Color(0.858824, 0, 0.0980392, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+red"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueGreen" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+self_modulate = Color(0.196078, 0.964706, 0, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+green"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueBlue" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+self_modulate = Color(0.0862745, 0.0431373, 1, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+blue"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueViolet" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+self_modulate = Color(0.764706, 0, 0.901961, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+violet"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
+[node name="GlueGreen3" type="Button" parent="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools"]
+self_modulate = Color(0.270588, 0.266667, 0.27451, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 1
+text = "glue
+black"
+icon = ExtResource("10_6y6y3")
+alignment = 0
+
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 2
@@ -181,18 +252,19 @@ position = Vector2(1913, 4837)
 rotation = 1.5708
 shape = SubResource("RectangleShape2D_wqvk2")
 
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ClickModeButton" to="." method="_on_click_mode_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddNewButton" to="." method="_on_add_new_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/DeleteAllButton" to="." method="_on_delete_all_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LockRotateButton" to="." method="_on_lock_rotate_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/CollideButton" to="." method="_on_collide_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddFractureButton" to="." method="_on_add_fracture_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShatterButton" to="." method="_on_shatter_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/ToolboxContainer" to="CanvasLayer/ToolboxContainer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/ToolboxContainer" to="CanvasLayer/ToolboxContainer" method="_on_mouse_exited"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/FreezeButton" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/LockRotateButton" to="." method="_on_lock_rotate_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/AddNewButton" to="." method="_on_add_new_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueClear" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueWhite" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueGold" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueRed" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueGreen" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueBlue" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueViolet" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ToolboxContainer/MarginContainer/VBoxContainer/Tools/GlueGreen3" to="." method="_on_freeze_button_pressed"]
 [connection signal="body_entered" from="CursorArea" to="CursorArea" method="_on_body_entered"]
 [connection signal="body_exited" from="CursorArea" to="CursorArea" method="_on_body_exited"]

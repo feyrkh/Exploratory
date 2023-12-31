@@ -1,49 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://brb4yifejocw3"]
+[gd_scene load_steps=3 format=3 uid="uid://brb4yifejocw3"]
 
 [ext_resource type="Script" path="res://menu/main/DemoTable.gd" id="1_hvqn8"]
+[ext_resource type="Texture2D" uid="uid://cr211tcpa7q1p" path="res://pottery/shelf.png" id="2_sv8rw"]
 
 [node name="DemoTable" type="Node2D"]
 z_index = -1
 script = ExtResource("1_hvqn8")
 metadata/_edit_vertical_guides_ = [-986.0, 1.0]
 
-[node name="LeftArm" type="Polygon2D" parent="."]
-z_index = -100
-position = Vector2(-1128, 63)
-color = Color(0.494118, 0.211765, 0.164706, 1)
-polygon = PackedVector2Array(340, 11, 140, 571, 209, 571, 398, 12)
+[node name="Shelf" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(-485, 440)
+texture = ExtResource("2_sv8rw")
 
-[node name="RightArm" type="Polygon2D" parent="."]
-z_index = -100
-position = Vector2(137, 63)
-scale = Vector2(-1, 1)
-color = Color(0.494118, 0.211765, 0.164706, 1)
-polygon = PackedVector2Array(340, 11, 140, 571, 209, 571, 398, 12)
+[node name="Slot0" type="Node2D" parent="Shelf"]
+z_as_relative = false
+position = Vector2(154, -199)
 
-[node name="Shelf1" type="Polygon2D" parent="."]
-z_index = -100
-position = Vector2(-1128, 63)
-color = Color(0.494118, 0.211765, 0.164706, 1)
-polygon = PackedVector2Array(1034, 443, 223, 442, 205, 503, 1074, 503)
-
-[node name="Shelf2" type="Polygon2D" parent="."]
-z_index = -100
-position = Vector2(-1002, -146)
-scale = Vector2(0.802071, 1)
-color = Color(0.494118, 0.211765, 0.164706, 1)
-polygon = PackedVector2Array(1034, 443, 223, 442, 205, 503, 1074, 503)
-
-[node name="Shelf3" type="Polygon2D" parent="."]
-z_index = -100
-position = Vector2(-950.32, -367)
-scale = Vector2(0.706071, 1)
-color = Color(0.494118, 0.211765, 0.164706, 1)
-polygon = PackedVector2Array(1034, 443, 223, 442, 205, 503, 1074, 503)
-
-[node name="Slot0" type="Node2D" parent="."]
-position = Vector2(-509, 506)
-
-[node name="ColorRect" type="ColorRect" parent="Slot0"]
+[node name="ColorRect" type="ColorRect" parent="Shelf/Slot0"]
 visible = false
 z_index = 4
 offset_left = -5.0
@@ -51,10 +25,11 @@ offset_top = -5.0
 offset_right = 5.0
 offset_bottom = 5.0
 
-[node name="Slot1" type="Node2D" parent="."]
-position = Vector2(-741, 506)
+[node name="Slot1" type="Node2D" parent="Shelf"]
+z_as_relative = false
+position = Vector2(-186, 92)
 
-[node name="ColorRect" type="ColorRect" parent="Slot1"]
+[node name="ColorRect" type="ColorRect" parent="Shelf/Slot1"]
 visible = false
 z_index = 4
 offset_left = -5.0
@@ -62,10 +37,11 @@ offset_top = -5.0
 offset_right = 5.0
 offset_bottom = 5.0
 
-[node name="Slot2" type="Node2D" parent="."]
-position = Vector2(-265, 506)
+[node name="Slot2" type="Node2D" parent="Shelf"]
+z_as_relative = false
+position = Vector2(168, 94)
 
-[node name="ColorRect" type="ColorRect" parent="Slot2"]
+[node name="ColorRect" type="ColorRect" parent="Shelf/Slot2"]
 visible = false
 z_index = 4
 offset_left = -5.0
@@ -73,21 +49,11 @@ offset_top = -5.0
 offset_right = 5.0
 offset_bottom = 5.0
 
-[node name="Slot3" type="Node2D" parent="."]
-position = Vector2(-633, 296)
+[node name="Slot3" type="Node2D" parent="Shelf"]
+z_as_relative = false
+position = Vector2(-178, -201)
 
-[node name="ColorRect" type="ColorRect" parent="Slot3"]
-visible = false
-z_index = 4
-offset_left = -5.0
-offset_top = -5.0
-offset_right = 5.0
-offset_bottom = 5.0
-
-[node name="Slot4" type="Node2D" parent="."]
-position = Vector2(-378, 297)
-
-[node name="ColorRect" type="ColorRect" parent="Slot4"]
+[node name="ColorRect" type="ColorRect" parent="Shelf/Slot3"]
 visible = false
 z_index = 4
 offset_left = -5.0

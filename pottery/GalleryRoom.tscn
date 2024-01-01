@@ -16,6 +16,7 @@ metadata/_edit_horizontal_guides_ = [2397.0]
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(2136, 1200)
 zoom = Vector2(0.3, 0.3)
+position_smoothing_enabled = true
 
 [node name="Shelf2" type="Sprite2D" parent="."]
 position = Vector2(1103.15, 1863.25)

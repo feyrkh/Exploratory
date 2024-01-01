@@ -361,6 +361,8 @@ func handle_move_input(event):
 				safe_freeze(false)
 				var prev_top = get_parent().get_child(-1)
 				get_parent().move_child(self, -1)
+				for i in range(get_parent().get_child_count()):
+					get_parent().get_child(i).z_index = i * 5
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
 				random_scar()

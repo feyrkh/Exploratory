@@ -31,4 +31,5 @@ static func unpack_from_gallery(item_name:String, report_error:Callable, texture
 	var item_save_data = save_file.get_var()
 	save_file.close()
 	var result = await ArcheologyItem.load_save_data(item_save_data, reversed_image_save_data, texture_cache)
+	result.gallery_id = item_name
 	return result

@@ -267,6 +267,9 @@ func _on_shatter_button_pressed():
 func _on_shuffle_button_pressed():
 	#PhysicsServer2D.set_active(false)
 	var pieces = find_child("Pieces").get_children()
+	for i in range(pieces.size()):
+		if pieces[i]._gallery_mode:
+			pieces[i].z_index = i * 5
 	pieces.shuffle()
 	var largest_x_seen = 0
 	var cur_min_x = 0

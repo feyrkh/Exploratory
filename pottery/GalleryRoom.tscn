@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://tpag1njdnwcy"]
+[gd_scene load_steps=7 format=3 uid="uid://tpag1njdnwcy"]
 
 [ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
 [ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_dhsuc"]
 [ext_resource type="PackedScene" uid="uid://dr6w8rungysm1" path="res://menu/gallery/GalleryMenu.tscn" id="4_gxinv"]
+[ext_resource type="PackedScene" uid="uid://btr4madyriyi0" path="res://util/FadeRect.tscn" id="5_0t2vs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wqvk2"]
 size = Vector2(3644, 9187)
@@ -79,11 +80,38 @@ shape = SubResource("RectangleShape2D_wqvk2")
 offset_right = 1281.0
 offset_bottom = 36.0
 
-[node name="RoomLabel" type="Label" parent="UI/PanelContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/PanelContainer2"]
 layout_mode = 2
+
+[node name="PreviousButton" type="Button" parent="UI/PanelContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Previous room"
+
+[node name="RoomLabel" type="Label" parent="UI/PanelContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
 theme = ExtResource("2_dhsuc")
 text = "Gallery 1"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RoomLabelEdit" type="LineEdit" parent="UI/PanelContainer2/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(301, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_dhsuc")
+alignment = 1
+
+[node name="NextButton" type="Button" parent="UI/PanelContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Next room"
 
 [node name="PanelContainer" type="PanelContainer" parent="UI"]
 offset_top = 680.0
@@ -97,13 +125,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
-text = "Unpack Item"
-
-[node name="PreviousButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 7
-theme = ExtResource("2_dhsuc")
-text = "Previous room"
+text = "Unpack Artifact"
 
 [node name="ExitButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
 layout_mode = 2
@@ -111,17 +133,18 @@ size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
 text = "Exit"
 
-[node name="NextButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 7
-theme = ExtResource("2_dhsuc")
-text = "Next room"
-
 [node name="GalleryMenu" parent="UI" instance=ExtResource("4_gxinv")]
 visible = false
 
 [node name="Camera2D" type="Camera2D" parent="UI"]
 anchor_mode = 0
 
+[node name="FadeRect" parent="UI" instance=ExtResource("5_0t2vs")]
+
+[connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/PreviousButton" to="." method="_on_previous_button_pressed"]
+[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_on_room_label_gui_input"]
+[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_gui_input"]
+[connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_text_submitted"]
+[connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/UnpackButton" to="." method="_on_unpack_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

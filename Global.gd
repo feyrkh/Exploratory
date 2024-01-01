@@ -2,6 +2,7 @@ extends Node
 
 signal click_mode_changed()
 signal camera_zoom_changed(cur_zoom:float)
+signal delete_archeology_item(item:ArcheologyItem)
 signal save_to_gallery(item:Node2D)
 signal unpack_gallery_item(gallery_item_name:String)
 

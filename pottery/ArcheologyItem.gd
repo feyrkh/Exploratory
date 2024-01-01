@@ -105,6 +105,7 @@ var glue_hashes = null:
 @onready var shard_edges:Node2D = find_child("ShardEdges")
 @onready var glue_edges:Node2D = find_child("Glue")
 var _gallery_mode = false
+var gallery_id:String
 
 func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[String, ImageBuilder.ImageSaveData]
 	var result := []
@@ -361,8 +362,9 @@ func handle_move_input(event):
 				safe_freeze(false)
 				var prev_top = get_parent().get_child(-1)
 				get_parent().move_child(self, -1)
-				for i in range(get_parent().get_child_count()):
-					get_parent().get_child(i).z_index = i * 5
+				if _gallery_mode:
+					for i in range(get_parent().get_child_count()):
+						get_parent().get_child(i).z_index = i * 5
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
 				random_scar()
@@ -396,6 +398,7 @@ func handle_move_input(event):
 		target_rot = 0.1 # just something to get the _integrate_forces method started
 	elif hover_idx >= 0 and event.is_action_pressed("delete_item"):
 		print("Deleting item ", self)
+		Global.delete_archeology_item.emit(self)
 		queue_free()
 
 func _integrate_forces(state):

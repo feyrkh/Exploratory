@@ -14,4 +14,6 @@ Button/styles/normal = ExtResource("2_e1s68")
 Button/styles/pressed = ExtResource("2_e1s68")
 Label/font_sizes/font_size = 34
 Label/fonts/font = ExtResource("1_xin2s")
+LineEdit/font_sizes/font_size = 34
+LineEdit/fonts/font = ExtResource("1_xin2s")
 PanelContainer/styles/panel = ExtResource("1_mtm7e")

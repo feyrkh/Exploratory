@@ -122,14 +122,6 @@ focus_mode = 0
 text = "Save Item"
 alignment = 0
 
-[node name="Label" type="Label" parent="CanvasLayer"]
-offset_left = 130.0
-offset_right = 1141.0
-offset_bottom = 49.0
-text = "camera=wasd or middle-click+drag, leftclick+drag=move piece, rightclick+drag=rotate piece, mouse wheel=zoom, shift=disable collisions while held
-tab=toggle mouse mode
-"
-
 [node name="PopupContainer" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0

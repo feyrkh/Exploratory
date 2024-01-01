@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://btr4madyriyi0"]
+
+[ext_resource type="Script" path="res://pottery/FadeRect.gd" id="1_07p1y"]
+
+[node name="FadeRect" type="ColorRect"]
+offset_right = 1288.0
+offset_bottom = 729.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_07p1y")

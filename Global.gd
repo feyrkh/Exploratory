@@ -2,15 +2,18 @@ extends Node
 
 signal click_mode_changed()
 signal camera_zoom_changed(cur_zoom:float)
+signal save_to_gallery(item:Node2D)
+signal unpack_gallery_item(gallery_item_name:String)
 
 var next_scene_settings
 var shatter_width:float = 0.5
-var rotate_with_shuffle = true
+var rotate_with_shuffle = false
 
 var lock_rotation = true:
 	set(val):
 		print("Toggling rotation lock to ", val)
 		lock_rotation = val
+		rotate_with_shuffle = !val
 		get_tree().call_group("archeology", "global_lock_rotation", val)
 
 var freeze_pieces = false:
@@ -25,7 +28,7 @@ var collide = true:
 		collide = val
 		get_tree().call_group("archeology", "global_collide", val)
 
-enum ClickMode {move, glue, paint}
+enum ClickMode {move, glue, save_item}
 var click_mode = ClickMode.move:
 	set(val):
 		if val != click_mode:

@@ -44,6 +44,7 @@ var center:
 	get:
 		if center == null:
 			_find_center()
+			center_of_mass = center
 		return center
 var area:float:
 	get:
@@ -103,6 +104,7 @@ var glue_hashes = null:
 		return polygon
 @onready var shard_edges:Node2D = find_child("ShardEdges")
 @onready var glue_edges:Node2D = find_child("Glue")
+var _gallery_mode = false
 
 func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[String, ImageBuilder.ImageSaveData]
 	var result := []
@@ -134,11 +136,24 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "me":me_data}
 
 ## item_save = as returned from get_save_data
-## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), ImageBuilder.ImageSaveData]
+## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), Array[ImageBuilder.ImageSaveData]]
+## rebuilt_textures = Dictionary[int (referenced from item_save[IMG_DATA]), Texture2D]
+## image_save_data values may be either an array of ImageSaveData objects, or an inverted copy of the map
+## 		populated by the parameter to ArcheologyItem.get_save_data()
+## rebuilt_textures may be passed as an empty dictionary to be populated if desired
 static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, rebuilt_textures:Dictionary) -> ArcheologyItem: 
+	for k in image_save_data.keys():
+		if image_save_data[k] != null and image_save_data[k].size() > 0 and !(image_save_data[k][0] is ItemBuilder.ImageSaveData):
+			image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
+		if !rebuilt_textures.has(k):
+			rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
 	var result = load("res://pottery/ArcheologyItem.tscn").instantiate()
-	result.find_child("Polygon2D").queue_free()
-	result.find_child("CollisionPolygon2D").queue_free()
+	var orig_poly = result.find_child("Polygon2D")
+	result.remove_child(orig_poly)
+	orig_poly.queue_free()
+	orig_poly = result.find_child("CollisionPolygon2D")
+	result.remove_child(orig_poly)
+	orig_poly.queue_free()
 	var poly_data = item_save.get("img", [])
 	var scar_data = item_save.get("scar", [])
 	var edge_data = item_save.get("edge", [])
@@ -192,6 +207,11 @@ func _ready():
 		refresh_polygon()
 	if original_area == null:
 		original_area = area
+
+func gallery_mode():
+	_gallery_mode = true
+	#collision_mask &= ~1 # disable collision with other pieces
+	_find_center() # trigger center calculations so the center of mass gets calculated properly
 
 func _process(_delta):
 	if shattering_in_progress:
@@ -275,11 +295,13 @@ func refresh_polygon() -> int:
 			new_polygon.append(collision.polygon[i] + offset)
 		collision.polygon = new_polygon
 	polygon.polygon = collision.polygon
-	polygon.uv = collision.polygon
 	total_edge_length = 0
 	for i in range(collision.polygon.size()):
 		var j = (i+1) % collision.polygon.size()
 		total_edge_length += collision.polygon[i].distance_to(collision.polygon[j])
+	if _gallery_mode:
+		return 1
+	polygon.uv = collision.polygon
 	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
@@ -317,6 +339,13 @@ func _unhandled_input(event):
 		return
 	match Global.click_mode:
 		Global.ClickMode.move: handle_move_input(event)
+		Global.ClickMode.save_item: handle_save_item_input(event)
+
+func handle_save_item_input(event):
+	if event is InputEventMouseButton:
+		if hover_idx >= 0:
+			if event.is_action_pressed("drag_start"):
+				save_to_gallery()
 
 func handle_move_input(event):
 	if event is InputEventMouseButton:
@@ -367,6 +396,7 @@ func handle_move_input(event):
 
 func _integrate_forces(state):
 	if reset_position != null:
+		freeze = false
 		state.transform = state.transform.rotated(-state.transform.get_rotation())
 		state.transform = state.transform.rotated(reset_rotation)
 		state.transform.origin = reset_position
@@ -397,7 +427,7 @@ func _integrate_forces(state):
 func _on_mouse_shape_entered(shape_idx):
 	if is_display:
 		return
-	if Global.click_mode == Global.ClickMode.move:
+	if Global.click_mode == Global.ClickMode.move or Global.click_mode == Global.ClickMode.save_item:
 		highlight_visual_polygons()
 	#print("Hovering ", shape_idx)
 	hover_idx = shape_idx
@@ -407,7 +437,7 @@ func _on_mouse_shape_exited(shape_idx):
 		return
 	if shape_idx == hover_idx:
 		if drag_start_item == null:
-			if Global.click_mode == Global.ClickMode.move:
+			if Global.click_mode == Global.ClickMode.move or Global.click_mode == Global.ClickMode.save_item:
 				unhighlight_visual_polygons()
 		#print("Left hover ", shape_idx)
 		hover_idx = -1
@@ -804,3 +834,26 @@ func safe_freeze(val:bool):
 	elif cur_mode != PhysicsServer2D.BodyMode.BODY_MODE_STATIC: 
 			set_deferred("freeze", val)
 
+func save_to_gallery():
+	Global.save_to_gallery.emit(self)
+
+func adjust_scale(scale_change:float):
+	for child in get_children():
+		if child is Polygon2D or child is CollisionPolygon2D:
+			child.position *= scale_change
+			if "uv" in child:
+				child.uv = PackedVector2Array(child.polygon)
+			child.polygon = _adjust_polygon_scale(child.polygon, scale_change)
+	for child in $Scars.get_children():
+		child.position *= scale_change
+		child.adjust_scale(scale_change)
+	for child in $ShardEdges.get_children():
+		child.position *= scale_change
+		child.adjust_scale(scale_change)
+	center = null
+	_find_center()
+
+func _adjust_polygon_scale(polygon, scale_change:float):
+	for i in range(polygon.size()):
+		polygon[i] = polygon[i] * scale_change
+	return polygon

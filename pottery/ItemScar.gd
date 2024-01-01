@@ -142,3 +142,8 @@ func intersect_scar(scar2:ItemScar, scar1_from_end:bool, scar2_from_end:bool): #
 		covered_scar1_pts.append(next_pt)
 		start_pt = next_pt
 	return null
+
+func adjust_scale(scale_change:float):
+	for i in range(line.points.size()):
+		line.points[i] = line.points[i] * scale_change
+		line.width *= scale_change

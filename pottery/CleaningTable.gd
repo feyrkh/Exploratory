@@ -29,6 +29,7 @@ func _ready():
 	
 	PhysicsServer2D.set_active(false)
 	Global.click_mode_changed.connect(update_button_text)
+	Global.save_to_gallery.connect(save_to_gallery)
 	update_button_text()
 	var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
 	var total_items = settings.get(ITEM_COUNT_SETTING, 1)
@@ -159,10 +160,12 @@ func _unhandled_input(event):
 	match Global.click_mode:
 		Global.ClickMode.move: handle_move_input(event)
 		Global.ClickMode.glue: handle_glue_input(event)
-		Global.ClickMode.paint: handle_paint_input(event)
+		Global.ClickMode.save_item: handle_save_item_input(event)
+		#Global.ClickMode.paint: handle_paint_input(event)
 
-func handle_paint_input(_event):
-	pass
+func handle_save_item_input(event):
+	if event.is_action_pressed("rotate_start"):
+		Global.reset_click_mode()
 
 func handle_glue_input(event):
 	if event.is_action_pressed("drag_start"):
@@ -247,7 +250,8 @@ func update_button_text():
 	match Global.click_mode:
 		Global.ClickMode.move: find_child("ClickModeButton").text = "Click: Move"
 		Global.ClickMode.glue: find_child("ClickModeButton").text = "Click: Glue"
-		Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
+		Global.ClickMode.save_item: find_child("ClickModeButton").text = "Click: Gallery"
+		#Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
 		_: find_child("ClickModeButton").text = "Click: Unknown?"
 
 
@@ -302,7 +306,7 @@ func _on_shuffle_button_pressed():
 		piece.reset_position = Vector2(cur_min_x - space_needed, cur_min_y) - piece.center_of_mass.rotated(piece.global_rotation) + Vector2(bb_xmax-bb_xmin, bb_ymax-bb_ymin)/2
 		piece.reset_rotation = piece.global_rotation
 		piece.global_rotation = orig_rotation
-		set_deferred("freeze", false) #should get reset to whatever it should be after the position is changed
+		piece.set_deferred("freeze", false) #should get reset to whatever it should be after the position is changed
 	var area_center = camera_top_left_limit + (camera_bot_right_limit - camera_top_left_limit)/2
 	var y_offset = area_center.y - ((cur_min_y + cur_row_height) / 2)
 	var x_offset = area_center.x - (largest_x_seen / 2)
@@ -343,17 +347,28 @@ func _on_load_button_pressed():
 	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)
 	var image_save_data = save_file.get_var()
 	var rebuilt_textures = {}
-	for k in image_save_data.keys():
-		image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
-		rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
+	#for k in image_save_data.keys():
+	#	image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
+	#	rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
 	var item_save_data = save_file.get_var()
 	for item_save in item_save_data:
-		var new_item = ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
+		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
 		$Pieces.add_child(new_item)
 	save_file.close()
 
-func take_screenshot_of_piece(piece) -> Image:
+func take_screenshot_of_piece(piece:Node2D) -> Image:
 	if piece == null or !is_instance_valid(piece): 
 		return
 	return await ScreenshotUtil.take_screenshot(camera, piece.global_position + piece.bounding_box.position - Vector2(10, 10), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
-	
+
+func _on_save_item_button_pressed():
+	Global.click_mode = Global.ClickMode.save_item
+
+func save_to_gallery(item:Node2D):
+	item.visibility_layer |= 2
+	var img = await take_screenshot_of_piece(item)
+	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
+	popup.setup(img, item)
+	find_child("PopupContainer").add_child(popup)
+	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
+	item.visibility_layer &= ~2

@@ -288,6 +288,7 @@ func read_file(dir_name, file_name):
 	print("Processing config file: ", file_path)
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var content = file.get_as_text()
+	file.close()
 	var data = JSON.parse_string(content)
 	if data == null:
 		push_error("Error reading ", file_path, ", skipping")

@@ -1,0 +1,123 @@
+[gd_scene load_steps=6 format=3 uid="uid://tpag1njdnwcy"]
+
+[ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
+[ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_dhsuc"]
+[ext_resource type="PackedScene" uid="uid://dr6w8rungysm1" path="res://menu/gallery/GalleryMenu.tscn" id="4_gxinv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wqvk2"]
+size = Vector2(3644, 9187)
+
+[node name="GalleryRoom" type="Node2D"]
+script = ExtResource("1_2k2a3")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+zoom = Vector2(0.3, 0.3)
+
+[node name="Shelf2" type="Sprite2D" parent="."]
+position = Vector2(1103.15, 1863.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="Shelf" type="Sprite2D" parent="."]
+position = Vector2(1103.15, 1263.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="Shelf3" type="Sprite2D" parent="."]
+position = Vector2(1103.15, 671.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="Shelf4" type="Sprite2D" parent="."]
+position = Vector2(3143.15, 1863.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="Shelf5" type="Sprite2D" parent="."]
+position = Vector2(3143.15, 1263.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="Shelf6" type="Sprite2D" parent="."]
+position = Vector2(3143.15, 671.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="Items" type="Node2D" parent="."]
+z_index = 5
+
+[node name="ScreenCollisionBorders" type="StaticBody2D" parent="."]
+collision_priority = 9999.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScreenCollisionBorders"]
+position = Vector2(-1823, 1510)
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ScreenCollisionBorders"]
+position = Vector2(6090, 1655)
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="ScreenCollisionBorders"]
+position = Vector2(2036, -1822)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="ScreenCollisionBorders"]
+position = Vector2(1749, 4218)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_wqvk2")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PanelContainer2" type="PanelContainer" parent="UI"]
+offset_right = 1281.0
+offset_bottom = 36.0
+
+[node name="RoomLabel" type="Label" parent="UI/PanelContainer2"]
+layout_mode = 2
+theme = ExtResource("2_dhsuc")
+text = "Gallery 1"
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="UI"]
+offset_top = 680.0
+offset_right = 1278.0
+offset_bottom = 720.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/PanelContainer"]
+layout_mode = 2
+
+[node name="UnpackButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Unpack Item"
+
+[node name="PreviousButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Previous room"
+
+[node name="ExitButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Exit"
+
+[node name="NextButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Next room"
+
+[node name="GalleryMenu" parent="UI" instance=ExtResource("4_gxinv")]
+visible = false
+
+[node name="Camera2D" type="Camera2D" parent="UI"]
+anchor_mode = 0
+
+[connection signal="pressed" from="UI/PanelContainer/HBoxContainer/UnpackButton" to="." method="_on_unpack_button_pressed"]
+[connection signal="pressed" from="UI/PanelContainer/HBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

@@ -82,6 +82,12 @@ func get_intersecting_edge_lines(global_circle_center:Vector2, circle_radius:flo
 			pt1 = pt2
 	return intersections
 
+func adjust_scale(scale_change:float):
+	for child in get_children():
+		for i in range(child.points.size()):
+			child.points[i] = child.points[i] * scale_change
+			child.width *= scale_change
+
 static func convert_to_glue(line:Line2D, color:Color):
 	line.default_color = color
 	line.texture = null

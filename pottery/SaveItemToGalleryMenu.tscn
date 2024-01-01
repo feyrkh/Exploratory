@@ -25,7 +25,8 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
-text = "Save this piece to your gallery, or discard it forever?"
+text = "Save this piece to your gallery
+or discard it forever?"
 horizontal_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer"]
@@ -36,12 +37,15 @@ stretch_mode = 5
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Save" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="SaveButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Save"
 
-[node name="Destroy" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="CancelButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
-text = "Discard"
+text = "Cancel"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_pressed"]

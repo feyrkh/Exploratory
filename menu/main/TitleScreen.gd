@@ -41,12 +41,12 @@ func _ready():
 	find_child("OptionsContainer").visible = false
 	load_config()
 	update_labels()
-	var offset = randi_range(0, 1000)
+	var offset = randi_range(800, 1000)
 	for i in range(5):
 		var new_table = load("res://menu/main/DemoTable.tscn").instantiate()
-		new_table.should_load_slowly = false
+		new_table.should_load_slowly = i > 2
 		add_child(new_table)
-		new_table.position = Vector2(i * 1000 - offset, 0)
+		new_table.position = Vector2(i * 1000 + offset, 0)
 		tables.append(new_table)
 
 func _unhandled_key_input(event):
@@ -220,3 +220,7 @@ func _on_start_button_mouse_entered():
 
 func _on_back_button_mouse_entered():
 	hover_tooltip("Return to the main menu")
+
+
+func _on_gallery_button_pressed():
+	get_tree().change_scene_to_file("res://pottery/GalleryRoom.tscn")

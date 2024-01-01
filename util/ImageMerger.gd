@@ -18,6 +18,8 @@ static func merge_images(image_merge_info:Array, noise:FastNoiseLite=null, noise
 			base_img.blend_rect(overlay_img, overlay_img.get_used_rect(), merge_info.position)
 		if tree:
 			await(tree.process_frame)
+	if !base_img.has_mipmaps():
+		base_img.generate_mipmaps()
 	return ImageTexture.create_from_image(base_img)
 
 static func modulate_image(img:Image, color:Color, noise:FastNoiseLite, noise_cutoff:float, tree:SceneTree=null, noise_offset:Vector2=Vector2.ZERO):

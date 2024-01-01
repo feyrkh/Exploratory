@@ -210,7 +210,7 @@ func _ready():
 
 func gallery_mode():
 	_gallery_mode = true
-	#collision_mask &= ~1 # disable collision with other pieces
+	collision_mask &= ~1 # disable collision with other pieces
 	_find_center() # trigger center calculations so the center of mass gets calculated properly
 
 func _process(_delta):
@@ -239,6 +239,8 @@ func global_freeze_pieces(val:bool):
 		safe_freeze(val)
 		
 func global_collide(val:bool):
+	if _gallery_mode:
+		return
 	# Called by Global.collide when piece collisions should be disabled
 	if val:
 		collision_mask |= 1 # allow this piece to collide with elements on layer 1

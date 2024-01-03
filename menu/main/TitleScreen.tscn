@@ -198,9 +198,17 @@ horizontal_alignment = 1
 
 [node name="MainMenu" type="VBoxContainer" parent="."]
 offset_left = 514.0
-offset_top = 473.0
+offset_top = 193.0
 offset_right = 802.0
-offset_bottom = 725.0
+offset_bottom = 509.0
+
+[node name="ContinueButton" type="Button" parent="MainMenu"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_7feem")
+text = "Continue"
+metadata/_edit_lock_ = true
 
 [node name="ZenButton" type="Button" parent="MainMenu"]
 custom_minimum_size = Vector2(0, 60)
@@ -215,7 +223,7 @@ custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("2_7feem")
-text = "Time Attack"
+text = "Struggle Mode"
 metadata/_edit_lock_ = true
 
 [node name="GalleryButton" type="Button" parent="MainMenu"]
@@ -276,6 +284,7 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="mouse_entered" from="OptionsContainer/BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MainMenu/ContinueButton" to="." method="_on_continue_button_pressed"]
 [connection signal="pressed" from="MainMenu/ZenButton" to="." method="_on_zen_button_pressed"]
 [connection signal="pressed" from="MainMenu/TimeButton" to="." method="_on_time_button_pressed"]
 [connection signal="pressed" from="MainMenu/GalleryButton" to="." method="_on_gallery_button_pressed"]

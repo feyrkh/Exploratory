@@ -12,13 +12,19 @@ const ITEM_COUNT_SETTING := "item_count"
 @onready var cursor_area:CursorArea = find_child("CursorArea")
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
-var collision_temp_disabled = false
 var camera_drag_mouse_start = null
 var camera_drag_camera_start = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var settings = Global.next_scene_settings
+	Global.click_mode_changed.connect(update_button_text)
+	Global.save_to_gallery.connect(save_to_gallery)
+	
+	#if settings == "continue_zen":
+	#	_on_load_button_pressed()
+	#	return
+	
 	if settings == null:
 		settings = {}
 	
@@ -28,8 +34,6 @@ func _ready():
 	fade_rect.modulate.a = 1.0
 	
 	PhysicsServer2D.set_active(false)
-	Global.click_mode_changed.connect(update_button_text)
-	Global.save_to_gallery.connect(save_to_gallery)
 	update_button_text()
 	var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
 	var total_items = settings.get(ITEM_COUNT_SETTING, 1)
@@ -164,7 +168,7 @@ func _unhandled_input(event):
 		#Global.ClickMode.paint: handle_paint_input(event)
 
 func handle_save_item_input(event):
-	if event.is_action_pressed("rotate_start"):
+	if event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
 		Global.reset_click_mode()
 
 func handle_glue_input(event):
@@ -181,7 +185,7 @@ func handle_glue_input(event):
 		elif pieces.size() == 1:
 			print("Filling glue in cracks, maybe")
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
-	elif event.is_action_pressed("rotate_start"):
+	elif event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
 		Global.reset_click_mode()
 
 func handle_camera_input(event:InputEvent):
@@ -207,19 +211,22 @@ func handle_camera_input(event:InputEvent):
 		elif event.is_action_pressed("camera_drag"):
 			camera_drag_mouse_start = get_viewport().get_mouse_position()
 			camera_drag_camera_start = camera.position
+			get_viewport().set_input_as_handled()
 		elif event.is_action_released("camera_drag"):
 			camera_drag_mouse_start = null
 			camera_drag_camera_start = null
+			get_viewport().set_input_as_handled()
 
 func handle_move_input(event):
 	if Global.collide == true and event.is_action_pressed("disable_collision"):
-		print("Disabling collision ", self)
 		Global.collide = false
-		collision_temp_disabled = true
-	elif collision_temp_disabled and event.is_action_released("disable_collision"):
+		get_viewport().set_input_as_handled()
+	elif Global.collide == false and event.is_action_released("disable_collision"):
 		Global.collide = true
-		print("Reenabling collision")
-
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_cancel"):
+		open_pause_menu()
+		get_viewport().set_input_as_handled()
 
 func _on_freeze_button_pressed():
 	Global.freeze_pieces = !Global.freeze_pieces
@@ -375,3 +382,17 @@ func save_to_gallery(item:Node2D):
 	find_child("PopupContainer").add_child(popup)
 	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
 	item.visibility_layer &= ~2
+
+func open_pause_menu():
+	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()
+	find_child("PopupContainer").add_child(popup)
+	set_process(false)
+	set_process_input(false)
+	popup.close.connect(func(): 
+		set_process_input(true)
+		set_process(true)
+	)
+	popup.save_game.connect(_on_save_button_pressed)
+	popup.exit_game.connect(func():
+		get_tree().change_scene_to_file("res://menu/main/TitleScreen.tscn")
+	)

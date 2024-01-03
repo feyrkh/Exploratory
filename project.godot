@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Exploratory"
+config/name="Keshiki"
+config/description="A game of kintsugi."
 run/main_scene="res://menu/main/TitleScreen.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 run/max_fps=30

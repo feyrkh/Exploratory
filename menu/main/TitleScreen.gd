@@ -210,7 +210,6 @@ func _on_crack_width_label_mouse_entered():
 func _on_crack_amt_label_mouse_entered():
 	hover_tooltip("Adjust the number of fracture lines on each item")
 
-
 func _on_start_button_mouse_entered():
 	if mode == "zen":
 		hover_tooltip("Begin a calm and reflective meditation on imperfection\n\nNo time limit, discard fragments freely, and bring new broken items into the mix as you wish\n\nSave completed pieces to your gallery")
@@ -224,3 +223,8 @@ func _on_back_button_mouse_entered():
 
 func _on_gallery_button_pressed():
 	get_tree().change_scene_to_file("res://pottery/GalleryRoom.tscn")
+
+
+func _on_continue_button_pressed():
+	mode = "zen"
+	

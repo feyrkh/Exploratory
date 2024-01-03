@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3 uid="uid://cshl65com1jf3"]
+
+[ext_resource type="Script" path="res://menu/PauseMenu.gd" id="1_28fmm"]
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_gotgm"]
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_28fmm")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_left = 210.0
+offset_top = 241.0
+offset_right = 1027.0
+offset_bottom = 473.0
+mouse_filter = 1
+theme = ExtResource("2_gotgm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 20
+text = "Keshiki"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="QuoteLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ReturnButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_gotgm")
+text = "Back to game"
+alignment = 0
+
+[node name="QuitAndDiscardButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_gotgm")
+text = "quit without saving"
+
+[node name="QuitAndSaveButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_gotgm")
+text = "Save and quit"
+alignment = 2
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/QuitAndDiscardButton" to="." method="_on_quit_and_discard_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/QuitAndSaveButton" to="." method="_on_quit_and_save_button_pressed"]

@@ -515,7 +515,7 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 		new_collision_polygons = []
 
 	for i in range(0, collision_polygon_list.size()):
-		if should_shatter_slow:
+		if should_shatter_slow and get_tree() != null:
 			await get_tree().process_frame
 		var new_item = await clone(collision_polygon_list[i], should_shatter_slow)
 		new_item.refresh_polygon()

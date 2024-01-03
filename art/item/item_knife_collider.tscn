@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://f8pyt2b5hltf"]
+
+[ext_resource type="Texture2D" uid="uid://bvjwapmakjf1l" path="res://art/item/item_knife.png" id="1_a567y"]
+[ext_resource type="Script" path="res://util/DecorationBase.gd" id="2_fdie0"]
+
+[node name="Item" type="StaticBody2D"]
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(87, 50, 157, 108, 222, 182, 252, 224, 367, 384, 402, 432, 406, 430, 411, 428, 419, 428, 427, 432, 430, 437, 430, 444, 422, 455, 466, 512, 467, 523, 532, 603, 561, 638, 592, 669, 630, 714, 639, 714, 659, 747, 659, 753, 648, 773, 630, 791, 606, 806, 575, 816, 558, 818, 553, 815, 528, 785, 532, 767, 483, 687, 441, 637, 404, 598, 394, 597, 351, 541, 337, 546, 320, 529, 313, 529, 304, 526, 299, 517, 303, 503, 292, 499, 277, 496, 268, 499, 255, 505, 102, 252, 50, 134, 11, 36, 10, 20, 10, 4, 12, 4, 16, 6)
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_a567y")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="DecorationBase" type="ColorRect" parent="."]
+offset_left = 247.0
+offset_top = 368.0
+offset_right = 346.0
+offset_bottom = 468.0
+script = ExtResource("2_fdie0")

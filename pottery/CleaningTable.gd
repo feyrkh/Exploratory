@@ -378,8 +378,8 @@ func save_to_gallery(item:Node2D):
 	item.visibility_layer |= 2
 	var img = await take_screenshot_of_piece(item)
 	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
-	popup.setup(img, item)
 	find_child("PopupContainer").add_child(popup)
+	popup.setup(img, item)
 	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
 	item.visibility_layer &= ~2
 

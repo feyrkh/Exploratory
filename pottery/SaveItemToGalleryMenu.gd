@@ -8,9 +8,17 @@ func setup(img:Image, item):
 	self.image = img
 	self.item = item
 	find_child("TextureRect").texture = ImageTexture.create_from_image(img)
+	get_tree().paused = true
+
+
+func _unhandled_input(event):
+	if event.is_action_pressed("ui_cancel"):
+		_on_cancel_pressed()
+		get_viewport().set_input_as_handled()
 
 
 func _on_cancel_pressed():
+	get_tree().paused = false
 	queue_free()
 
 func _on_save_pressed():

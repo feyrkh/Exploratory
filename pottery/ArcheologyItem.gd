@@ -267,12 +267,12 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.scale = scale
 	new_scene.shatter_size = shatter_size
 	if should_clone_slow:
-		await get_tree().process_frame
+		await wait_frame()
 	#for scar in scars.get_children():
 	#	var new_scar = scar.clone()
 	#	new_scene.scars.add_child(new_scar)
 	if should_clone_slow:
-		await get_tree().process_frame
+		await wait_frame()
 	for edge in shard_edges.get_children():
 		var new_edge = edge.clone()
 		new_scene.shard_edges.add_child(new_edge)
@@ -280,6 +280,10 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.find_child("Polygon2D").save_data = polygon.save_data
 	#await get_tree().physics_frame
 	return new_scene
+
+func wait_frame():
+	if get_tree() != null:
+		await get_tree().process_frame
 
 func refresh_polygon() -> int:
 	center = null
@@ -503,7 +507,7 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 #		new_polygons_created = false
 	for scar_poly in scar_polys:
 		if should_shatter_slow and randf() < 0.1:
-			await get_tree().process_frame
+			await wait_frame()
 		for collision_polygon in collision_polygon_list:
 			# intersect our break path with our existing polygon
 			var clipped_polygons = Geometry2D.clip_polygons(collision_polygon, scar_poly)
@@ -516,7 +520,7 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 
 	for i in range(0, collision_polygon_list.size()):
 		if should_shatter_slow and get_tree() != null:
-			await get_tree().process_frame
+			await wait_frame()
 		var new_item = await clone(collision_polygon_list[i], should_shatter_slow)
 		new_item.refresh_polygon()
 	queue_free()
@@ -603,7 +607,7 @@ func try_shatter_old(shatter_width:float = Global.shatter_width, should_shatter_
 	# create a new item out of all but the first polygon we found
 	for i in range(1, clipped_polygons.size()):
 		if should_shatter_slow and randf() < 0.5:
-			await get_tree().process_frame
+			await wait_frame()
 		var new_item = await clone(clipped_polygons[i])
 		new_item.refresh_polygon()
 		#new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)

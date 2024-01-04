@@ -33,26 +33,33 @@ func _ready():
 	fade_rect.visible = true
 	fade_rect.modulate.a = 1.0
 	
-	PhysicsServer2D.set_active(false)
-	update_button_text()
-	var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
-	var total_items = settings.get(ITEM_COUNT_SETTING, 1)
-	for i in range(total_items):
-		fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nGenerating..."
-		await get_tree().process_frame
-		var new_item = await ItemBuilder.build_random_item(null, false)
-		$Pieces.add_child(new_item)
-		new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
-		fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
-		await get_tree().process_frame
-		for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
-			new_item.random_scar()
-		await new_item.try_shatter(Global.shatter_width, true)
 	
-	PhysicsServer2D.set_active(true)
-	fade_label.text = "Shuffling..."
-	await get_tree().process_frame
-	_on_shuffle_button_pressed()
+	if settings.get("mode") == "continue":
+		fade_label.text = "Restoring..."
+		PhysicsServer2D.set_active(true)
+		_on_load_button_pressed()
+	else:
+		PhysicsServer2D.set_active(false)
+		update_button_text()
+		var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
+		var total_items = settings.get(ITEM_COUNT_SETTING, 1)
+		for i in range(total_items):
+			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nGenerating..."
+			await get_tree().process_frame
+			var new_item = await ItemBuilder.build_random_item(null, false)
+			$Pieces.add_child(new_item)
+			new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
+			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
+			await get_tree().process_frame
+			for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
+				new_item.random_scar()
+			await new_item.try_shatter(Global.shatter_width, true)
+		
+		PhysicsServer2D.set_active(true)
+		fade_label.text = "Shuffling..."
+		await get_tree().process_frame
+		_on_shuffle_button_pressed()
+	
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
 	tween.tween_callback(fade_rect.queue_free)
@@ -347,6 +354,7 @@ func _on_save_button_pressed():
 	var reversed_image_save_data = {}
 	for k in image_save_data.keys():
 		reversed_image_save_data[image_save_data[k]] = k.map(func(entry): return entry.get_save_data())
+	save_file.store_var(Global.get_save_data())
 	save_file.store_var((reversed_image_save_data))
 	save_file.store_var((item_save_data))
 	save_file.close()
@@ -355,6 +363,7 @@ func _on_load_button_pressed():
 	for child in $Pieces.get_children():
 		child.queue_free()
 	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)
+	var global_data = save_file.get_var()
 	var image_save_data = save_file.get_var()
 	var rebuilt_textures = {}
 	#for k in image_save_data.keys():
@@ -365,6 +374,7 @@ func _on_load_button_pressed():
 		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
 		$Pieces.add_child(new_item)
 	save_file.close()
+	Global.load_save_data(global_data)
 
 func take_screenshot_of_piece(piece:Node2D) -> Image:
 	if piece == null or !is_instance_valid(piece): 

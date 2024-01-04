@@ -174,7 +174,6 @@ func _on_start_button_pressed():
 	Global.next_scene_settings = settings
 	get_tree().change_scene_to_packed(scene)
 
-
 func _on_bump_decrease_pressed():
 	bump_enabled = !bump_enabled
 	update_labels()
@@ -226,5 +225,6 @@ func _on_gallery_button_pressed():
 
 
 func _on_continue_button_pressed():
-	mode = "zen"
+	Global.next_scene_settings = {"mode":"continue"}
+	get_tree().change_scene_to_file("res://pottery/CleaningTable.tscn")
 	

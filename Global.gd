@@ -41,6 +41,24 @@ var click_mode = ClickMode.move:
 				_: Input.set_custom_mouse_cursor(null)
 			click_mode_changed.emit()
 
+func get_save_data() -> Dictionary:
+	return {
+		"sw":shatter_width,
+		"rws":rotate_with_shuffle,
+		"lr":lock_rotation,
+		"fp":freeze_pieces,
+		"c": collide,
+		"cm": click_mode
+	}
+
+func load_save_data(data:Dictionary):
+	shatter_width = data.get("sw", shatter_width)
+	rotate_with_shuffle = data.get("rws", rotate_with_shuffle)
+	lock_rotation = data.get("lr", lock_rotation)
+	freeze_pieces = data.get("fp", freeze_pieces)
+	collide = data.get("c", collide)
+	click_mode = data.get("cm", click_mode)
+
 func rotate_click_mode():
 	match click_mode:
 		ClickMode.move: click_mode = ClickMode.glue

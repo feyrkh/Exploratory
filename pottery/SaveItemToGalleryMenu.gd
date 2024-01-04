@@ -1,6 +1,9 @@
 extends Control
 class_name SaveItemToGalleryMenu
 
+signal item_saved
+signal closed
+
 var image:Image
 var item
 
@@ -16,10 +19,10 @@ func _unhandled_input(event):
 		_on_cancel_pressed()
 		get_viewport().set_input_as_handled()
 
-
 func _on_cancel_pressed():
 	get_tree().paused = false
 	queue_free()
+	closed.emit()
 
 func _on_save_pressed():
 	GalleryMgr.save_to_gallery(image, item, report_error)
@@ -27,6 +30,8 @@ func _on_save_pressed():
 	find_child("SaveButton").visible = false
 	find_child("CancelButton").text = "Ok"
 	find_child("Label").text = "This item has been moved\nto your gallery"
+	item_saved.emit()
+	closed.emit()
 	
 func report_error(err):
 	push_error(err)

@@ -385,6 +385,7 @@ func _on_save_item_button_pressed():
 	Global.click_mode = Global.ClickMode.save_item
 
 func save_to_gallery(item:Node2D):
+	Global.click_mode = Global.ClickMode.move
 	item.visibility_layer |= 2
 	var img = await take_screenshot_of_piece(item)
 	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
@@ -392,6 +393,12 @@ func save_to_gallery(item:Node2D):
 	popup.setup(img, item)
 	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
 	item.visibility_layer &= ~2
+	popup.item_saved.connect(func():
+		if get_tree():
+			await get_tree().process_frame
+			_on_save_button_pressed()
+	, CONNECT_ONE_SHOT)
+
 
 func open_pause_menu():
 	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()

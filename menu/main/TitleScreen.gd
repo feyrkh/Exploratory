@@ -37,6 +37,7 @@ var mode := "zen"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	find_child("ContinueButton").visible = FileAccess.file_exists("user://save.dat")
 	find_child("MainMenu").visible = true
 	find_child("OptionsContainer").visible = false
 	load_config()
@@ -160,6 +161,8 @@ func _on_start_button_pressed():
 			settings["mode"] = "zen"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
+			var dir = DirAccess.open("user://")
+			dir.remove("save.dat")
 		"time":
 			settings["mode"] = "zen"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
@@ -172,7 +175,7 @@ func _on_start_button_pressed():
 	Global.collide = true
 	Global.click_mode = Global.ClickMode.move
 	Global.next_scene_settings = settings
-	get_tree().change_scene_to_packed(scene)
+	Global.change_scene(scene)
 
 func _on_bump_decrease_pressed():
 	bump_enabled = !bump_enabled
@@ -221,10 +224,10 @@ func _on_back_button_mouse_entered():
 
 
 func _on_gallery_button_pressed():
-	get_tree().change_scene_to_file("res://pottery/GalleryRoom.tscn")
+	Global.change_scene("res://pottery/GalleryRoom.tscn")
 
 
 func _on_continue_button_pressed():
 	Global.next_scene_settings = {"mode":"continue"}
-	get_tree().change_scene_to_file("res://pottery/CleaningTable.tscn")
+	Global.change_scene("res://pottery/CleaningTable.tscn")
 	

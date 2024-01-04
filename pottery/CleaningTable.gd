@@ -411,5 +411,5 @@ func open_pause_menu():
 	)
 	popup.save_game.connect(_on_save_button_pressed)
 	popup.exit_game.connect(func():
-		get_tree().change_scene_to_file("res://menu/main/TitleScreen.tscn")
+		Global.change_scene("res://menu/main/TitleScreen.tscn")
 	)

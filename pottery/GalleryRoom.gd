@@ -227,7 +227,7 @@ func unpack_gallery_item(item_name:String) -> Node2D:
 
 func _on_exit_button_pressed():
 	save_current_room()
-	get_tree().change_scene_to_file("res://menu/main/TitleScreen.tscn")
+	Global.change_scene("res://menu/main/TitleScreen.tscn")
 
 func _on_unpack_button_pressed():
 	display_gallery_menu()

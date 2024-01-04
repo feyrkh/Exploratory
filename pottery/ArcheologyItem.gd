@@ -204,6 +204,7 @@ func _post_load():
 	apply_global_settings()
 
 func _ready():
+	Global.cleanup_all_items.connect(func():self.free())
 	if !loading:
 		refresh_polygon()
 	if original_area == null:

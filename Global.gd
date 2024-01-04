@@ -5,10 +5,18 @@ signal camera_zoom_changed(cur_zoom:float)
 signal delete_archeology_item(item:ArcheologyItem)
 signal save_to_gallery(item:Node2D)
 signal unpack_gallery_item(gallery_item_name:String)
+signal cleanup_all_items()
 
 var next_scene_settings
 var shatter_width:float = 0.5
 var rotate_with_shuffle = false
+
+func change_scene(scene):
+	cleanup_all_items.emit()
+	if scene is String:
+		get_tree().change_scene_to_file(scene)
+	else:
+		get_tree().change_scene_to_packed(scene)
 
 var lock_rotation = true:
 	set(val):

@@ -58,6 +58,7 @@ text = "Add Item"
 alignment = 0
 
 [node name="DeleteAllButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -105,12 +106,14 @@ text = "Shuffle"
 alignment = 0
 
 [node name="SaveButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 text = "Save Workspace"
 alignment = 0
 
 [node name="LoadButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 text = "Load Workspace"

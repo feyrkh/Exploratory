@@ -5,6 +5,7 @@ var primes = [79, 83, 89, 97]
 var should_load_slowly = true
 
 func _ready():
+	Global.cleanup_all_items.connect(func():self.free())
 	var noise:FastNoiseLite = null
 	noise = FastNoiseLite.new()
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
@@ -14,7 +15,6 @@ func _ready():
 	noise.fractal_octaves = 8
 	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
 	noise.seed = randf()
-	var tree_to_use
 	var num_items = randi_range(2, NUM_SLOTS)
 	num_items=NUM_SLOTS
 	var start_slot = randi_range(0, NUM_SLOTS-1)

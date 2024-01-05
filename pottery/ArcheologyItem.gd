@@ -21,6 +21,7 @@ var reset_position = null
 var reset_rotation = null
 var bounding_box:Rect2
 var loading:bool = false
+var adjusted_scale := 1.0
 ## This item is being used for display only and can't be interacted with
 var is_display:bool = false:
 	set(val):
@@ -309,7 +310,8 @@ func refresh_polygon() -> int:
 		total_edge_length += collision.polygon[i].distance_to(collision.polygon[j])
 	if _gallery_mode:
 		return 1
-	polygon.uv = collision.polygon
+	if polygon.uv == null or polygon.uv.size() == 0:
+		polygon.uv = collision.polygon
 	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
@@ -417,7 +419,7 @@ func _integrate_forces(state):
 		set_deferred("freeze", Global.freeze_pieces)
 	if target_pos != null:
 		var desired_motion = drag_start_item - global_position + target_pos - drag_start_mouse
-		state.linear_velocity = desired_motion * 25
+		state.linear_velocity = desired_motion * 5
 	if target_rot != null:
 		var item_center = to_global(center_of_mass)
 		var mouse_cursor = get_global_mouse_position()
@@ -850,12 +852,13 @@ func save_to_gallery():
 	Global.save_to_gallery.emit(self)
 
 func adjust_scale(scale_change:float):
+	adjusted_scale = scale_change
 	for child in get_children():
 		if child is Polygon2D or child is CollisionPolygon2D:
 			child.position *= scale_change
-			if "uv" in child:
-				child.uv = PackedVector2Array(child.polygon)
 			child.polygon = _adjust_polygon_scale(child.polygon, scale_change)
+			if "uv" in child:
+				child.uv = _adjust_polygon_scale(child.polygon, 1.0/adjusted_scale)
 	for child in $Scars.get_children():
 		child.position *= scale_change
 		child.adjust_scale(scale_change)

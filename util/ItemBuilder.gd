@@ -260,6 +260,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false, noise:Fast
 	retval.find_child("Polygon2D").save_data = save_data
 
 	collider_scene.queue_free()
+	print("Item complete")
 	return retval
 
 func reload_definitions():

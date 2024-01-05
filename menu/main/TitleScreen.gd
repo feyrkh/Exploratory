@@ -2,7 +2,7 @@ extends Node2D
 
 const SETTINGS_PATH := "user://settings.cfg"
 
-var tables = []
+#var tables = []
 
 enum CrackWidth {HAIRLINE, THIN, MEDIUM, THICK}
 const crack_widths = {
@@ -35,20 +35,36 @@ var crack_count := 8
 var config_file := ConfigFile.new()
 var mode := "zen"
 
+var next_bounding_box
+
+@onready var subviewport = find_child("SubViewport")
+@onready var spawn_start = find_child("ItemSpawn").global_position
+@onready var demo_start_pos = find_child("SubViewportContainer").position
+@onready var main_menu_start_pos = find_child("MainMenu").position
+@onready var option_menu_start_pos = find_child("OptionsContainer").position
+
+var demo_tween:Tween
+
+const LIT_TIME := 10
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	subviewport.world_2d = get_world_2d()
+	#find_child("DisplayCamera").global_position = find_child("ItemSpawn").global_position
 	find_child("ContinueButton").visible = FileAccess.file_exists("user://save.dat")
 	find_child("MainMenu").visible = true
 	find_child("OptionsContainer").visible = false
 	load_config()
 	update_labels()
-	var offset = randi_range(800, 1000)
-	for i in range(5):
-		var new_table = load("res://menu/main/DemoTable.tscn").instantiate()
-		new_table.should_load_slowly = i > 2
-		add_child(new_table)
-		new_table.position = Vector2(i * 1000 + offset, 0)
-		tables.append(new_table)
+	await prepare_next_item(false)
+	update_item()
+	#var offset = randi_range(800, 1000)
+	#for i in range(5):
+		#var new_table = load("res://menu/main/DemoTable.tscn").instantiate()
+		#new_table.should_load_slowly = i > 2
+		#add_child(new_table)
+		#new_table.position = Vector2(i * 1000 + offset, 0)
+		#tables.append(new_table)
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_cancel") and find_child("OptionsContainer").visible:
@@ -71,11 +87,12 @@ func save_config():
 	config_file.save(SETTINGS_PATH)
 
 func _process(delta):
-	if tables[0].position.x < -1000:
-		tables[0].position = Vector2(tables[0].position.x + ((tables.size()) * 1000), 0)
-		#tables.append(new_table)
-		#tables[0].queue_free()
-		tables.append(tables.pop_front())
+	pass
+	#if tables[0].position.x < -1000:
+		#tables[0].position = Vector2(tables[0].position.x + ((tables.size()) * 1000), 0)
+		##tables.append(new_table)
+		##tables[0].queue_free()
+		#tables.append(tables.pop_front())
 
 func _on_exit_button_pressed():
 	get_tree().quit()
@@ -135,8 +152,9 @@ func _on_crack_amt_increase_pressed():
 	update_labels()
 
 func _on_back_button_pressed():
+	restore_demo_view()
 	save_config()
-	find_child("OptionsContainer").visible = false
+	#find_child("OptionsContainer").visible = false
 	find_child("MainMenu").visible = true
 
 func _on_zen_button_pressed():
@@ -148,10 +166,11 @@ func _on_time_button_pressed():
 	load_options_menu()
 
 func load_options_menu():
+	hide_demo_view()
 	load_config()
 	update_labels()
 	find_child("OptionsContainer").visible = true
-	find_child("MainMenu").visible = false
+	#find_child("MainMenu").visible = false
 	
 func _on_start_button_pressed():
 	save_config()
@@ -230,4 +249,101 @@ func _on_gallery_button_pressed():
 func _on_continue_button_pressed():
 	Global.next_scene_settings = {"mode":"continue"}
 	Global.change_scene("res://pottery/CleaningTable.tscn")
+
+func update_item():
+	var coverup = find_child("Coverup")
+	var display_area_size = coverup.get_rect()
+	if coverup.modulate.a == 0:
+		print("Fading out")
+		var tween = create_tween()
+		tween.tween_property(coverup, "modulate", Color(0, 0, 0, 1), 2.0).set_delay(1)
+		await tween.finished
+	for child in find_child("ItemSpawn").get_children():
+		child.queue_free()
+	transfer_prepared_item()
+
+	var tween = create_tween()
+	tween.tween_property(coverup, "modulate", Color(0, 0, 0, 0.0), 2.0).set_delay(1)
+	print("Fading in")
+	prepare_next_item()
+	await tween.finished
+	var timer := get_tree().create_timer(LIT_TIME)
+	await timer.timeout
+	call_deferred("update_item")
+
+func prepare_next_item(load_slowly=true):
+	var noise:FastNoiseLite = null
+	noise = FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	noise.frequency = 0.1
+	noise.fractal_lacunarity = 2
+	noise.fractal_gain = 0.5
+	noise.fractal_octaves = 8
+	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	noise.seed = randf()
+	var item := await ItemBuilder.build_random_item(null, load_slowly, noise if randf() < 0.3 else null, randf_range(0.1, 1.0))
+	item.is_display = true
+	find_child("ItemPreparation").add_child(item)
+	item.global_rotation = 0
+	next_bounding_box = item.bounding_box
+	item.position = -(item.bounding_box.size / 2 + item.bounding_box.position)
+	
+	for j in range(randi_range(5, 12)):
+		item.random_scar()
+	if load_slowly: await(get_tree().process_frame)
+	await item.try_shatter(randf_range(0.5, 1.5), load_slowly)
+	if load_slowly: await(get_tree().process_frame)
+	for i in find_child("ItemPreparation").get_children():
+		if is_instance_valid(i) and i is ArcheologyItem:
+			i.build_glue_polygons(i.global_position, 99999999)
+			if load_slowly: await(get_tree().process_frame)
+
+func transfer_prepared_item():
+	var spawn = find_child("ItemSpawn")
+	spawn.global_position = spawn_start
+	var prep = find_child("ItemPreparation")
+	for child in spawn.get_children():
+		child.queue_free()
+	for child in prep.get_children():
+		var pos = child.position
+		prep.remove_child(child)
+		spawn.add_child(child)
+		child.position = pos
+
+	var available_space = Vector2(830, 720)
+	var used_space = next_bounding_box.size
+	var actual_scale = max(used_space.x / available_space.x, used_space.y / available_space.y)
+	var desired_zoom = 0.7 / actual_scale
+	find_child("DisplayCamera").zoom = Vector2(desired_zoom, desired_zoom)
+	var offset = Vector2(randf_range(100, 200), randf_range(100, 200))
+	if randf() < 0.5: offset.x = -offset.x
+	if randf() < 0.5: offset.y = -offset.y
+	find_child("DisplayCamera").global_position = spawn_start# - Vector2(415, 0)
+	#var camera_tween = create_tween()
+	#spawn.global_position = spawn_start - offset
+	#camera_tween.tween_property(spawn, "global_position", spawn_start + offset, LIT_TIME + 6)
+
+func hide_demo_view():
+	if demo_tween != null and demo_tween.is_running():
+		demo_tween.stop()
+	demo_tween = create_tween()
+	demo_tween.set_parallel(true)
+	demo_tween.tween_property(find_child("SubViewportContainer"), "position", Vector2(1280, 0), 1.0)
+	find_child("MainMenu").position = main_menu_start_pos
+	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos - Vector2(1280, 0), 1.0)
+	find_child("OptionsContainer").position = option_menu_start_pos + Vector2(0, 1280)
+	demo_tween.tween_property(find_child("OptionsContainer"), "position", option_menu_start_pos, 1.0)
+
+
+func restore_demo_view():
+	if demo_tween != null and demo_tween.is_running():
+		demo_tween.stop()
+	demo_tween = create_tween()
+	demo_tween.set_parallel(true)
+	demo_tween.tween_property(find_child("SubViewportContainer"), "position", demo_start_pos, 1.0)
+	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos, 1.0)
+	demo_tween.tween_property(find_child("OptionsContainer"), "position", option_menu_start_pos + Vector2(0, 1280), 1.0)
+
+func show_demo_view():
+	var tween = create_tween()
 	

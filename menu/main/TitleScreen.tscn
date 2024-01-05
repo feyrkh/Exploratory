@@ -1,13 +1,73 @@
-[gd_scene load_steps=3 format=3 uid="uid://cf3wlna5ki846"]
+[gd_scene load_steps=5 format=3 uid="uid://cf3wlna5ki846"]
 
 [ext_resource type="Script" path="res://menu/main/TitleScreen.gd" id="1_mpvbx"]
 [ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_7feem"]
+[ext_resource type="Texture2D" uid="uid://b8ahj1h8tttqg" path="res://art/light_cone.png" id="3_y0o7f"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kd5ff"]
+light_mode = 2
 
 [node name="TitleScreen" type="Node2D"]
 script = ExtResource("1_mpvbx")
+metadata/_edit_vertical_guides_ = [450.0]
+
+[node name="SubViewportContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VPC" type="SubViewportContainer" parent="SubViewportContainer"]
+offset_left = 215.0
+offset_right = 1495.0
+offset_bottom = 720.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer/VPC"]
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="DisplayCamera" type="Camera2D" parent="SubViewportContainer/VPC/SubViewport"]
+position = Vector2(831.245, 2362)
+
+[node name="MenuBackground" type="ColorRect" parent="SubViewportContainer"]
+layout_mode = 2
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 483.0
+offset_bottom = 729.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="DisplayView" type="Node2D" parent="."]
+position = Vector2(504, 2000)
+
+[node name="ColorRect" type="ColorRect" parent="DisplayView"]
+material = SubResource("CanvasItemMaterial_kd5ff")
+offset_left = -498.0
+offset_top = -1025.0
+offset_right = 1210.0
+offset_bottom = 1305.0
+
+[node name="PointLight2D" type="PointLight2D" parent="DisplayView"]
+position = Vector2(343.5, 135.67)
+scale = Vector2(3.31445, 4.48567)
+energy = 0.0
+texture = ExtResource("3_y0o7f")
+height = 350.0
+
+[node name="ItemSpawn" type="Node2D" parent="DisplayView"]
+position = Vector2(327, 363)
+
+[node name="Coverup" type="ColorRect" parent="DisplayView"]
+offset_left = -557.0
+offset_top = -1073.0
+offset_right = 1240.0
+offset_bottom = 1351.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="OptionsContainer" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 512.0
@@ -16,11 +76,11 @@ offset_right = 800.0
 offset_bottom = 684.0
 
 [node name="OptionsGrid" type="GridContainer" parent="OptionsContainer"]
-layout_mode = 0
+layout_mode = 2
 offset_left = -182.0
 offset_top = -619.0
-offset_right = 453.0
-offset_bottom = -25.0
+offset_right = 301.0
+offset_bottom = -353.0
 columns = 4
 metadata/_edit_lock_ = true
 
@@ -168,7 +228,7 @@ text = ">"
 layout_mode = 2
 offset_left = -104.0
 offset_top = -249.0
-offset_right = 36.0
+offset_right = 512.0
 offset_bottom = -210.0
 focus_mode = 0
 theme = ExtResource("2_7feem")
@@ -179,7 +239,7 @@ alignment = 0
 layout_mode = 2
 offset_left = 202.0
 offset_top = -247.0
-offset_right = 344.0
+offset_right = 818.0
 offset_bottom = -208.0
 focus_mode = 0
 theme = ExtResource("2_7feem")
@@ -187,20 +247,20 @@ text = "Back"
 alignment = 0
 
 [node name="HoverDescription" type="Label" parent="OptionsContainer"]
-layout_mode = 0
+layout_mode = 2
 offset_left = -511.0
 offset_top = -128.0
-offset_right = 2049.0
-offset_bottom = 170.0
-scale = Vector2(0.5, 0.5)
+offset_right = 767.0
+offset_bottom = -89.0
 theme = ExtResource("2_7feem")
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 
 [node name="MainMenu" type="VBoxContainer" parent="."]
-offset_left = 514.0
-offset_top = 193.0
-offset_right = 802.0
-offset_bottom = 509.0
+offset_left = 68.0
+offset_top = 192.0
+offset_right = 426.0
+offset_bottom = 508.0
 
 [node name="ContinueButton" type="Button" parent="MainMenu"]
 custom_minimum_size = Vector2(0, 60)
@@ -249,6 +309,12 @@ focus_mode = 0
 theme = ExtResource("2_7feem")
 text = "Exit"
 metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="ItemPreparation" type="Node2D" parent="."]
+position = Vector2(-1827, -453)
 
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountLabel" to="." method="_on_item_count_label_mouse_entered"]
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_label_mouse_entered"]

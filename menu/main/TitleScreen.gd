@@ -183,7 +183,7 @@ func _on_start_button_pressed():
 			var dir = DirAccess.open("user://")
 			dir.remove("save.dat")
 		"time":
-			settings["mode"] = "zen"
+			settings["mode"] = "time"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
 	var scene = load("res://pottery/CleaningTable.tscn")
@@ -333,6 +333,7 @@ func hide_demo_view():
 	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos - Vector2(1280, 0), 1.0)
 	find_child("OptionsContainer").position = option_menu_start_pos + Vector2(0, 1280)
 	demo_tween.tween_property(find_child("OptionsContainer"), "position", option_menu_start_pos, 1.0)
+	hover_tooltip("")
 
 
 func restore_demo_view():
@@ -343,6 +344,7 @@ func restore_demo_view():
 	demo_tween.tween_property(find_child("SubViewportContainer"), "position", demo_start_pos, 1.0)
 	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos, 1.0)
 	demo_tween.tween_property(find_child("OptionsContainer"), "position", option_menu_start_pos + Vector2(0, 1280), 1.0)
+	hover_tooltip("")
 
 func show_demo_view():
 	var tween = create_tween()

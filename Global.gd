@@ -6,6 +6,7 @@ signal delete_archeology_item(item:ArcheologyItem)
 signal save_to_gallery(item:Node2D)
 signal unpack_gallery_item(gallery_item_name:String)
 signal cleanup_all_items()
+signal first_click_received()
 
 var next_scene_settings
 var shatter_width:float = 0.5
@@ -49,6 +50,9 @@ var click_mode = ClickMode.move:
 				_: Input.set_custom_mouse_cursor(null)
 			click_mode_changed.emit()
 
+var game_mode:String
+var awaiting_first_click:bool = false
+
 func get_save_data() -> Dictionary:
 	return {
 		"sw":shatter_width,
@@ -56,7 +60,8 @@ func get_save_data() -> Dictionary:
 		"lr":lock_rotation,
 		"fp":freeze_pieces,
 		"c": collide,
-		"cm": click_mode
+		"cm": click_mode,
+		"m": game_mode,
 	}
 
 func load_save_data(data:Dictionary):
@@ -66,6 +71,7 @@ func load_save_data(data:Dictionary):
 	freeze_pieces = data.get("fp", freeze_pieces)
 	collide = data.get("c", collide)
 	click_mode = data.get("cm", click_mode)
+	game_mode = data.get("m")
 
 func rotate_click_mode():
 	match click_mode:

@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=8 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
 [ext_resource type="Theme" uid="uid://ds00llpm4138j" path="res://theme/loading_screen.tres" id="3_dm5cm"]
 [ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
+[ext_resource type="Script" path="res://pottery/GameTimer.gd" id="4_2x0wy"]
 [ext_resource type="PackedScene" uid="uid://bylog41kf2707" path="res://util/ScreenCollisionBorders.tscn" id="5_friqi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
@@ -150,6 +151,18 @@ theme = ExtResource("3_dm5cm")
 text = "Loading...."
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="GameTimer" type="PanelContainer" parent="CanvasLayer" node_paths=PackedStringArray("piece_container")]
+offset_left = 278.0
+offset_right = 862.0
+offset_bottom = 40.0
+script = ExtResource("4_2x0wy")
+piece_container = NodePath("../../Pieces")
+
+[node name="Label" type="Label" parent="CanvasLayer/GameTimer"]
+layout_mode = 2
+text = "Timer will start when you move your first piece"
+horizontal_alignment = 1
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0

@@ -14,10 +14,11 @@ const ITEM_COUNT_SETTING := "item_count"
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
 var camera_drag_mouse_start = null
 var camera_drag_camera_start = null
+var settings
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var settings = Global.next_scene_settings
+	settings = Global.next_scene_settings
 	Global.click_mode_changed.connect(update_button_text)
 	Global.save_to_gallery.connect(save_to_gallery)
 	
@@ -33,12 +34,12 @@ func _ready():
 	fade_rect.visible = true
 	fade_rect.modulate.a = 1.0
 	
-	
 	if settings.get("mode") == "continue":
 		fade_label.text = "Restoring..."
 		PhysicsServer2D.set_active(true)
 		_on_load_button_pressed()
 	else:
+		Global.game_mode = settings.get("mode")
 		PhysicsServer2D.set_active(false)
 		update_button_text()
 		var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
@@ -59,7 +60,7 @@ func _ready():
 		fade_label.text = "Shuffling..."
 		await get_tree().process_frame
 		_on_shuffle_button_pressed()
-	
+	setup_game_mode()
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
 	tween.tween_callback(fade_rect.queue_free)
@@ -107,6 +108,22 @@ func _ready():
 
 	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
+
+func setup_game_mode():
+	var game_timer := find_child("GameTimer")
+	match Global.game_mode:
+		"zen":
+			# delete time attack stuff
+			Global.awaiting_first_click = false
+			game_timer.queue_free()
+		"time":
+			# prepare to trigger time attack stuff
+			Global.awaiting_first_click = true
+			game_timer.setup(settings[ITEM_COUNT_SETTING])
+			game_timer.time_attack_complete.connect(time_attack_complete)
+
+func time_attack_complete():
+	pass
 
 func set_piece_freeze():
 	for child in $Pieces.get_children():

@@ -3,6 +3,7 @@ class_name ArcheologyItem
 
 const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
+const DRAG_SPEED := 15
 
 enum Fields {IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE}
 
@@ -362,6 +363,9 @@ func handle_move_input(event):
 		#print("Clicked: ", event)
 		if hover_idx >= 0:
 			if event.is_action_pressed("drag_start"):
+				if Global.awaiting_first_click:
+					Global.awaiting_first_click = false
+					Global.first_click_received.emit()
 				print("Starting drag")
 				drag_start_mouse = get_global_mouse_position()
 				drag_start_item = global_position
@@ -376,6 +380,9 @@ func handle_move_input(event):
 			if event.is_action_pressed("break_item"):
 				random_scar()
 			if event.is_action_pressed("rotate_start"):
+				if Global.awaiting_first_click:
+					Global.awaiting_first_click = false
+					Global.first_click_received.emit()
 				rotate_start_mouse = to_global(center_of_mass).angle_to_point(get_global_mouse_position())
 				rotate_start_item = global_rotation
 				rotate_start_item_com_position = to_global(center_of_mass)
@@ -418,8 +425,8 @@ func _integrate_forces(state):
 		#safe_freeze(Global.freeze_pieces)
 		set_deferred("freeze", Global.freeze_pieces)
 	if target_pos != null:
-		var desired_motion = drag_start_item - global_position + target_pos - drag_start_mouse
-		state.linear_velocity = desired_motion * 5
+		var desired_motion = (drag_start_item - global_position + target_pos - drag_start_mouse)
+		state.linear_velocity = desired_motion * DRAG_SPEED
 	if target_rot != null:
 		var item_center = to_global(center_of_mass)
 		var mouse_cursor = get_global_mouse_position()

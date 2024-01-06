@@ -10,7 +10,7 @@ var expected_pieces:int
 var time_seconds:int = 0:
 	set(val):
 		time_seconds = val
-		$Label.text = get_time_text()
+		find_child("Label").text = get_time_text()
 		if piece_container.get_child_count() <= expected_pieces:
 			complete_game()
 		
@@ -46,4 +46,7 @@ func _process(delta:float):
 func complete_game():
 	time_attack_complete.emit()
 	set_process(false)
-	label.text = get_time_text() + "Completed! You may save items to your gallery or press escape to move on."
+	label.text = get_time_text()
+	var win_label = find_child("WinLabel")
+	win_label.text = "Completed! You may save items to your gallery or press escape to move on."
+	win_label.visible = true

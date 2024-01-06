@@ -122,9 +122,6 @@ func setup_game_mode():
 			game_timer.setup(settings[ITEM_COUNT_SETTING])
 			game_timer.time_attack_complete.connect(time_attack_complete)
 
-func time_attack_complete():
-	pass
-
 func set_piece_freeze():
 	for child in $Pieces.get_children():
 		child.safe_freeze(Global.freeze_pieces)
@@ -396,27 +393,38 @@ func _on_load_button_pressed():
 func take_screenshot_of_piece(piece:Node2D) -> Image:
 	if piece == null or !is_instance_valid(piece): 
 		return
-	return await ScreenshotUtil.take_screenshot(camera, piece.global_position + piece.bounding_box.position - Vector2(10, 10), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
-
+	piece.visibility_layer |= 2
+	var result = await ScreenshotUtil.take_screenshot(camera, piece.global_position + piece.bounding_box.position - Vector2(10, 10), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
+	piece.visibility_layer &= ~2
+	return result
 func _on_save_item_button_pressed():
 	Global.click_mode = Global.ClickMode.save_item
 
 func save_to_gallery(item:Node2D):
 	Global.click_mode = Global.ClickMode.move
-	item.visibility_layer |= 2
 	var img = await take_screenshot_of_piece(item)
 	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
 	find_child("PopupContainer").add_child(popup)
 	popup.setup(img, item)
 	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
-	item.visibility_layer &= ~2
 	popup.item_saved.connect(func():
 		if get_tree():
 			await get_tree().process_frame
 			_on_save_button_pressed()
 	, CONNECT_ONE_SHOT)
 
-
+func time_attack_complete():
+	Global.click_mode = Global.ClickMode.move
+	var imgs = []
+	for piece in find_child("Pieces").get_children():
+		var img = await take_screenshot_of_piece(piece)
+		imgs.append([img, piece])
+	await get_tree().process_frame
+	var popup = load("res://pottery/TimeAttackCompleteMenu.tscn").instantiate()
+	find_child("PopupContainer").add_child(popup)
+	popup.setup(imgs)
+	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
+	
 func open_pause_menu():
 	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()
 	find_child("PopupContainer").add_child(popup)

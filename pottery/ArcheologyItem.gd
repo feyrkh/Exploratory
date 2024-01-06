@@ -1,7 +1,7 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
-const TOO_SMALL_POLYGON_AREA := 35
+const TOO_SMALL_POLYGON_AREA := 65
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
 const DRAG_SPEED := 15
 
@@ -527,7 +527,13 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 				new_collision_polygons.append(clipped_polygons[0])
 		collision_polygon_list = new_collision_polygons
 		new_collision_polygons = []
-
+	
+	var total_size = 0
+	for poly in collision_polygon_list:
+		total_size += _calculate_area(poly)
+	print("After shattering, original area changed by ", (1.0 - total_size / original_area)*100, "% (", original_area, " -> ", total_size, ")")
+	original_area = total_size
+	
 	for i in range(0, collision_polygon_list.size()):
 		if should_shatter_slow and get_tree() != null:
 			await wait_frame()
@@ -545,85 +551,6 @@ func vector_arrays_equal(arr1:PackedVector2Array, arr2:PackedVector2Array) -> bo
 	for b in arr2:
 		hash2 += b.length_squared()
 	return abs(hash1 - hash2) < 0.01
-
-func try_shatter_old(shatter_width:float = Global.shatter_width, should_shatter_slow:bool=false):
-	shattering_in_progress = false
-	shatter_size = shatter_width
-	# look at each scar in turn
-	var scar_count = scars.get_child_count()
-	var break_path
-	var scar1:ItemScar
-	var scar2:ItemScar
-	var scar1_edge_segments
-	var scar2_edge_segments
-	for pt_idx in range(collision.polygon.size()):
-		if break_path != null: break
-		var next_pt_idx = (pt_idx + 1) % collision.polygon.size()
-		for scar1_idx in range(scar_count):
-			if break_path != null: break
-			scar1 = scars.get_child(scar1_idx)
-			# check if that scar intersects the same edge on both sides, if so that's our break path
-			var scar1_intersect = scar1.get_edge_intersections(collision.polygon[pt_idx], collision.polygon[next_pt_idx])
-			if scar1_intersect == null:
-				continue
-			if scar1_intersect[-1] == "both":
-				break_path = scar1.line.points
-				scar1_edge_segments = break_path
-				break
-			# otherwise, look for any scar which intersects with this one, our break path is the first scar up to the intersection point, then follow the second scar back to its start
-			for scar2_idx in range(scar1_idx+1, scar_count):
-				scar2 = scars.get_child(scar2_idx)
-				var scar1_intersect_scar2 = scar1.intersect_scar(scar2, false, false)
-				if scar1_intersect_scar2:
-					break_path = scar1_intersect_scar2[0]
-					scar1_edge_segments = scar1_intersect_scar2[1]
-					scar2_edge_segments = scar1_intersect_scar2[2]
-					break
-			if !break_path:
-				scar2 = null
-				# Finally, if no other scars intersect this one, look at whether the endpoint of this scar intersects any other edges
-				for endpt_idx in range(collision.polygon.size()):
-					var next_endpt_idx = (endpt_idx + 1) % collision.polygon.size()
-					var scar1_endpt_intersect = scar1.get_edge_intersections(collision.polygon[endpt_idx], collision.polygon[next_endpt_idx])
-					if scar1_endpt_intersect != null:
-						if scar1_endpt_intersect[-1] != "start":
-							break_path = scar1.line.points
-							scar1_edge_segments = break_path
-							break
-	# see if we found any break path
-	if !break_path:
-		for scar in scars.get_children():
-			scar.queue_free()
-		return
-	if scar1 and scar1_edge_segments:
-		scar1.remove_line_segments(scar1_edge_segments, false)
-	if scar2 and scar2_edge_segments:
-		scar2.remove_line_segments(scar2_edge_segments, false)
-	
-	# expand our break path
-	shattering_in_progress = [shatter_width, should_shatter_slow]
-	var break_poly = MyGeom.inflate_polyline(break_path, shatter_size)
-	# intersect our break path with our existing polygon
-	var clipped_polygons = Geometry2D.clip_polygons(collision.polygon, break_poly)
-	for poly in clipped_polygons:
-		# check that each result polygon is clockwise, reverse it if not
-		if !Geometry2D.is_polygon_clockwise(poly):
-			poly.reverse()
-	# if no polygons were found, destroy this obj - it got divided into dust
-	if clipped_polygons == null or clipped_polygons.size() == 0:
-		queue_free()
-		return
-	add_break_underlay(break_path, clipped_polygons[0])
-	# create a new item out of all but the first polygon we found
-	for i in range(1, clipped_polygons.size()):
-		if should_shatter_slow and randf() < 0.5:
-			await wait_frame()
-		var new_item = await clone(clipped_polygons[i])
-		new_item.refresh_polygon()
-		#new_item.apply_central_impulse(Vector2.ONE.rotated(deg_to_rad(randf_range(0, 360))) * 260)
-	# replace our current collision polygon with the first polygon we found
-	collision.polygon = clipped_polygons[0]
-	refresh_polygon()
 
 func random_scar():
 	#var start_pos_idx = randi_range(0, collision.polygon.size() - 2)

@@ -48,6 +48,7 @@ func _ready():
 			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nGenerating..."
 			await get_tree().process_frame
 			var new_item = await ItemBuilder.build_random_item(null, false)
+			new_item.original_item_count = total_items
 			$Pieces.add_child(new_item)
 			new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
 			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
@@ -397,6 +398,7 @@ func take_screenshot_of_piece(piece:Node2D) -> Image:
 	var result = await ScreenshotUtil.take_screenshot(camera, piece.global_position + piece.bounding_box.position - Vector2(10, 10), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
 	piece.visibility_layer &= ~2
 	return result
+	
 func _on_save_item_button_pressed():
 	Global.click_mode = Global.ClickMode.save_item
 
@@ -413,10 +415,13 @@ func save_to_gallery(item:Node2D):
 			_on_save_button_pressed()
 	, CONNECT_ONE_SHOT)
 
-func time_attack_complete():
+func time_attack_complete(total_seconds:int):
 	Global.click_mode = Global.ClickMode.move
 	var imgs = []
 	for piece in find_child("Pieces").get_children():
+		piece.time_attack_seconds = total_seconds
+		piece.bump_enabled = !Global.freeze_pieces
+		piece.rotate_enabled = Global.rotate_with_shuffle
 		var img = await take_screenshot_of_piece(piece)
 		imgs.append([img, piece])
 	await get_tree().process_frame

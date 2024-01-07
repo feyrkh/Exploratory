@@ -37,11 +37,163 @@ layout_mode = 2
 text = "Completed piece"
 horizontal_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
+
+[node name="ScoreContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+columns = 3
+
+[node name="CategoryPieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Fragments"
+
+[node name="ValuePieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "5"
+horizontal_alignment = 1
+
+[node name="ScorePieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Artifacts"
+
+[node name="ValueItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "2"
+horizontal_alignment = 1
+
+[node name="ScoreItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Time"
+
+[node name="ValueTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "00:00:00  "
+horizontal_alignment = 1
+
+[node name="ScoreTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "complete"
+
+[node name="ValueComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "100%"
+horizontal_alignment = 1
+
+[node name="ScoreComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Disarray"
+
+[node name="ValueAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "100%"
+horizontal_alignment = 1
+
+[node name="ScoreAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Fracture"
+
+[node name="ValueShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "hairline"
+horizontal_alignment = 1
+
+[node name="ScoreShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Bump"
+
+[node name="ValueBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Yes"
+horizontal_alignment = 1
+
+[node name="ScoreBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Rotate"
+
+[node name="ValueRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Yes"
+horizontal_alignment = 1
+
+[node name="ScoreRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
+
+[node name="CategoryTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Total"
+
+[node name="ValueTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+
+[node name="ScoreTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2

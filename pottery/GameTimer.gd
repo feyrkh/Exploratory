@@ -1,6 +1,6 @@
 extends PanelContainer
 
-signal time_attack_complete
+signal time_attack_complete(total_seconds:int)
 
 @export var piece_container:Node
 
@@ -20,14 +20,8 @@ func setup(piece_count:int):
 	expected_pieces = piece_count
 
 func get_time_text():
-	var hours:int = time_seconds / 3600
-	var mins:int = time_seconds / 60
-	var secs:int = time_seconds % 60
 	var fragment_count := piece_container.get_child_count()
-	if hours > 0:
-		return "%d:%02d:%02d   %d/%d fragments" % [hours, mins, secs, fragment_count, expected_pieces]
-	else:
-		return "%02d:%02d   %d/%d fragments" % [mins, secs, fragment_count, expected_pieces]
+	return "%s   %d/%d fragments" % [TimeUtil.format_timer(time_seconds), fragment_count, expected_pieces]
 
 func _ready():
 	Global.first_click_received.connect(start_timer)
@@ -44,7 +38,7 @@ func _process(delta:float):
 		time_seconds += 1
 
 func complete_game():
-	time_attack_complete.emit()
+	time_attack_complete.emit(time_seconds)
 	set_process(false)
 	label.text = get_time_text()
 	var win_label = find_child("WinLabel")

@@ -5,7 +5,11 @@ const TOO_SMALL_POLYGON_AREA := 65
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
 const DRAG_SPEED := 15
 
-enum Fields {IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE}
+enum Fields {
+	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
+	ORIG_ITEM_COUNT, TIME_ATTACK_SECONDS, FINAL_SCORE, BUMP_ENABLED, ROTATE_ENABLED,
+	DISPLACEMENT_SCORE,
+}
 
 # if -1, the mouse is not hovering over this piece
 var hover_idx = -1
@@ -56,7 +60,16 @@ var area:float:
 					area += _calculate_area(child.polygon)
 		return area
 
-var original_area
+# time attack score values, not for use during normal gameplay
+var original_area:float
+var original_fragment_count:int
+var original_item_count:int
+var time_attack_seconds:int
+var bump_enabled:bool
+var rotate_enabled:bool
+var final_displacement_score:float
+var final_score:int
+
 var area_pct:
 	get:
 		if !original_area:
@@ -106,6 +119,8 @@ var glue_hashes = null:
 		return polygon
 @onready var shard_edges:Node2D = find_child("ShardEdges")
 @onready var glue_edges:Node2D = find_child("Glue")
+@onready var center_of_mass_indicator:Node2D = find_child("CenterOfMass")
+@onready var rotation_handle_indicator:Node2D = find_child("RotationHandle")
 var _gallery_mode = false
 var gallery_id:String
 
@@ -134,7 +149,14 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 		Fields.POSITION: global_position,
 		Fields.ROTATION: global_rotation,
 		Fields.ORIG_AREA: original_area,
-		Fields.SHATTER_SIZE: shatter_size
+		Fields.ORIG_PIECE_COUNT: original_fragment_count,
+		Fields.ORIG_ITEM_COUNT: original_item_count,
+		Fields.TIME_ATTACK_SECONDS: time_attack_seconds,
+		Fields.SHATTER_SIZE: shatter_size,
+		Fields.BUMP_ENABLED: bump_enabled,
+		Fields.ROTATE_ENABLED: rotate_enabled,
+		Fields.DISPLACEMENT_SCORE: final_displacement_score,
+		Fields.FINAL_SCORE: final_score,
 	}
 	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "me":me_data}
 
@@ -164,6 +186,13 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, reb
 	result.global_position = me_data[Fields.POSITION]
 	result.global_rotation = me_data[Fields.ROTATION]
 	result.original_area = me_data[Fields.ORIG_AREA]
+	result.original_fragment_count = me_data[Fields.ORIG_PIECE_COUNT]
+	result.original_item_count = me_data[Fields.ORIG_ITEM_COUNT]
+	result.time_attack_seconds = me_data[Fields.TIME_ATTACK_SECONDS]
+	result.bump_enabled = me_data[Fields.BUMP_ENABLED]
+	result.rotate_enabled = me_data[Fields.ROTATE_ENABLED]
+	result.final_displacement_score = me_data[Fields.DISPLACEMENT_SCORE]
+	result.final_score = me_data[Fields.FINAL_SCORE]
 	for data in poly_data:
 		var new_polygon = ItemPolygon2D.new()
 		new_polygon.visibility_layer = 3 # Visible on layers 1 (normal view) and 2 (screenshot view)
@@ -211,7 +240,9 @@ func _ready():
 		refresh_polygon()
 	if original_area == null:
 		original_area = area
-
+	center_of_mass_indicator.polygon = MyGeom.circle_polygon(Vector2.ZERO, Global.center_of_mass_indicator_size, 16)
+	rotation_handle_indicator.polygon = MyGeom.circle_polygon(Vector2.ZERO, Global.center_of_mass_indicator_size*.75, 8)
+	
 func gallery_mode():
 	_gallery_mode = true
 	collision_mask &= ~1 # disable collision with other pieces
@@ -258,6 +289,13 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	var new_scene = preload("res://pottery/ArcheologyItem.tscn").instantiate()
 	new_scene.find_child("Polygon2D").texture = visual_polygons[0].texture
 	new_scene.original_area = original_area
+	new_scene.original_fragment_count = original_fragment_count
+	new_scene.original_item_count = original_item_count
+	new_scene.time_attack_seconds = time_attack_seconds
+	new_scene.bump_enabled = bump_enabled
+	new_scene.rotate_enabled = rotate_enabled
+	new_scene.final_displacement_score = final_displacement_score
+	new_scene.final_score = final_score
 	new_scene.is_display = is_display
 	new_scene.original_boundary_polygon = original_boundary_polygon
 	get_parent().add_child(new_scene)
@@ -386,10 +424,13 @@ func handle_move_input(event):
 				rotate_start_mouse = to_global(center_of_mass).angle_to_point(get_global_mouse_position())
 				rotate_start_item = global_rotation
 				rotate_start_item_com_position = to_global(center_of_mass)
+				center_of_mass_indicator.visible = true
+				rotation_handle_indicator.visible = true
+				rotation_handle_indicator.position = to_local(get_global_mouse_position())
 				lock_rotation = false
 				safe_freeze(false)
-				print("Mouse at ", get_global_mouse_position(), ", COM at ", to_global(center_of_mass))
-				print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rad_to_deg(rotate_start_mouse))
+				#print("Mouse at ", get_global_mouse_position(), ", COM at ", to_global(center_of_mass))
+				#print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rad_to_deg(rotate_start_mouse))
 		if drag_start_mouse != null and event.is_action_released("drag_start"):
 			drag_start_mouse = null
 			drag_start_item = null
@@ -403,6 +444,12 @@ func handle_move_input(event):
 			rotate_start_mouse = null
 			rotate_start_item = null
 			target_rot = null
+			if hover_idx == -1:
+				_on_mouse_shape_exited(-1)
+				center_of_mass_indicator.visible = false
+			else:
+				center_of_mass_indicator.visible = !Global.lock_rotation
+			rotation_handle_indicator.visible = false
 			lock_rotation = Global.lock_rotation
 			safe_freeze(Global.freeze_pieces)
 			print("Stopping rotate")
@@ -457,7 +504,7 @@ func _on_mouse_shape_exited(shape_idx):
 	if is_display:
 		return
 	if shape_idx == hover_idx:
-		if drag_start_item == null:
+		if drag_start_item == null and rotate_start_item == null:
 			if Global.click_mode == Global.ClickMode.move or Global.click_mode == Global.ClickMode.save_item:
 				unhighlight_visual_polygons()
 		#print("Left hover ", shape_idx)
@@ -466,18 +513,16 @@ func _on_mouse_shape_exited(shape_idx):
 func highlight_visual_polygons():
 	for polygon in visual_polygons:
 		polygon.modulate = Color(1.3, 1.3, 1.3, 1.3)
+	center_of_mass_indicator.position = center_of_mass
+	center_of_mass_indicator.visible = !Global.lock_rotation or (rotate_start_item != null)
 
 func unhighlight_visual_polygons():
 	for polygon in visual_polygons:
 		polygon.modulate = Color.WHITE
+	center_of_mass_indicator.visible = false
 
 func add_scar(scar:ItemScar):
 	scar.refresh_scar_path(collision.polygon)
-	for scar2 in scars.get_children():
-		# Check that no other scars start really close to the start/end of this scar - if they do, skip it
-		if scar.line.points[0].distance_squared_to(scar2.line.points[0]) <= 25 or scar.line.points[-1].distance_squared_to(scar2.line.points[0]) <= 25:
-			# One of the endpoints is too close to an existing scar, delete it to avoid bad fragments later
-			scar.queue_free()
 	scars.add_child(scar)
 
 #func try_shatter_all_at_once():
@@ -533,7 +578,7 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 		total_size += _calculate_area(poly)
 	print("After shattering, original area changed by ", (1.0 - total_size / original_area)*100, "% (", original_area, " -> ", total_size, ")")
 	original_area = total_size
-	
+	original_fragment_count = collision_polygon_list.size()
 	for i in range(0, collision_polygon_list.size()):
 		if should_shatter_slow and get_tree() != null:
 			await wait_frame()
@@ -748,11 +793,29 @@ func get_segment_intersecting_circle(circle_center:Vector2, circle_radius:float,
 				#cur_segment = []
 	return cur_segment
 
-func recalculate_structure_completion():
+## Sorts visual polygons in order of descending size, then adjusts the offset of everything and the
+## actual object position to be based on the location of the largest item. This prevents displacement
+## score from being thrown off by considering a tiny fragment that's wildly out of place from being the
+## true origin of the object
+func find_largest_polygon():
+	if visual_polygons.size() < 2:
+		return visual_polygons[0] # nothing to do if we only have 1 polygon (or less)
+	var largest_polygon := visual_polygons[0]
+	var largest_size := _calculate_area(largest_polygon.polygon)
+	for i in range(1, visual_polygons.size()):
+		var cur_polygon := visual_polygons[i]
+		var cur_size := _calculate_area(cur_polygon.polygon)
+		if cur_size > largest_size:
+			largest_polygon = cur_polygon
+			largest_size = cur_size
+	return largest_polygon
+
+func get_displacement_score():
 	var result = {}
 	var avg_displacements = 0
 	var num_polygons = 0
 	var total_area = 0
+	var largest_polygon = find_largest_polygon()
 	for child in get_children():
 		if child is ItemPolygon2D:
 			var total_displacement = 0
@@ -761,17 +824,14 @@ func recalculate_structure_completion():
 			total_area += cur_area
 			for pt in child.polygon:
 				var actual_pt = child.to_global(pt)
-				var expected_pt = self.to_global(pt)
+				var expected_pt = largest_polygon.to_global(pt)
 				total_displacement += abs(expected_pt.distance_to(actual_pt))
 				num_pts += 1
 			if num_pts > 0:
 				avg_displacements += total_displacement/num_pts * cur_area
 				num_polygons += 1
 	$StructurePct.text = "avg displace: "+str(snapped(avg_displacements/num_polygons/total_area, 0.01))+"\ncomplete: "+str(snapped(area_pct*100, 0.1))+"%"
-	result['displace'] = avg_displacements/num_polygons/total_area
-
-func _on_timer_timeout():
-	recalculate_structure_completion()
+	return avg_displacements/num_polygons/total_area
 
 func safe_freeze(val:bool):
 	freeze = val

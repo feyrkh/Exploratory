@@ -45,3 +45,13 @@ static func inflate_polyline(pts, offset):
 static func shorten_path(path_part, shorten_amt:float):
 	path_part[0] =  path_part[0] + (path_part[1] - path_part[0]).normalized() * shorten_amt
 	path_part[-1] = path_part[-1] + (path_part[-2] - path_part[-1]).normalized() * shorten_amt
+
+static func circle_polygon(pos:Vector2, radius:float, point_count:int) -> PackedVector2Array:
+	var v: Vector2 = Vector2(0, radius)
+	var delta_radians: float = 2 * PI / point_count
+	var circle: PackedVector2Array = PackedVector2Array()
+	circle.resize(point_count + 1)
+	for i in range(point_count + 1):
+		circle.append(v + pos)
+		v = v.rotated(delta_radians)
+	return circle

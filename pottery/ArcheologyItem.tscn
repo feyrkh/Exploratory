@@ -54,6 +54,24 @@ text = "structure 100%"
 
 [node name="BBoxContainer" type="Node2D" parent="."]
 
+[node name="RotationGuide" type="Node2D" parent="."]
+
+[node name="CenterOfMass" type="Polygon2D" parent="RotationGuide"]
+visible = false
+polygon = PackedVector2Array(-1, 0, 0, -1, 1, 0, 0, 1)
+
+[node name="Polygon2D" type="Polygon2D" parent="RotationGuide/CenterOfMass"]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-2, 0, 0, -2, 2, 0, 0, 2)
+
+[node name="RotationHandle" type="Polygon2D" parent="RotationGuide"]
+visible = false
+polygon = PackedVector2Array(-1, 0, 0, -1, 1, 0, 0, 1)
+
+[node name="Polygon2D" type="Polygon2D" parent="RotationGuide/RotationHandle"]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-2, 0, 0, -2, 2, 0, 0, 2)
+
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

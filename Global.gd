@@ -52,6 +52,7 @@ var click_mode = ClickMode.move:
 
 var game_mode:String
 var awaiting_first_click:bool = false
+var center_of_mass_indicator_size:float = 5
 
 func get_save_data() -> Dictionary:
 	return {
@@ -62,6 +63,7 @@ func get_save_data() -> Dictionary:
 		"c": collide,
 		"cm": click_mode,
 		"m": game_mode,
+		"coms": center_of_mass_indicator_size,
 	}
 
 func load_save_data(data:Dictionary):
@@ -72,6 +74,7 @@ func load_save_data(data:Dictionary):
 	collide = data.get("c", collide)
 	click_mode = data.get("cm", click_mode)
 	game_mode = data.get("m")
+	center_of_mass_indicator_size = data.get("coms")
 
 func rotate_click_mode():
 	match click_mode:

@@ -206,7 +206,7 @@ func handle_glue_input(event):
 		Global.reset_click_mode()
 
 func do_glue_at_cursor():
-		glue_cooldown = 0.1
+		glue_cooldown = 0.05
 		var pieces = cursor_area.get_overlaps()
 		if pieces.size() > 1:
 			var main_piece = pieces[0]

@@ -44,6 +44,7 @@ color = Color(0, 0, 0, 1)
 position = Vector2(504, 2000)
 
 [node name="ColorRect" type="ColorRect" parent="DisplayView"]
+z_index = -999
 material = SubResource("CanvasItemMaterial_kd5ff")
 offset_left = -498.0
 offset_top = -1025.0

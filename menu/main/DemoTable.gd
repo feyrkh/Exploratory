@@ -42,7 +42,7 @@ func _ready():
 		var slot = find_child("Slot"+str(i))
 		for item in slot.get_children():
 			if is_instance_valid(item) and item is ArcheologyItem:
-				item.build_glue_polygons(item.global_position, 99999999)
+				#item.build_glue_polygons(item.global_position, 99999999)
 				if should_load_slowly:
 					await(get_tree().process_frame)
 

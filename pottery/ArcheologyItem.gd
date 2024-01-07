@@ -676,6 +676,9 @@ func add_break_underlay(break_path, clip_polygon, offset=1):
 			#print("Zero width path found")
 			var new_pt = path_part[0] - (path_part[0] - path_part[1])/2
 			path_part.insert(1, new_pt)
+		# retreat by 5px in both directions
+		path_part[0] = path_part[0] + (path_part[1] - path_part[0]).normalized() * 5
+		path_part[-1] = path_part[-1] + (path_part[-2] - path_part[-1]).normalized() * 5
 		line.points = path_part
 		edge.add_child(line)
 		shard_edges.add_child(edge)

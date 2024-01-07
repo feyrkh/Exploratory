@@ -1,5 +1,7 @@
 extends Node2D
 
+signal glue_changed
+
 var child1_idx:int = -1
 var child2_idx:int = -1
 var auto_restart:bool = false
@@ -20,6 +22,7 @@ func _process(delta):
 			child1_idx = 0
 			child2_idx = 1
 		else:
+			glue_changed.emit()
 			stop_processing()
 			return
 	var child1:ItemGlueEdge = get_child(child1_idx)

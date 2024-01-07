@@ -295,7 +295,7 @@ func prepare_next_item(load_slowly=true):
 	if load_slowly: await(get_tree().process_frame)
 	for i in find_child("ItemPreparation").get_children():
 		if is_instance_valid(i) and i is ArcheologyItem:
-			i.build_glue_polygons(i.global_position, 99999999)
+			#i.build_glue_polygons(i.global_position, 99999999)
 			if load_slowly: await(get_tree().process_frame)
 
 func transfer_prepared_item():

@@ -9,7 +9,7 @@ metadata/_edit_horizontal_guides_ = [131.0]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(1, 0, 0.0392157, 1)
-polygon = PackedVector2Array(180.131, 92.7578, 180.354, 93.4958, 152.886, 114.019, 152.48, 113.992, 128.681, 90.66, 128.988, 89.9637)
+polygon = PackedVector2Array(259.615, 278.994, 268.245, 273.993, 269.781, 277.979, 262.433, 282.368)
 
 [node name="Line2D" type="Line2D" parent="."]
 points = PackedVector2Array(128.571, 89.7816, 180.777, 92.4931)

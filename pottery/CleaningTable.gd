@@ -15,6 +15,7 @@ const ITEM_COUNT_SETTING := "item_count"
 var camera_drag_mouse_start = null
 var camera_drag_camera_start = null
 var settings
+var glue_cooldown:float = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -158,6 +159,10 @@ func _process(_delta):
 			var view_rect = camera.get_viewport_rect()
 			view_rect.position += camera.get_screen_center_position()
 			set_camera_position(camera.position + movement * CAMERA_MOVE_SPEED / camera.zoom.x)
+	if glue_cooldown > 0:
+		glue_cooldown = max(0, glue_cooldown-_delta)
+		if glue_cooldown <= 0 and Input.is_action_pressed("drag_start"):
+			do_glue_at_cursor()
 
 func adjust_camera_limits():
 		var view_rect = camera.get_viewport_rect()
@@ -196,19 +201,21 @@ func handle_save_item_input(event):
 func handle_glue_input(event):
 	if event.is_action_pressed("drag_start"):
 		# find all pieces under the cursor and glue them together
+		do_glue_at_cursor()
+	elif event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
+		Global.reset_click_mode()
+
+func do_glue_at_cursor():
+		glue_cooldown = 0.1
 		var pieces = cursor_area.get_overlaps()
 		if pieces.size() > 1:
-			print("Gluing ", pieces.size(), " pieces together")
 			var main_piece = pieces[0]
 			for i in range(1, pieces.size()):
 				main_piece.glue(pieces[i])
 			main_piece.call_deferred("highlight_visual_polygons")
 			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 		elif pieces.size() == 1:
-			print("Filling glue in cracks, maybe")
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
-	elif event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
-		Global.reset_click_mode()
 
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:

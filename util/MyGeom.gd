@@ -55,3 +55,44 @@ static func circle_polygon(pos:Vector2, radius:float, point_count:int) -> Packed
 		circle.append(v + pos)
 		v = v.rotated(delta_radians)
 	return circle
+
+# Find the orientation of an ordered set of 3 points
+# 0=colinear, 1=clockwise, 2=ccw
+# https://www.geeksforgeeks.org/convex-hull-using-jarvis-algorithm-or-wrapping/
+#static func orientation(p1:Vector2, p2:Vector2, p3:Vector2):
+	#var val:int = (p2.y-p1.y)*(p3.x-p2.x)-(p2.x-p1.x)*(p3.y-p2.y)
+	#if val == 0:
+		#return 0
+	#return 1 if val > 0 else 2
+static func build_convex_polygon(points:PackedVector2Array) -> PackedVector2Array:
+	return Geometry2D.convex_hull(points)
+
+#static func build_convex_polygon(points:PackedVector2Array) -> PackedVector2Array:
+	#var n := points.size()
+	#if points == null or n < 3:
+		#return points
+	#var hull:Array[Vector2] = []
+	#
+	## Find leftmost point
+	#var leftmost_idx = 0
+	#for i in range(1, n):
+		#if points[i].x < points[leftmost_idx].x:
+			#leftmost_idx = i
+	#
+	## Start from leftmost point, move counterclockwise until we reach the start
+	## point again.
+	#var p=leftmost_idx
+	#var q
+	#for j in points.size():
+		#hull.append(points[p])
+		## Search for a point 'q' such that orientation (p, q, x) is ccw for all
+		## all points 'x'. The idea is to keep track of the last visited most ccw 
+		## point in q. If any point 'i' is more ccw than q, then update q.
+		#q = (p+1)%n
+		#for i in range(n):
+			#if orientation(points[p], points[i], points[q]) == 2:
+				#q = i
+		#p = q
+		#if p == leftmost_idx:
+			#break
+	#return hull

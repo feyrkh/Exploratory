@@ -92,14 +92,6 @@ var collision_polygons:Array[CollisionPolygon2D] = []:
 					collision_polygons.append(child)
 		return collision_polygons
 
-var glue_hashes = null:
-	get:
-		if glue_hashes == null:
-			glue_hashes = {}
-			for child in $Glue.get_children():
-				glue_hashes[child.polygon.hash()] = child
-		return glue_hashes
-
 @onready var collision:CollisionPolygon2D = find_child("CollisionPolygon2D"):
 	get:
 		if collision == null:
@@ -109,7 +101,7 @@ var glue_hashes = null:
 					break
 		return collision
 @onready var scars:Node2D = find_child("Scars")
-@onready var polygon:ItemPolygon2D = find_child("Polygon2D"):
+@onready var polygon:ItemPolygon2D:
 	get:
 		if polygon == null:
 			for child in get_children():
@@ -227,7 +219,6 @@ func _post_load():
 	visual_polygons = []
 	polygon = null
 	collision = null
-	glue_hashes = null
 	refresh_polygon()
 	loading = false
 	for child in $ShardEdges.get_children():
@@ -738,7 +729,6 @@ func glue(other:ArcheologyItem):
 				glue_edges.add_child(g)
 				g.global_position = pos
 				g.global_rotation = rot
-				glue_hashes[g.find_child("Polygon2D").polygon.hash()] = g
 	visual_polygons = []
 	collision_polygons = []
 	area = 0
@@ -746,12 +736,61 @@ func glue(other:ArcheologyItem):
 	center_of_mass = center
 	other.queue_free()
 
-# Build glue polygons by finding scars and recoloring them?
+func _global_bounding_box(node:ItemPolygon2D) -> Rect2:
+	var bbox = node.bounding_box
+	var top_left = node.to_global(node.bounding_box.position)
+	var top_right = node.to_global(node.bounding_box.position + Vector2(node.bounding_box.size.x, 0))
+	var bot_right = node.to_global(node.bounding_box.end)
+	var bot_left = node.to_global(node.bounding_box.position + Vector2(0, node.bounding_box.size.y))
+	var x1:float = min(top_left.x, bot_right.x, top_right.x, bot_left.x)
+	var y1:float = min(top_left.y, bot_right.y, top_right.y, bot_left.y)
+	var x2:float = max(top_left.x, bot_right.x, top_right.x, bot_left.x)
+	var y2:float = max(top_left.y, bot_right.y, top_right.y, bot_left.y)
+	return Rect2(x1, y1, x2-x1, y2-y1)
+	
+
+# Find edges intersecting the circle, collect all their points, build a convex hull from them
+# Encourage careful gluing, otherwise you'll get artifacts :(
+# Consider only finding the closest edge from each piece to the center?
 func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
-	for edge in shard_edges.get_children():
-		var intersecting_edges = edge.get_intersecting_edge_lines(circle_center_global, circle_radius)
-		for line in intersecting_edges:
-			ItemShardEdge.convert_to_glue(line, Color.GOLD)
+	var affected_area:Rect2 = Rect2(circle_center_global - Vector2(circle_radius, circle_radius), Vector2(circle_radius*2, circle_radius*2))
+	# Get list of visual polygons that might intersect with the circle based on their bounding boxes
+	var possible_polygon_overlaps := visual_polygons.filter(func(poly): 
+		var poly_box = _global_bounding_box(poly)
+		#print("Checking whether ", poly_box, " intersects with ", affected_area, ": ", affected_area.intersects(_global_bounding_box(poly)))
+		return affected_area.intersects(_global_bounding_box(poly))
+	)
+	# Get list of intersection points along the edges of these polygons
+	var intersection_pts:Array[Vector2] = []
+	for polygon:ItemPolygon2D in possible_polygon_overlaps:
+		var pt1 = polygon.to_global(polygon.polygon[-1])
+		for local_pt2 in polygon.polygon:
+			var pt2 := polygon.to_global(local_pt2)
+			var intersect1:float = Geometry2D.segment_intersects_circle(pt1, pt2, circle_center_global, circle_radius)
+			if intersect1 >= 0:
+				intersection_pts.append(self.to_local(pt1 + (pt2-pt1)*intersect1))
+				var intersect2:float = Geometry2D.segment_intersects_circle(pt2, pt1, circle_center_global, circle_radius)
+				# if it intersects once, it might intersect twice - check from both ends, but ignore duplicates
+				if intersect2 >= 0 and (1-(intersect1 + intersect2) > 0.000001):
+					intersection_pts.append(self.to_local(pt2 + (pt1-pt2)*intersect2))
+			if Geometry2D.is_point_in_circle(pt2, circle_center_global, circle_radius):
+				intersection_pts.append(self.to_local(pt2))
+			pt1 = pt2
+	# Now that we have all the affected points, build a convex hull around them
+	# Hopefully this doesn't stick out in weird ways in thin concave sections
+	if intersection_pts.size() >= 3:
+		var new_glue_poly = MyGeom.build_convex_polygon(intersection_pts)
+		var new_glue_obj = preload("res://pottery/ItemGlueEdge.tscn").instantiate()
+		new_glue_obj.setup(new_glue_poly)
+		glue_edges.add_child(new_glue_obj)
+	
+		
+# Build glue polygons by finding scars and recoloring them?
+#func build_glue_polygons2(circle_center_global:Vector2, circle_radius:float):
+	#for edge in shard_edges.get_children():
+		#var intersecting_edges = edge.get_intersecting_edge_lines(circle_center_global, circle_radius)
+		#for line in intersecting_edges:
+			#ItemShardEdge.convert_to_glue(line, Color.GOLD)
 
 ## Build glue polygons based on the segments near the circle - doesn't work very well
 #func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
@@ -851,6 +890,8 @@ func adjust_scale(scale_change:float):
 		if child is Polygon2D or child is CollisionPolygon2D:
 			child.position *= scale_change
 			child.polygon = _adjust_polygon_scale(child.polygon, scale_change)
+			if child.has("bounding_box"):
+				child.bounding_box = null
 			if "uv" in child:
 				child.uv = _adjust_polygon_scale(child.polygon, 1.0/adjusted_scale)
 	for child in $Scars.get_children():

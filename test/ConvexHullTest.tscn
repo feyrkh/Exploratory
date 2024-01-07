@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6xb2l5po8w4s"]
+
+[ext_resource type="Script" path="res://test/ConvexHullTest.gd" id="1_uxgx0"]
+
+[node name="ConvexHullTest" type="Node2D"]
+script = ExtResource("1_uxgx0")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.713726, 0.0588235, 0.101961, 1)
+
+[node name="Points" type="Node2D" parent="."]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://lxehddere6da"]
+[gd_scene load_steps=6 format=3 uid="uid://lxehddere6da"]
 
 [ext_resource type="Script" path="res://pottery/ArcheologyItem.gd" id="1_yx51a"]
 [ext_resource type="Texture2D" uid="uid://b15mfee467ymu" path="res://art/item/pot.png" id="2_bwwpx"]
 [ext_resource type="Script" path="res://pottery/ItemPolygon2D.gd" id="3_h7ita"]
+[ext_resource type="Script" path="res://pottery/GlueContainer.gd" id="4_e74n6"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_05x1r"]
 rough = true
@@ -43,6 +44,7 @@ z_index = -2
 [node name="Glue" type="Node2D" parent="."]
 visibility_layer = 3
 z_index = -1
+script = ExtResource("4_e74n6")
 
 [node name="StructurePct" type="Label" parent="."]
 visible = false
@@ -53,6 +55,7 @@ offset_bottom = -38.0
 text = "structure 100%"
 
 [node name="BBoxContainer" type="Node2D" parent="."]
+visible = false
 
 [node name="RotationGuide" type="Node2D" parent="."]
 
@@ -75,3 +78,4 @@ polygon = PackedVector2Array(-2, 0, 0, -2, 2, 0, 0, 2)
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]
+[connection signal="child_entered_tree" from="Glue" to="Glue" method="_on_child_entered_tree"]

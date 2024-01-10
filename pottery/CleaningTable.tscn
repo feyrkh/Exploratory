@@ -38,95 +38,6 @@ metadata/_edit_lock_ = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainer"]
-layout_mode = 2
-
-[node name="ClickModeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Mode: Move
-"
-alignment = 0
-
-[node name="AddNewButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "Add Item"
-alignment = 0
-
-[node name="DeleteAllButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "Delete All"
-alignment = 0
-
-[node name="FreezeButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "Move: Free"
-alignment = 0
-
-[node name="LockRotateButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Rotate: Locked"
-alignment = 0
-
-[node name="CollideButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "Collide: Yes"
-alignment = 0
-
-[node name="AddFractureButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "Add Fracture"
-alignment = 0
-
-[node name="ShatterButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "Shatter"
-alignment = 0
-
-[node name="ShuffleButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Shuffle"
-alignment = 0
-
-[node name="SaveButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "Save Workspace"
-alignment = 0
-
-[node name="LoadButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-focus_mode = 0
-text = "Load Workspace"
-alignment = 0
-
-[node name="SaveItemButton" type="Button" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Save Item"
-alignment = 0
-
 [node name="PopupContainer" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
@@ -192,17 +103,11 @@ shape = SubResource("CircleShape2D_tahv2")
 
 [node name="ScreenCollisionBorders" parent="." instance=ExtResource("5_friqi")]
 
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ClickModeButton" to="." method="_on_click_mode_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddNewButton" to="." method="_on_add_new_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/DeleteAllButton" to="." method="_on_delete_all_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LockRotateButton" to="." method="_on_lock_rotate_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/CollideButton" to="." method="_on_collide_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/AddFractureButton" to="." method="_on_add_fracture_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShatterButton" to="." method="_on_shatter_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PanelContainer/HBoxContainer/SaveItemButton" to="." method="_on_save_item_button_pressed"]
+[connection signal="time_attack_complete" from="CanvasLayer/GameTimer" to="CanvasLayer/SidebarMenu" method="_on_game_timer_time_attack_complete"]
+[connection signal="add_item_button_pressed" from="CanvasLayer/SidebarMenu" to="." method="_on_sidebar_menu_add_item_button_pressed"]
+[connection signal="movement_button_toggled" from="CanvasLayer/SidebarMenu" to="." method="_on_sidebar_menu_movement_button_toggled"]
+[connection signal="rotate_button_toggled" from="CanvasLayer/SidebarMenu" to="." method="_on_sidebar_menu_rotate_button_toggled"]
+[connection signal="save_item_button_pressed" from="CanvasLayer/SidebarMenu" to="." method="_on_sidebar_menu_save_item_button_pressed"]
+[connection signal="shuffle_button_pressed" from="CanvasLayer/SidebarMenu" to="." method="_on_sidebar_menu_shuffle_button_pressed"]
 [connection signal="body_entered" from="CursorArea" to="CursorArea" method="_on_body_entered"]
 [connection signal="body_exited" from="CursorArea" to="CursorArea" method="_on_body_exited"]

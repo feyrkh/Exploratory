@@ -10,5 +10,4 @@ render_target_update_mode = 4
 script = ExtResource("1_e3fr8")
 
 [node name="ScreenshotCamera" type="Camera2D" parent="."]
-anchor_mode = 0
 ignore_rotation = false

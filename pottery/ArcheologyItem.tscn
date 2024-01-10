@@ -55,7 +55,6 @@ offset_bottom = -38.0
 text = "structure 100%"
 
 [node name="BBoxContainer" type="Node2D" parent="."]
-visible = false
 
 [node name="RotationGuide" type="Node2D" parent="."]
 

@@ -99,37 +99,14 @@ text = "Piece Rotation
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
-[node name="ShuffleButton" type="TextureButton" parent="."]
-modulate = Color(1, 1, 1, 0.6)
-layout_mode = 2
-offset_left = 6.0
-offset_top = -125.0
-offset_right = 73.0
-offset_bottom = -67.0
-pivot_offset = Vector2(28, 28.5)
-texture_normal = ExtResource("8_s0nvp")
-script = ExtResource("2_sh7t1")
-
-[node name="ShuffleLabel" type="Label" parent="."]
-layout_mode = 2
-offset_left = 74.0
-offset_top = -120.0
-offset_right = 333.0
-offset_bottom = -72.0
-theme = ExtResource("2_t10ru")
-text = "Shuffle Pieces
-"
-vertical_alignment = 1
-script = ExtResource("5_mpmi2")
-
 [node name="SaveItemButton" type="TextureButton" parent="."]
 modulate = Color(1, 1, 1, 0.6)
 custom_minimum_size = Vector2(67, 0)
 layout_mode = 2
 offset_left = 6.0
-offset_top = -63.0
+offset_top = -124.0
 offset_right = 73.0
-offset_bottom = -5.0
+offset_bottom = -66.0
 pivot_offset = Vector2(30, 27)
 texture_normal = ExtResource("9_gnf6j")
 stretch_mode = 3
@@ -138,11 +115,34 @@ script = ExtResource("2_sh7t1")
 [node name="SaveItemLabel" type="Label" parent="."]
 layout_mode = 2
 offset_left = 74.0
-offset_top = -58.0
+offset_top = -119.0
 offset_right = 333.0
-offset_bottom = -10.0
+offset_bottom = -71.0
 theme = ExtResource("2_t10ru")
 text = "Save Item"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="ShuffleButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+offset_left = 6.0
+offset_top = -64.0
+offset_right = 73.0
+offset_bottom = -6.0
+pivot_offset = Vector2(28, 28.5)
+texture_normal = ExtResource("8_s0nvp")
+script = ExtResource("2_sh7t1")
+
+[node name="ShuffleLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 74.0
+offset_top = -59.0
+offset_right = 333.0
+offset_bottom = -11.0
+theme = ExtResource("2_t10ru")
+text = "Shuffle Pieces
+"
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
@@ -162,5 +162,5 @@ script = ExtResource("15_j52o5")
 [connection signal="pressed" from="AddItemButton" to="." method="_on_add_item_button_pressed"]
 [connection signal="toggled" from="MovementButton" to="." method="_on_movement_button_toggled"]
 [connection signal="toggled" from="RotateButton" to="." method="_on_rotate_button_toggled"]
-[connection signal="pressed" from="ShuffleButton" to="." method="_on_shuffle_button_pressed"]
 [connection signal="pressed" from="SaveItemButton" to="." method="_on_save_item_button_pressed"]
+[connection signal="pressed" from="ShuffleButton" to="." method="_on_shuffle_button_pressed"]

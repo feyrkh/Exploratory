@@ -233,6 +233,7 @@ func _ready():
 		original_area = area
 	center_of_mass_indicator.polygon = MyGeom.circle_polygon(Vector2.ZERO, Global.center_of_mass_indicator_size, 16)
 	rotation_handle_indicator.polygon = MyGeom.circle_polygon(Vector2.ZERO, Global.center_of_mass_indicator_size*.75, 8)
+	apply_global_settings()
 	
 func gallery_mode():
 	_gallery_mode = true

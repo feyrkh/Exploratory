@@ -10,8 +10,11 @@ const ITEM_COUNT_SETTING := "item_count"
 @onready var camera:Camera2D = find_child("Camera2D")
 @onready var screenshot_camera:Camera2D = find_child("ScreenshotCamera")
 @onready var cursor_area:CursorArea = find_child("CursorArea")
+@onready var sidebar_menu = find_child("SidebarMenu")
+
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
+
 var camera_drag_mouse_start = null
 var camera_drag_camera_start = null
 var settings
@@ -61,7 +64,7 @@ func _ready():
 		PhysicsServer2D.set_active(true)
 		fade_label.text = "Shuffling..."
 		await get_tree().process_frame
-		_on_shuffle_button_pressed()
+		shuffle_items()
 	setup_game_mode()
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
@@ -257,50 +260,135 @@ func handle_move_input(event):
 		open_pause_menu()
 		get_viewport().set_input_as_handled()
 
-func _on_freeze_button_pressed():
-	Global.freeze_pieces = !Global.freeze_pieces
-	update_button_text()
-
-func _on_lock_rotate_button_pressed():
-	Global.lock_rotation = !Global.lock_rotation
-	update_button_text()
-
-
 func _on_collide_button_pressed():
 	Global.collide = !Global.collide
 	update_button_text()
 
 func update_button_text():
-	if Global.freeze_pieces:
-		find_child("FreezeButton").text = "Move: Locked"
-	else:
-		find_child("FreezeButton").text = "Move: Free"
-	if Global.collide:
-		find_child("CollideButton").text = "Collide: Yes"
-	else:
-		find_child("CollideButton").text = "Collide: No"
-	if Global.lock_rotation:
-		find_child("LockRotateButton").text = "Rotate: Locked"
-	else:
-		find_child("LockRotateButton").text = "Rotate: Free"
-	match Global.click_mode:
-		Global.ClickMode.move: find_child("ClickModeButton").text = "Click: Move"
-		Global.ClickMode.glue: find_child("ClickModeButton").text = "Click: Glue"
-		Global.ClickMode.save_item: find_child("ClickModeButton").text = "Click: Gallery"
-		#Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
-		_: find_child("ClickModeButton").text = "Click: Unknown?"
-
+	if sidebar_menu:
+		sidebar_menu.update_buttons()
 
 func _on_add_fracture_button_pressed():
 	find_child("Pieces").get_children().pick_random().random_scar()
-
 
 func _on_shatter_button_pressed():
 	for child in find_child("Pieces").get_children():
 		child.shattering_in_progress = [Global.shatter_width, false]
 
+func _on_add_new_button_pressed():
+	var new_item = await ItemBuilder.build_random_item()
+	$Pieces.add_child(new_item)
+	new_item.position = Vector2(350,150)
 
-func _on_shuffle_button_pressed():
+func _on_delete_all_button_pressed():
+	for child in $Pieces.get_children():
+		child.queue_free()
+
+func _on_click_mode_pressed():
+	Global.rotate_click_mode()
+
+func _on_save_button_pressed():
+	var image_save_data := {} # ImageBuilder.ImageSaveData -> int index
+	var item_save_data = []
+	for item in $Pieces.get_children():
+		item_save_data.append(item.get_save_data(image_save_data))
+	var save_file := FileAccess.open("user://save.dat", FileAccess.WRITE)
+	var reversed_image_save_data = {}
+	for k in image_save_data.keys():
+		reversed_image_save_data[image_save_data[k]] = k.map(func(entry): return entry.get_save_data())
+	save_file.store_var(Global.get_save_data())
+	save_file.store_var((reversed_image_save_data))
+	save_file.store_var((item_save_data))
+	save_file.close()
+
+func _on_load_button_pressed():
+	for child in $Pieces.get_children():
+		child.queue_free()
+	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)
+	var global_data = save_file.get_var()
+	var image_save_data = save_file.get_var()
+	var rebuilt_textures = {}
+	#for k in image_save_data.keys():
+	#	image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
+	#	rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
+	var item_save_data = save_file.get_var()
+	for item_save in item_save_data:
+		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
+		$Pieces.add_child(new_item)
+	save_file.close()
+	Global.load_save_data(global_data)
+
+func take_screenshot_of_piece(piece:ArcheologyItem) -> Image:
+	if piece == null or !is_instance_valid(piece): 
+		return
+	piece.visibility_layer |= 2
+	var result = await ScreenshotUtil.take_screenshot(camera, piece.to_global(piece.center), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
+	piece.visibility_layer &= ~2
+	return result
+	
+func save_to_gallery(item:Node2D):
+	Global.click_mode = Global.ClickMode.move
+	var img = await take_screenshot_of_piece(item)
+	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
+	find_child("PopupContainer").add_child(popup)
+	popup.setup(img, item)
+	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
+	popup.item_saved.connect(func():
+		if get_tree():
+			await get_tree().process_frame
+			_on_save_button_pressed()
+	, CONNECT_ONE_SHOT)
+
+func time_attack_complete(total_seconds:int):
+	Global.click_mode = Global.ClickMode.move
+	var imgs = []
+	for piece in find_child("Pieces").get_children():
+		piece.time_attack_seconds = total_seconds
+		piece.bump_enabled = !Global.freeze_pieces
+		piece.rotate_enabled = Global.rotate_with_shuffle
+		var img = await take_screenshot_of_piece(piece)
+		imgs.append([img, piece])
+	await get_tree().process_frame
+	var popup = load("res://pottery/TimeAttackCompleteMenu.tscn").instantiate()
+	find_child("PopupContainer").add_child(popup)
+	popup.setup(imgs)
+	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
+	
+func open_pause_menu():
+	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()
+	find_child("PopupContainer").add_child(popup)
+	set_process(false)
+	set_process_input(false)
+	popup.close.connect(func(): 
+		set_process_input(true)
+		set_process(true)
+	)
+	popup.save_game.connect(_on_save_button_pressed)
+	popup.exit_game.connect(func():
+		Global.change_scene("res://menu/main/TitleScreen.tscn")
+	)
+
+
+func _on_sidebar_menu_add_item_button_pressed():
+	var new_item = await ItemBuilder.build_random_item()
+	$Pieces.add_child(new_item)
+	new_item.position = Vector2(350,150)
+
+func _on_sidebar_menu_movement_button_toggled(new_val):
+	Global.freeze_pieces = new_val
+	update_button_text()
+
+func _on_sidebar_menu_rotate_button_toggled(new_val):
+	Global.lock_rotation = new_val
+	update_button_text()
+
+func _on_sidebar_menu_save_item_button_pressed():
+	Global.click_mode = Global.ClickMode.save_item
+
+func _on_sidebar_menu_shuffle_button_pressed():
+	shuffle_items()
+
+func shuffle_items():
 	#PhysicsServer2D.set_active(false)
 	var pieces = find_child("Pieces").get_children()
 	for i in range(pieces.size()):
@@ -354,99 +442,3 @@ func _on_shuffle_button_pressed():
 		piece.reset_position.x += x_offset
 	#PhysicsServer2D.set_active(true)
 	
-func _on_add_new_button_pressed():
-	var new_item = await ItemBuilder.build_random_item()
-	$Pieces.add_child(new_item)
-	new_item.position = Vector2(350,150)
-
-
-func _on_delete_all_button_pressed():
-	for child in $Pieces.get_children():
-		child.queue_free()
-
-func _on_click_mode_pressed():
-	Global.rotate_click_mode()
-
-func _on_save_button_pressed():
-	var image_save_data := {} # ImageBuilder.ImageSaveData -> int index
-	var item_save_data = []
-	for item in $Pieces.get_children():
-		item_save_data.append(item.get_save_data(image_save_data))
-	var save_file := FileAccess.open("user://save.dat", FileAccess.WRITE)
-	var reversed_image_save_data = {}
-	for k in image_save_data.keys():
-		reversed_image_save_data[image_save_data[k]] = k.map(func(entry): return entry.get_save_data())
-	save_file.store_var(Global.get_save_data())
-	save_file.store_var((reversed_image_save_data))
-	save_file.store_var((item_save_data))
-	save_file.close()
-
-func _on_load_button_pressed():
-	for child in $Pieces.get_children():
-		child.queue_free()
-	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)
-	var global_data = save_file.get_var()
-	var image_save_data = save_file.get_var()
-	var rebuilt_textures = {}
-	#for k in image_save_data.keys():
-	#	image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
-	#	rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
-	var item_save_data = save_file.get_var()
-	for item_save in item_save_data:
-		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
-		$Pieces.add_child(new_item)
-	save_file.close()
-	Global.load_save_data(global_data)
-
-func take_screenshot_of_piece(piece:Node2D) -> Image:
-	if piece == null or !is_instance_valid(piece): 
-		return
-	piece.visibility_layer |= 2
-	var result = await ScreenshotUtil.take_screenshot(camera, piece.global_position + piece.bounding_box.position - Vector2(10, 10), piece.bounding_box.size + Vector2(20, 20), piece.global_rotation)
-	piece.visibility_layer &= ~2
-	return result
-	
-func _on_save_item_button_pressed():
-	Global.click_mode = Global.ClickMode.save_item
-
-func save_to_gallery(item:Node2D):
-	Global.click_mode = Global.ClickMode.move
-	var img = await take_screenshot_of_piece(item)
-	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
-	find_child("PopupContainer").add_child(popup)
-	popup.setup(img, item)
-	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
-	popup.item_saved.connect(func():
-		if get_tree():
-			await get_tree().process_frame
-			_on_save_button_pressed()
-	, CONNECT_ONE_SHOT)
-
-func time_attack_complete(total_seconds:int):
-	Global.click_mode = Global.ClickMode.move
-	var imgs = []
-	for piece in find_child("Pieces").get_children():
-		piece.time_attack_seconds = total_seconds
-		piece.bump_enabled = !Global.freeze_pieces
-		piece.rotate_enabled = Global.rotate_with_shuffle
-		var img = await take_screenshot_of_piece(piece)
-		imgs.append([img, piece])
-	await get_tree().process_frame
-	var popup = load("res://pottery/TimeAttackCompleteMenu.tscn").instantiate()
-	find_child("PopupContainer").add_child(popup)
-	popup.setup(imgs)
-	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
-	
-func open_pause_menu():
-	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()
-	find_child("PopupContainer").add_child(popup)
-	set_process(false)
-	set_process_input(false)
-	popup.close.connect(func(): 
-		set_process_input(true)
-		set_process(true)
-	)
-	popup.save_game.connect(_on_save_button_pressed)
-	popup.exit_game.connect(func():
-		Global.change_scene("res://menu/main/TitleScreen.tscn")
-	)

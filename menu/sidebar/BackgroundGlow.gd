@@ -10,14 +10,22 @@ var first_button:TextureButton
 var last_button:TextureButton
 
 func _ready():
+	await get_tree().process_frame
+	await get_tree().process_frame
+	update_position()
+	
+func update_position():
+	first_button = null
 	for child in get_parent().get_children():
-		if child is TextureButton:
+		if child.visible and child is TextureButton:
 			if first_button == null: first_button = child
 			last_button = child
 			child.mouse_entered.connect(self.show_glow)
 			child.mouse_exited.connect(self.hide_glow)
 	position = first_button.get_rect().position - Vector2(0, 60)
 	position.x = 0
+	visible = false
+	set_process(false)
 
 func show_glow():
 	visible = true

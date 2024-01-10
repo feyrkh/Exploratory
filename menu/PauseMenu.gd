@@ -34,6 +34,9 @@ signal save_game
 signal exit_game
 
 func _ready():
+	if Global.game_mode != "zen":
+		find_child("QuitAndSaveButton").visible = false
+		find_child("QuitAndDiscardButton").text = "quit"
 	find_child("QuoteLabel").text = quotes.pick_random()
 	get_tree().paused = true
 

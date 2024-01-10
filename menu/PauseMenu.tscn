@@ -14,6 +14,7 @@ grow_vertical = 2
 script = ExtResource("1_28fmm")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
 offset_left = 210.0
 offset_top = 241.0
 offset_right = 1027.0

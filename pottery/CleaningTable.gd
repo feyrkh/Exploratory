@@ -40,7 +40,7 @@ func _ready():
 		PhysicsServer2D.set_active(true)
 		_on_load_button_pressed()
 	else:
-		Global.game_mode = settings.get("mode")
+		Global.game_mode = settings.get("mode", "zen")
 		PhysicsServer2D.set_active(false)
 		update_button_text()
 		var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit

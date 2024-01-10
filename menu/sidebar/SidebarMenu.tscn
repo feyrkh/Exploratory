@@ -1,0 +1,166 @@
+[gd_scene load_steps=16 format=3 uid="uid://bpmxfyq1j2wb1"]
+
+[ext_resource type="Texture2D" uid="uid://bxolhfnudaaon" path="res://art/sidebar menu/sidebar_icon_add-item.png" id="1_bximh"]
+[ext_resource type="Script" path="res://menu/sidebar/SidebarMenu.gd" id="1_ouhc1"]
+[ext_resource type="Script" path="res://menu/HighlightButton.gd" id="2_sh7t1"]
+[ext_resource type="Theme" uid="uid://c8qjml4q8nu2g" path="res://theme/sidebar_menu_theme.tres" id="2_t10ru"]
+[ext_resource type="Material" uid="uid://bxe50cdqaih13" path="res://shader/RevealMaterial.tres" id="3_87nh5"]
+[ext_resource type="Texture2D" uid="uid://yqevyrmv7cv" path="res://art/sidebar menu/sidebar_icon_movement-on.png" id="3_bgwxi"]
+[ext_resource type="Texture2D" uid="uid://dc518q0gdyy3w" path="res://art/sidebar menu/sidebar_icon_movement-off.png" id="4_bg0md"]
+[ext_resource type="Texture2D" uid="uid://dm6g261r8ykg" path="res://art/sidebar menu/sidebar_icon_rotate-off.png" id="4_eddwg"]
+[ext_resource type="Texture2D" uid="uid://dt34nn2ci4l7y" path="res://art/sidebar menu/sidebar_icon_rotate-on.png" id="5_ithpd"]
+[ext_resource type="Script" path="res://menu/sidebar/ExpandLabel.gd" id="5_mpmi2"]
+[ext_resource type="Texture2D" uid="uid://swpodqfjhjfb" path="res://art/sidebar menu/sidebar_icon_shuffle.png" id="8_s0nvp"]
+[ext_resource type="Texture2D" uid="uid://xsadu4tnnstq" path="res://art/sidebar menu/sidebar_icon_save-object.png" id="9_gnf6j"]
+[ext_resource type="Texture2D" uid="uid://kvkcjl3x51fc" path="res://art/sidebar menu/sidebar_icon_glow.png" id="13_6fqb1"]
+[ext_resource type="Texture2D" uid="uid://bsb1ipqfa1guk" path="res://art/sidebar menu/sidebar_glowing.png" id="14_7ojls"]
+[ext_resource type="Script" path="res://menu/sidebar/BackgroundGlow.gd" id="15_j52o5"]
+
+[node name="SidebarMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ouhc1")
+
+[node name="AddItemButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+offset_left = 6.0
+offset_top = -301.0
+offset_right = 73.0
+offset_bottom = -253.0
+pivot_offset = Vector2(27, 27.5)
+texture_normal = ExtResource("1_bximh")
+ignore_texture_size = true
+script = ExtResource("2_sh7t1")
+
+[node name="AddItemLabel" type="Label" parent="."]
+material = ExtResource("3_87nh5")
+clip_contents = true
+layout_mode = 2
+offset_left = 74.0
+offset_top = -301.0
+offset_right = 333.0
+offset_bottom = -253.0
+theme = ExtResource("2_t10ru")
+text = "Add Item"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="MovementButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+offset_left = 6.0
+offset_top = -249.0
+offset_right = 73.0
+offset_bottom = -191.0
+pivot_offset = Vector2(29.5, 27)
+toggle_mode = true
+texture_normal = ExtResource("3_bgwxi")
+texture_pressed = ExtResource("4_bg0md")
+script = ExtResource("2_sh7t1")
+
+[node name="MovementLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 74.0
+offset_top = -244.0
+offset_right = 333.0
+offset_bottom = -196.0
+theme = ExtResource("2_t10ru")
+text = "Piece Movement"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="RotateButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+offset_left = 6.0
+offset_top = -187.0
+offset_right = 73.0
+offset_bottom = -129.0
+pivot_offset = Vector2(29, 27.5)
+toggle_mode = true
+texture_normal = ExtResource("5_ithpd")
+texture_pressed = ExtResource("4_eddwg")
+script = ExtResource("2_sh7t1")
+
+[node name="RotateLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 74.0
+offset_top = -182.0
+offset_right = 333.0
+offset_bottom = -134.0
+theme = ExtResource("2_t10ru")
+text = "Piece Rotation
+"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="ShuffleButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+offset_left = 6.0
+offset_top = -125.0
+offset_right = 73.0
+offset_bottom = -67.0
+pivot_offset = Vector2(28, 28.5)
+texture_normal = ExtResource("8_s0nvp")
+script = ExtResource("2_sh7t1")
+
+[node name="ShuffleLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 74.0
+offset_top = -120.0
+offset_right = 333.0
+offset_bottom = -72.0
+theme = ExtResource("2_t10ru")
+text = "Shuffle Pieces
+"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="SaveItemButton" type="TextureButton" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+custom_minimum_size = Vector2(67, 0)
+layout_mode = 2
+offset_left = 6.0
+offset_top = -63.0
+offset_right = 73.0
+offset_bottom = -5.0
+pivot_offset = Vector2(30, 27)
+texture_normal = ExtResource("9_gnf6j")
+stretch_mode = 3
+script = ExtResource("2_sh7t1")
+
+[node name="SaveItemLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 74.0
+offset_top = -58.0
+offset_right = 333.0
+offset_bottom = -10.0
+theme = ExtResource("2_t10ru")
+text = "Save Item"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="GlowSprite" type="Sprite2D" parent="."]
+visible = false
+z_index = -1
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("13_6fqb1")
+
+[node name="BackgroundGlow" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, -371)
+texture = ExtResource("14_7ojls")
+centered = false
+script = ExtResource("15_j52o5")
+
+[connection signal="pressed" from="AddItemButton" to="." method="_on_add_item_button_pressed"]
+[connection signal="toggled" from="MovementButton" to="." method="_on_movement_button_toggled"]
+[connection signal="toggled" from="RotateButton" to="." method="_on_rotate_button_toggled"]
+[connection signal="pressed" from="ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="SaveItemButton" to="." method="_on_save_item_button_pressed"]

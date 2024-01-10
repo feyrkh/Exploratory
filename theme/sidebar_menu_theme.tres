@@ -1,0 +1,11 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c8qjml4q8nu2g"]
+
+[ext_resource type="FontFile" uid="uid://6af5xb7ndfw8" path="res://theme/PT_Serif/PTSerif-Regular.ttf" id="1_t18x5"]
+
+[resource]
+Label/colors/font_shadow_color = Color(0, 0, 0, 0.345098)
+Label/constants/shadow_offset_x = 0
+Label/constants/shadow_offset_y = 4
+Label/constants/shadow_outline_size = 5
+Label/font_sizes/font_size = 35
+Label/fonts/font = ExtResource("1_t18x5")

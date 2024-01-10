@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=9 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
 [ext_resource type="Script" path="res://pottery/GameTimer.gd" id="4_2x0wy"]
 [ext_resource type="PackedScene" uid="uid://bylog41kf2707" path="res://util/ScreenCollisionBorders.tscn" id="5_friqi"]
+[ext_resource type="PackedScene" uid="uid://bpmxfyq1j2wb1" path="res://menu/sidebar/SidebarMenu.tscn" id="7_qqhi4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
 radius = 15.0
@@ -14,7 +15,7 @@ radius = 15.0
 visibility_layer = 3
 script = ExtResource("1_avayf")
 camera_top_left_limit = Vector2(-400, -250)
-metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0]
+metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0, 8.0, 55.0]
 metadata/_edit_horizontal_guides_ = [3199.0, 1523.0]
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -173,6 +174,12 @@ visible = false
 layout_mode = 2
 text = "Timer will start when you move your first piece"
 horizontal_alignment = 1
+
+[node name="SidebarMenu" parent="CanvasLayer" instance=ExtResource("7_qqhi4")]
+offset_left = 1.0
+offset_top = 719.0
+offset_right = 1.0
+offset_bottom = 719.0
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0

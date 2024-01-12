@@ -929,15 +929,18 @@ func _on_body_entered(body):
 	if !body is ArcheologyItem:
 		return
 	if next_clink_time.get(body, 0) < Time.get_ticks_msec():
+		print(body, " and ", self, " clinking at ", Time.get_ticks_msec())
 		var other_area = body.area
 		var area_ratio = min(other_area, area) / max(other_area, area)
 		var pitch = 1.6 - area_ratio*1.1 + randf_range(-0.1, 0.1)
-		AudioPlayerPool.play(preload("res://sfx/clink.mp3"), pitch)
+		AudioPlayerPool.play(preload("res://sfx/clink3.mp3"), pitch)
+	print(body, " and ", self, " refreshing connection at ", Time.get_ticks_msec())
 	next_clink_time[body] = Time.get_ticks_msec() + 30000
 	body.next_clink_time[self] = Time.get_ticks_msec() + 30000
 
 func _on_body_exited(body):
 	if !body is ArcheologyItem:
 		return
+	print(body, " and ", self, " separating at ", Time.get_ticks_msec())
 	next_clink_time[body] = Time.get_ticks_msec() + 300
 	body.next_clink_time[self] = Time.get_ticks_msec() + 300

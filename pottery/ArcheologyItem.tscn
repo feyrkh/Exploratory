@@ -17,6 +17,8 @@ physics_material_override = SubResource("PhysicsMaterial_05x1r")
 gravity_scale = 0.0
 center_of_mass_mode = 1
 can_sleep = false
+max_contacts_reported = 1
+contact_monitor = true
 linear_damp_mode = 1
 linear_damp = 20.171
 angular_damp_mode = 1
@@ -74,6 +76,8 @@ polygon = PackedVector2Array(-1, 0, 0, -1, 1, 0, 0, 1)
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(-2, 0, 0, -2, 2, 0, 0, 2)
 
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="mouse_shape_entered" from="." to="." method="_on_mouse_shape_entered"]
 [connection signal="mouse_shape_exited" from="." to="." method="_on_mouse_shape_exited"]

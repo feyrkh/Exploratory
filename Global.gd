@@ -1,5 +1,7 @@
 extends Node
 
+signal setting_changed(setting_id:String, old_val, new_val)
+
 signal click_mode_changed()
 signal camera_zoom_changed(cur_zoom:float)
 signal delete_archeology_item(item:ArcheologyItem)

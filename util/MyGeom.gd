@@ -96,3 +96,16 @@ static func build_convex_polygon(points:PackedVector2Array) -> PackedVector2Arra
 		#if p == leftmost_idx:
 			#break
 	#return hull
+
+static func calculate_area(polygon) -> float:
+	var triangles = Geometry2D.triangulate_polygon(polygon)
+	if triangles.size() == 0:
+		polygon = Geometry2D.convex_hull(polygon)
+		triangles = Geometry2D.triangulate_polygon(polygon)
+	var twiceArea = 0
+	for i in range(0, triangles.size(), 3):
+		var t1 = triangles[i]
+		var t2 = triangles[i+1]
+		var t3 = triangles[i+2]
+		twiceArea += abs(polygon[t1].x * (polygon[t2].y - polygon[t3].y) + polygon[t2].x * (polygon[t3].y - polygon[t1].y) + polygon[t3].x * (polygon[t1].y - polygon[t2].y))
+	return twiceArea / 2

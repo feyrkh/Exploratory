@@ -29,6 +29,10 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/vsync/vsync_mode=3
 
+[editor]
+
+movie_writer/movie_file="D:/godot/gamplay.avi"
+
 [input]
 
 drag_start={

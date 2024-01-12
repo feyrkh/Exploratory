@@ -7,6 +7,7 @@ signal shuffle_button_pressed()
 signal save_item_button_pressed()
 
 func _ready():
+	Global.glue_color_changed.connect(update_buttons)
 	visible = false
 	await get_tree().process_frame
 	visible = true
@@ -20,6 +21,7 @@ func _ready():
 		$SaveItemButton.visible = false
 		$SaveItemLabel.visible = false
 	update_buttons()
+	
 
 func update_buttons():
 	if Global.freeze_pieces:
@@ -40,6 +42,7 @@ func update_buttons():
 		#Global.ClickMode.save_item: find_child("ClickModeButton").text = "Click: Gallery"
 		##Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
 		#_: find_child("ClickModeButton").text = "Click: Unknown?"
+	find_child("GlueButton").default_modulate = Global.glue_color
 
 func _on_add_item_button_pressed():
 	add_item_button_pressed.emit()
@@ -61,3 +64,6 @@ func _on_game_timer_time_attack_complete(total_seconds):
 	$SaveItemLabel.visible = true
 	$BackgroundGlow.update_position()
 
+func _on_glue_button_pressed():
+	Global.toggle_glue_panel.emit()
+	

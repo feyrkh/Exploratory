@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=10 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cc8pmk1km76fw" path="res://art/desktop.jpg" id="3_g5nv7"]
 [ext_resource type="Script" path="res://pottery/GameTimer.gd" id="4_2x0wy"]
 [ext_resource type="PackedScene" uid="uid://bylog41kf2707" path="res://util/ScreenCollisionBorders.tscn" id="5_friqi"]
+[ext_resource type="PackedScene" uid="uid://oft4qrgukbr3" path="res://pottery/glue_panel.tscn" id="6_8boyq"]
 [ext_resource type="PackedScene" uid="uid://bpmxfyq1j2wb1" path="res://menu/sidebar/SidebarMenu.tscn" id="7_qqhi4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
@@ -91,6 +92,9 @@ offset_left = 1.0
 offset_top = 719.0
 offset_right = 1.0
 offset_bottom = 719.0
+
+[node name="GluePanel" parent="CanvasLayer" instance=ExtResource("6_8boyq")]
+visible = false
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0

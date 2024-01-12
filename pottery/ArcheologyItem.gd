@@ -2,7 +2,7 @@ extends RigidBody2D
 class_name ArcheologyItem
 
 const TOO_SMALL_POLYGON_AREA := 65
-const TOO_SMALL_POLYGON_EDGE_RATIO := 0.6
+const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
 
 enum Fields {
@@ -137,6 +137,8 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 		scar_save_data.append(child.get_save_data())
 	for child in shard_edges.get_children():
 		edge_save_data.append(child.get_save_data())
+	for child in glue_edges.get_children():
+		glue_save_data.append(child.get_save_data())
 	var me_data = {
 		Fields.POSITION: global_position,
 		Fields.ROTATION: global_rotation,
@@ -150,7 +152,7 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 		Fields.DISPLACEMENT_SCORE: final_displacement_score,
 		Fields.FINAL_SCORE: final_score,
 	}
-	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "me":me_data}
+	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "glue":glue_save_data, "me":me_data}
 
 ## item_save = as returned from get_save_data
 ## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), Array[ImageBuilder.ImageSaveData]]
@@ -174,6 +176,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, reb
 	var poly_data = item_save.get("img", [])
 	var scar_data = item_save.get("scar", [])
 	var edge_data = item_save.get("edge", [])
+	var glue_data = item_save.get("glue", [])
 	var me_data = item_save.get("me", {})
 	result.global_position = me_data[Fields.POSITION]
 	result.global_rotation = me_data[Fields.ROTATION]
@@ -199,12 +202,19 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, reb
 		new_collision.polygon = new_polygon.polygon
 		result.add_child(new_polygon)
 		result.add_child(new_collision)
+	
+	var scar_container = result.find_child("Scars")
+	var edge_container = result.find_child("ShardEdges")
+	var glue_container = result.find_child("Glue")
 	for data in scar_data:
 		var new_scar = ItemScar.load_save_data(data)
-		result.find_child("Scars").add_child(new_scar)
+		scar_container.add_child(new_scar)
 	for data in edge_data:
 		var new_edge = ItemShardEdge.load_save_data(data)
-		result.find_child("ShardEdges").add_child(new_edge)
+		edge_container.add_child(new_edge)
+	for data in glue_data:
+		var new_glue = ItemGlueEdge.load_save_data(data)
+		glue_container.add_child(new_glue)
 	result.loading = true
 	result.call_deferred("post_load")
 	return result
@@ -733,6 +743,7 @@ func glue(other:ArcheologyItem):
 				glue_edges.add_child(g)
 				g.global_position = pos
 				g.global_rotation = rot
+			glue_edges.refresh_polygons()
 	visual_polygons = []
 	collision_polygons = []
 	area = 0
@@ -785,8 +796,9 @@ func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
 	if intersection_pts.size() >= 3:
 		var new_glue_poly = MyGeom.build_convex_polygon(intersection_pts)
 		var new_glue_obj = preload("res://pottery/ItemGlueEdge.tscn").instantiate()
-		new_glue_obj.setup(new_glue_poly)
+		new_glue_obj.setup(new_glue_poly, Global.glue_material)
 		glue_edges.add_child(new_glue_obj)
+		glue_edges.refresh_polygons()
 	
 		
 # Build glue polygons by finding scars and recoloring them?

@@ -6,10 +6,17 @@ const FLASH_COLOR := Color(1, 1, 1, 1)
 
 var glow_sprite:Sprite2D
 var flash_tween:Tween
+var default_modulate = Color.WHITE:
+	set(val):
+		if val.a < 0.6:
+			val.a = 0.6
+		default_modulate = val
+		modulate = NON_HOVER_COLOR * default_modulate
 
 func _ready():
+	focus_mode = Control.FOCUS_NONE
 	glow_sprite = get_parent().find_child("GlowSprite")
-	modulate = NON_HOVER_COLOR
+	modulate = NON_HOVER_COLOR * default_modulate
 	self.mouse_entered.connect(on_hover)
 	self.mouse_exited.connect(on_non_hover)
 	self.button_down.connect(start_flash)
@@ -20,7 +27,7 @@ func _ready():
 
 func on_hover():
 	cleanup_flash_tween()
-	modulate = HOVER_COLOR
+	modulate = HOVER_COLOR * default_modulate
 	scale = Vector2(1.1, 1.1)
 
 func start_flash():
@@ -43,5 +50,5 @@ func cleanup_flash_tween():
 
 func on_non_hover():
 	cleanup_flash_tween()
-	modulate = NON_HOVER_COLOR
+	modulate = NON_HOVER_COLOR * default_modulate
 	scale = Vector2(1.0, 1.0)

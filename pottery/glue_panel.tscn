@@ -1,0 +1,364 @@
+[gd_scene load_steps=4 format=3 uid="uid://oft4qrgukbr3"]
+
+[ext_resource type="Script" path="res://pottery/GluePanel.gd" id="1_do3jw"]
+[ext_resource type="Script" path="res://pottery/GluePot.gd" id="1_f22bh"]
+
+[sub_resource type="Curve" id="Curve_h3d5c"]
+_data = [Vector2(0, 0.607053), 0.0, 0.0, 0, 0, Vector2(0.481013, 1), 0.0, 0.0, 0, 0, Vector2(0.990506, 0.541562), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="GluePanel" type="Panel"]
+offset_left = 400.0
+offset_top = 621.0
+offset_right = 819.0
+offset_bottom = 720.0
+script = ExtResource("1_do3jw")
+
+[node name="TextureRect" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 16.0
+offset_top = 13.0
+offset_right = 50.0
+offset_bottom = 45.0
+color = Color(1, 1, 1, 0)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(0.682353, 0.682353, 0.682353, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect2" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 76.0
+offset_top = 13.0
+offset_right = 110.0
+offset_bottom = 45.0
+color = Color(1, 0.858824, 0.0705882, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect2"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect2"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect3" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 136.0
+offset_top = 13.0
+offset_right = 170.0
+offset_bottom = 45.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect3"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect3"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect4" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 193.0
+offset_top = 13.0
+offset_right = 227.0
+offset_bottom = 45.0
+color = Color(0.486275, 0.105882, 0.113725, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect4"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect4"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect5" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 253.0
+offset_top = 13.0
+offset_right = 287.0
+offset_bottom = 45.0
+color = Color(1, 0.0431373, 0, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect5"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect5"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect6" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 313.0
+offset_top = 13.0
+offset_right = 347.0
+offset_bottom = 45.0
+color = Color(1, 0.462745, 0, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect6"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect6"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect7" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 368.0
+offset_top = 13.0
+offset_right = 402.0
+offset_bottom = 45.0
+color = Color(0.972549, 1, 0, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect7"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect7"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect9" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 16.0
+offset_top = 55.0
+offset_right = 50.0
+offset_bottom = 87.0
+color = Color(0.176471, 1, 0, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect9"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect9"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect10" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 76.0
+offset_top = 55.0
+offset_right = 110.0
+offset_bottom = 87.0
+color = Color(0, 1, 0.741176, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect10"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect10"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect11" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 136.0
+offset_top = 55.0
+offset_right = 170.0
+offset_bottom = 87.0
+color = Color(0, 0.780392, 1, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect11"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect11"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect12" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 193.0
+offset_top = 55.0
+offset_right = 227.0
+offset_bottom = 87.0
+color = Color(0, 0.168627, 1, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect12"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect12"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect13" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 253.0
+offset_top = 55.0
+offset_right = 287.0
+offset_bottom = 87.0
+color = Color(0.494118, 0, 1, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect13"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect13"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect14" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 313.0
+offset_top = 55.0
+offset_right = 347.0
+offset_bottom = 87.0
+color = Color(0.921569, 0, 1, 1)
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect14"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect14"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect15" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 368.0
+offset_top = 55.0
+offset_right = 402.0
+offset_bottom = 87.0
+script = ExtResource("1_f22bh")
+
+[node name="Line2D" type="Line2D" parent="TextureRect15"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_h3d5c")
+default_color = Color(0.682353, 0.682353, 0.682353, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="TextureRect15"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)

@@ -8,9 +8,27 @@ signal unpack_gallery_item(gallery_item_name:String)
 signal cleanup_all_items()
 signal first_click_received()
 
+signal toggle_glue_panel()
+signal glue_color_changed()
+
 var next_scene_settings
 var shatter_width:float = 0.5
 var rotate_with_shuffle = false
+var glue_materials:Dictionary = {}
+var glue_material:ShaderMaterial = preload("res://shader/ItemShardEdgeLine.tres")
+var glue_color:Color = Color.GOLD:
+	set(val):
+		glue_color = val
+		glue_material = get_glue_material(glue_color)
+		glue_color_changed.emit()
+
+func get_glue_material(glue_color:Color):
+		if !glue_materials.has(glue_color):
+			var new_mat:ShaderMaterial = glue_material.duplicate()
+			new_mat.set_shader_parameter("normal_color", Vector4(glue_color.r, glue_color.g, glue_color.b, glue_color.a))
+			glue_materials[glue_color] = new_mat
+		return glue_materials.get(glue_color, glue_material)
+	
 
 func change_scene(scene):
 	cleanup_all_items.emit()

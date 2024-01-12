@@ -17,7 +17,7 @@ const quotes = [
 	"“The secret to becoming unbreakable is realizing that you are already broken. We all are.”\n— Brant Menswar",
 	"“I love the idea that an accident can be an occasion to make something more delightful, not less so.”\n— Ingrid Fetell Lee",
 	"“Every beautiful thing is damaged. You are that beauty; we all are.”\n— Bryant McGill",
-	"“I sit and pick up those pieces with their renewed essence and identities, with their flawed edges and imperfections, and join them together like Kintsugi, displaying the damages with pride.”\n— Rubina",
+	"“I sit and pick up those pieces with their renewed essence and identities, with their flawed edges and imperfections, and join them together like Kintsugi, displaying the damages with pride.”\n— Rubina Ruhee",
 	"“In repairing the object you really ended up loving it more, because you now knew its eagerness to be reassembled, and in running a fingertip over its surface you alone could feel its many cracks – a bond stronger than mere possession.”\n— Nicholson Baker",
 	"“It doesn’t hide the cracks, but embraces it, seeing it as integral to the object’s history, and rebuilds something new.”\n— Sidhanta Patnaik",
 	"“World is imperfect. Life is imperfect. You are imperfect. I’m imperfect. All are Kintsugi.”",
@@ -37,6 +37,8 @@ func _ready():
 	if Global.game_mode != "zen":
 		find_child("QuitAndSaveButton").visible = false
 		find_child("QuitAndDiscardButton").text = "quit"
+	find_child("SfxVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT)
+	find_child("MusicVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT)
 	find_child("QuoteLabel").text = quotes.pick_random()
 	get_tree().paused = true
 
@@ -60,3 +62,10 @@ func _on_quit_and_save_button_pressed():
 	close.emit()
 	save_game.emit()
 	exit_game.emit()
+
+
+func _on_sfx_volume_value_changed(value):
+	Global.setting_changed.emit(AudioPlayerPool.SFX_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT), value)
+
+func _on_music_volume_value_changed(value):
+	Global.setting_changed.emit(AudioPlayerPool.MUSIC_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT), value)

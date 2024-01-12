@@ -39,15 +39,9 @@ metadata/_edit_lock_ = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="PopupContainer" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="FadeRect" type="ColorRect" parent="CanvasLayer"]
 visible = false
-z_index = 4096
+z_index = 4095
 offset_left = -1093.0
 offset_top = -390.0
 offset_right = 5176.0
@@ -64,6 +58,13 @@ theme = ExtResource("3_dm5cm")
 text = "Loading...."
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="PopupContainer" type="Control" parent="CanvasLayer"]
+z_index = 4096
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="GameTimer" type="PanelContainer" parent="CanvasLayer" node_paths=PackedStringArray("piece_container")]
 offset_left = 278.0

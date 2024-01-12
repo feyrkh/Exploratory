@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cjtoc3cx8dk1x"
+path="res://.godot/imported/Beautiful Daughter.mp3-7b94ecb08a6e854ffbd72078b21cd7ea.mp3str"
+
+[deps]
+
+source_file="res://music/Beautiful Daughter.mp3"
+dest_files=["res://.godot/imported/Beautiful Daughter.mp3-7b94ecb08a6e854ffbd72078b21cd7ea.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

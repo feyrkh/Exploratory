@@ -4,3 +4,14 @@
 
 [node name="AudioPlayerPool" type="Node"]
 script = ExtResource("1_mkr3f")
+
+[node name="MusicPlayer1" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+
+[node name="MusicPlayer2" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

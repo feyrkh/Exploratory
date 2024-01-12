@@ -11,6 +11,7 @@ func _init(filename:String, defaults:Dictionary={}, section:String="default"):
 	self.config_path = filename
 	self.defaults = defaults
 	self.section = section
+	load_config()
 
 func get_config(key:String, default_value=null):
 	return config_file.get_value(section, key, default_value if default_value != null else defaults.get(key))

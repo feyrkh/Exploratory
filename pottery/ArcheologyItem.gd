@@ -1,7 +1,7 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
-const TOO_SMALL_POLYGON_AREA := 65
+const TOO_SMALL_POLYGON_AREA := 55
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
 
@@ -926,21 +926,25 @@ func _adjust_polygon_scale(polygon, scale_change:float):
 
 var next_clink_time = {}
 func _on_body_entered(body):
-	if !body is ArcheologyItem:
+	if !body is ArcheologyItem or loading or is_display or shattering_in_progress or body.shattering_in_progress or body.loading:
 		return
 	if next_clink_time.get(body, 0) < Time.get_ticks_msec():
-		print(body, " and ", self, " clinking at ", Time.get_ticks_msec())
+		var relative_velocity = (linear_velocity - body.linear_velocity).length() + abs(angular_velocity - body.angular_velocity) * 30
+		if relative_velocity == 0:
+			return
+		var volume_adjustment = max(0.4, min(1.0, relative_velocity / 1500.0))
+		print(body, " and ", self, " clinking at ", Time.get_ticks_msec(), " with velocity ", relative_velocity, " and volume ", volume_adjustment)
 		var other_area = body.area
 		var area_ratio = min(other_area, area) / max(other_area, area)
 		var pitch = 1.6 - area_ratio*1.1 + randf_range(-0.1, 0.1)
-		AudioPlayerPool.play(preload("res://sfx/clink3.mp3"), pitch)
-	print(body, " and ", self, " refreshing connection at ", Time.get_ticks_msec())
+		AudioPlayerPool.play(preload("res://sfx/clink3.mp3"), pitch, volume_adjustment)
+	#print(body, " and ", self, " refreshing connection at ", Time.get_ticks_msec())
 	next_clink_time[body] = Time.get_ticks_msec() + 30000
 	body.next_clink_time[self] = Time.get_ticks_msec() + 30000
 
 func _on_body_exited(body):
 	if !body is ArcheologyItem:
 		return
-	print(body, " and ", self, " separating at ", Time.get_ticks_msec())
+	#print(body, " and ", self, " separating at ", Time.get_ticks_msec())
 	next_clink_time[body] = Time.get_ticks_msec() + 300
 	body.next_clink_time[self] = Time.get_ticks_msec() + 300

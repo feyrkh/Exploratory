@@ -74,7 +74,7 @@ func handle_cleaning():
 	var child2 = get_parent().visual_polygons[child2_idx]
 	#print("clipping a ", child2_idx, " (visual polygon) hole out of ", child1_idx)
 	var global_polygon1 = global_polygon(child1)
-	var global_polygon2 = Geometry2D.offset_polygon(global_polygon(child2), 0.05)
+	var global_polygon2 = Geometry2D.offset_polygon(global_polygon(child2), -0.05)
 	_clip_glue_polygon(child1, global_polygon1, global_polygon2)
 
 func handle_clipping():

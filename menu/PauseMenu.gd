@@ -39,6 +39,7 @@ func _ready():
 		find_child("QuitAndDiscardButton").text = "quit"
 	find_child("SfxVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT)
 	find_child("MusicVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT)
+	find_child("OverallVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.OVERALL_VOLUME_PCT)
 	find_child("QuoteLabel").text = quotes.pick_random()
 	get_tree().paused = true
 
@@ -63,9 +64,11 @@ func _on_quit_and_save_button_pressed():
 	save_game.emit()
 	exit_game.emit()
 
-
 func _on_sfx_volume_value_changed(value):
 	Global.setting_changed.emit(AudioPlayerPool.SFX_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT), value)
 
 func _on_music_volume_value_changed(value):
 	Global.setting_changed.emit(AudioPlayerPool.MUSIC_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT), value)
+
+func _on_overall_volume_value_changed(value):
+	Global.setting_changed.emit(AudioPlayerPool.OVERALL_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.OVERALL_VOLUME_PCT), value)

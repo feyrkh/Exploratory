@@ -5,6 +5,7 @@ const TOO_SMALL_POLYGON_AREA := 55
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
 const MAX_LINEAR_VELOCITY := 6000.0
+const MAX_ANGULAR_VELOCITY := 25.0
 
 enum Fields {
 	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
@@ -479,7 +480,6 @@ func _integrate_forces(state):
 		state.linear_velocity = desired_motion * DRAG_SPEED
 		if state.linear_velocity.length() > MAX_LINEAR_VELOCITY:
 			state.linear_velocity = state.linear_velocity.normalized() * MAX_LINEAR_VELOCITY
-		print("v=", state.linear_velocity.length())
 	if target_rot != null:
 		var item_center = to_global(center_of_mass)
 		var mouse_cursor = get_global_mouse_position()
@@ -497,6 +497,9 @@ func _integrate_forces(state):
 		while target_rot < -PI:
 			target_rot += PI
 		angular_velocity = target_rot * 15
+		if angular_velocity > MAX_ANGULAR_VELOCITY: angular_velocity = MAX_ANGULAR_VELOCITY
+		elif angular_velocity < -MAX_ANGULAR_VELOCITY: angular_velocity = -MAX_ANGULAR_VELOCITY
+		#print("av=", angular_velocity)
 
 func _on_mouse_shape_entered(shape_idx):
 	if is_display:
@@ -947,7 +950,7 @@ func _on_body_entered(body):
 		var other_area = body.area
 		var area_ratio = min(other_area, area) / max(other_area, area)
 		var pitch = 1.6 - area_ratio*1.1 + randf_range(-0.1, 0.1)
-		AudioPlayerPool.play(preload("res://sfx/clink3.mp3"), pitch, volume_adjustment)
+		AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), pitch, volume_adjustment)
 	#print(body, " and ", self, " refreshing connection at ", Time.get_ticks_msec())
 	next_clink_time[body] = Time.get_ticks_msec() + 30000
 	body.next_clink_time[self] = Time.get_ticks_msec() + 30000

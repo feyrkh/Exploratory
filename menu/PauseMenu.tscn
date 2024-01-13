@@ -52,7 +52,26 @@ size_flags_vertical = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="OverallLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 20
+text = "Global Volume"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="OverallVolume" type="HSlider" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SfxLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -62,7 +81,7 @@ text = "SFX Volume"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="SfxVolume" type="HSlider" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="SfxVolume" type="HSlider" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
@@ -71,7 +90,7 @@ step = 0.01
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="MusicLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -110,7 +129,8 @@ theme = ExtResource("2_gotgm")
 text = "Save and quit"
 alignment = 2
 
-[connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer/SfxVolume" to="." method="_on_sfx_volume_value_changed"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer/OverallVolume" to="." method="_on_overall_volume_value_changed"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer3/SfxVolume" to="." method="_on_sfx_volume_value_changed"]
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MusicVolume" to="." method="_on_music_volume_value_changed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/QuitAndDiscardButton" to="." method="_on_quit_and_discard_button_pressed"]

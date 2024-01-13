@@ -163,7 +163,7 @@ var glue_brush_stream_min_seconds = 1
 func play_glue_sfx():
 	var stream_data = glue_brush_streams.pick_random()
 	glue_brush_audio.stream = stream_data[0]
-	glue_brush_audio.volume_db = AudioPlayerPool.get_decibels_for_volume_percentage(stream_data[1] * AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT))
+	glue_brush_audio.volume_db = AudioPlayerPool.get_decibels_for_sfx(stream_data[1])
 	glue_brush_audio.pitch_scale = randf_range(0.9, 1.1)
 	glue_brush_stream_min_seconds = stream_data[2]
 	glue_brush_audio.play()

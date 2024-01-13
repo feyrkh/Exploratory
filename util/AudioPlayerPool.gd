@@ -6,6 +6,7 @@ extends Node
 @onready var musicPlayer1 = $MusicPlayer1
 @onready var musicPlayer2 = $MusicPlayer2
 
+const OVERALL_VOLUME_PCT := "overall_volume"
 const SFX_VOLUME_PCT := "sfx_volume"
 const MUSIC_VOLUME_PCT := "music_volume"
 const MIN_VOLUME := 0.0
@@ -13,6 +14,7 @@ const MAX_VOLUME := 1.0
 
 var players = []
 var audio_config := SettingsFile.new("user://audio.cfg", {
+	OVERALL_VOLUME_PCT: 1.0,
 	SFX_VOLUME_PCT: 1.0,
 	MUSIC_VOLUME_PCT: 0.5,
 })
@@ -30,6 +32,30 @@ var expected_next_volume = 0
 var expected_cur_volume = 0
 var next_background_music_index = 0
 var crossfade_time = 5
+var config_needs_saving := false
+
+var sfx_volume:float:
+	get:
+		return audio_config.get_config(SFX_VOLUME_PCT)
+	set(val):
+		config_needs_saving = true
+		audio_config.set_config(SFX_VOLUME_PCT, val)
+		apply_sfx_volume()
+var music_volume:float:
+	get:
+		return audio_config.get_config(MUSIC_VOLUME_PCT)
+	set(val):
+		config_needs_saving = true
+		audio_config.set_config(MUSIC_VOLUME_PCT, val)
+		apply_music_volume()
+var overall_volume:float:
+	get:
+		return audio_config.get_config(OVERALL_VOLUME_PCT)
+	set(val):
+		config_needs_saving = true
+		audio_config.set_config(OVERALL_VOLUME_PCT, val)
+		apply_music_volume()
+		apply_sfx_volume()
 
 func _ready():
 	background_music_list.shuffle()
@@ -37,29 +63,48 @@ func _ready():
 	Global.setting_changed.connect(on_setting_change)
 	await Global.enable_sound
 	cross_fade(background_music_list[0], 2, true)
+	var settings_saver = Timer.new()
+	add_child(settings_saver)
+	settings_saver.one_shot = false
+	settings_saver.timeout.connect(func():
+		if config_needs_saving:
+			config_needs_saving = false
+			audio_config.save_config()
+		)
+	settings_saver.start(5)
 
 func on_setting_change(setting, old_val, new_val):
-	if setting == SFX_VOLUME_PCT:
-		audio_config.set_config(SFX_VOLUME_PCT, new_val)
-		audio_config.save_config()
-		var volume = get_decibels_for_volume_percentage(new_val)
-		for player in players:
-			player.volume_db = volume
-	if setting == MUSIC_VOLUME_PCT:
-		audio_config.set_config(MUSIC_VOLUME_PCT, new_val)
-		audio_config.save_config()
-		musicPlayer1.volume_db = get_decibels_for_volume_percentage(new_val * expected_cur_volume)
-		musicPlayer2.volume_db = get_decibels_for_volume_percentage(new_val * expected_next_volume)
+	match setting:
+		OVERALL_VOLUME_PCT: overall_volume = new_val
+		SFX_VOLUME_PCT: sfx_volume = new_val
+		MUSIC_VOLUME_PCT: music_volume = new_val
 
-static func get_decibels_for_volume_percentage(volume_percent): # 0 - 1.0 range for pct, translates to -80 to 0 decibel adjustment
+func apply_sfx_volume():
+	var volume = get_decibels_for_sfx()
+	for player in players:
+		player.volume_db = volume
+
+func apply_music_volume():
+	musicPlayer1.volume_db = get_decibels_for_music(expected_cur_volume)
+	musicPlayer2.volume_db = get_decibels_for_music(expected_next_volume)
+
+func get_decibels_for_sfx(volume_adjustment:float=1.0)->float:
+	return get_decibels_for_volume_percentage(volume_adjustment * sfx_volume)
+
+func get_decibels_for_music(volume_adjustment:float=1.0)->float:
+	var music_pct = music_volume
+	var overall_pct = volume_adjustment * music_volume
+	return get_decibels_for_volume_percentage(overall_pct)
+
+func get_decibels_for_volume_percentage(volume_percent:float=1.0)->float: # 0 - 1.0 range for pct, translates to -80 to 0 decibel adjustment
 	if volume_percent <= 0:
 		return -80
-	return (50.0 * volume_percent) - 50 # range goes from -80 decibels (silent?) to 0 (normal) or higher (really loud)
+	return (50.0 * volume_percent * overall_volume) - 50 # range goes from -80 decibels (silent?) to 0 (normal) or higher (really loud)
 	
-func play(stream_file, pitch:=1.0, single_play_volume_adjustment:=1.0):
+func play_sfx(stream_file, pitch:=1.0, single_play_volume_adjustment:=1.0):
 	var player:AudioStreamPlayer = get_first_free_player()
 	player.pitch_scale = pitch
-	player.volume_db = get_decibels_for_volume_percentage(audio_config.get_config(SFX_VOLUME_PCT) * single_play_volume_adjustment)
+	player.volume_db = get_decibels_for_sfx(single_play_volume_adjustment)
 	if stream_file is String:
 		player.stream = load(stream_file)
 	else:
@@ -85,6 +130,7 @@ func cross_fade(new_music_file, crossfade_time, new_music_saves_position=true):
 	fade_counter = crossfade_time
 	musicPlayer2.stop()
 	musicPlayer2.stream = load(new_music_file)
+	musicPlayer2.volume_db = -80
 	set_next_volume(0.0)
 	fade_up_per_sec = (MAX_VOLUME - MIN_VOLUME)/crossfade_time
 	fade_down_per_sec = (expected_cur_volume - MIN_VOLUME)/crossfade_time
@@ -123,13 +169,13 @@ func _process(delta):
 func set_next_volume(amt):
 	if expected_next_volume != amt:
 		expected_next_volume = amt
-		musicPlayer2.volume_db = get_decibels_for_volume_percentage(audio_config.get_config(MUSIC_VOLUME_PCT) * expected_next_volume)
+		musicPlayer2.volume_db = get_decibels_for_music(expected_next_volume)
 		#print("Next volume: ", amt, " (actual: ", musicPlayer2.volume_db, ")")
 
 func set_cur_volume(amt):
 	if expected_cur_volume != amt:
 		expected_cur_volume = amt
-		musicPlayer1.volume_db = get_decibels_for_volume_percentage(audio_config.get_config(MUSIC_VOLUME_PCT) * expected_cur_volume)
+		musicPlayer1.volume_db = get_decibels_for_music(expected_cur_volume)
 		#print("Cur volume: ", amt, " (actual: ", musicPlayer1.volume_db, ")")
 
 func swap_players():
@@ -142,8 +188,7 @@ func swap_players():
 	tmp = expected_cur_volume
 	expected_cur_volume = expected_next_volume
 	expected_next_volume = tmp
-	print("Swapped music players - cur=", musicPlayer1_file, ", next=", musicPlayer2_file)
-
+	#print("Swapped music players - cur=", musicPlayer1_file, ", next=", musicPlayer2_file)
 
 func _on_timer_timeout():
 	check_background_music()

@@ -6,6 +6,7 @@ func _ready():
 	for child in get_children():
 		if child is GluePot:
 			child.gui_input.connect(glue_input.bind(child))
+	update_glue_pot_highlights()
 
 func glue_input(event:InputEvent, glue_pot:GluePot):
 	if event is InputEventMouseButton and event.is_action_pressed("left_click"):
@@ -25,7 +26,7 @@ func open_panel():
 func update_glue_pot_highlights():
 	for child in get_children():
 		if child is GluePot:
-			if child.get_glue_color() == Global.glue_color:
+			if child.get_glue_color().is_equal_approx(Global.glue_color):
 				child.highlight()
 			else:
 				child.unhighlight()

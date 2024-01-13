@@ -35,6 +35,7 @@ func _ready():
 	background_music_list.shuffle()
 	get_first_free_player()
 	Global.setting_changed.connect(on_setting_change)
+	await Global.enable_sound
 	cross_fade(background_music_list[0], 2, true)
 
 func on_setting_change(setting, old_val, new_val):

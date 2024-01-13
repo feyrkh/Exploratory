@@ -4,5 +4,3 @@
 
 [resource]
 shader = ExtResource("1_223yn")
-shader_parameter/normal_color = Vector4(1, 0.843137, 0, 1)
-shader_parameter/shine_color = Vector4(1, 1, 1, 1)

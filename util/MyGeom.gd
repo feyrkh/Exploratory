@@ -109,3 +109,15 @@ static func calculate_area(polygon) -> float:
 		var t3 = triangles[i+2]
 		twiceArea += abs(polygon[t1].x * (polygon[t2].y - polygon[t3].y) + polygon[t2].x * (polygon[t3].y - polygon[t1].y) + polygon[t3].x * (polygon[t1].y - polygon[t2].y))
 	return twiceArea / 2
+
+static func global_polygon(polygon_holder:Node2D):
+	var result := PackedVector2Array()
+	for pt in polygon_holder.polygon:
+		result.append(polygon_holder.to_global(pt))
+	return result
+
+static func local_polygon(polygon_holder:Node2D, polygon):
+	var result := PackedVector2Array()
+	for pt in polygon:
+		result.append(polygon_holder.to_local(pt))
+	return result

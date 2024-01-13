@@ -73,8 +73,8 @@ func handle_cleaning():
 		return
 	var child2 = get_parent().visual_polygons[child2_idx]
 	#print("clipping a ", child2_idx, " (visual polygon) hole out of ", child1_idx)
-	var global_polygon1 = global_polygon(child1)
-	var global_polygon2 = Geometry2D.offset_polygon(global_polygon(child2), -0.05)
+	var global_polygon1 = MyGeom.global_polygon(child1)
+	var global_polygon2 = Geometry2D.offset_polygon(MyGeom.global_polygon(child2), -0.05)
 	_clip_glue_polygon(child1, global_polygon1, global_polygon2)
 
 func handle_clipping():
@@ -83,8 +83,8 @@ func handle_clipping():
 	var child2:ItemGlueEdge = get_child(get_child_count()-1-child2_idx)
 	if child1.glue_color == child2.glue_color:
 		return # don't clip between children of the same color, we'll merge later
-	var global_polygon1 = Geometry2D.offset_polygon(global_polygon(child1), 0.05)
-	var global_polygon2 = global_polygon(child2)
+	var global_polygon1 = Geometry2D.offset_polygon(MyGeom.global_polygon(child1), 0.05)
+	var global_polygon2 = MyGeom.global_polygon(child2)
 	_clip_glue_polygon(child2, global_polygon2, global_polygon1)
 
 func _clip_glue_polygon(glue_obj:ItemGlueEdge, glue_global_poly, cutting_poly_array):
@@ -119,11 +119,11 @@ func _clip_glue_polygon(glue_obj:ItemGlueEdge, glue_global_poly, cutting_poly_ar
 			continue
 		if !orig_polygon_handled:
 			#print("Replacing original child polygon for ", glue_obj.glue_color)
-			glue_obj.polygon = local_polygon(glue_obj, new_poly)
+			glue_obj.polygon = MyGeom.local_polygon(glue_obj, new_poly)
 			orig_polygon_handled = true
 		else:
 			#print("Cloning this polygon with a new polygon ", glue_obj.glue_color)
-			var new_child = glue_obj.clone(local_polygon(glue_obj, new_poly))
+			var new_child = glue_obj.clone(MyGeom.local_polygon(glue_obj, new_poly))
 			self.add_child(new_child)
 			self.move_child(new_child, glue_obj.get_index())
 
@@ -131,26 +131,14 @@ func handle_merging():
 	var child1:ItemGlueEdge = get_child(child1_idx)
 	var child2:ItemGlueEdge = get_child(child2_idx)
 	if child1.glue_color == child2.glue_color:
-		var global_polygon1 = global_polygon(child1)
-		var global_polygon2 = global_polygon(child2)
+		var global_polygon1 = MyGeom.global_polygon(child1)
+		var global_polygon2 = MyGeom.global_polygon(child2)
 		var merged := Geometry2D.merge_polygons(global_polygon1, global_polygon2)
 		if merged.size() == 1:
 			#print("Merging glues ", child1_idx, " and ", child2_idx)
-			child2.polygon = local_polygon(child1, merged[0])
+			child2.polygon = MyGeom.local_polygon(child1, merged[0])
 			child1.queue_free()
 			auto_restart = true
-
-func global_polygon(polygon_holder:Node2D):
-	var result := PackedVector2Array()
-	for pt in polygon_holder.polygon:
-		result.append(polygon_holder.to_global(pt))
-	return result
-
-func local_polygon(polygon_holder:Node2D, polygon):
-	var result := PackedVector2Array()
-	for pt in polygon:
-		result.append(polygon_holder.to_local(pt))
-	return result
 
 func stop_processing():
 	set_process(false)

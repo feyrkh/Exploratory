@@ -70,6 +70,7 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="OptionsContainer" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 512.0
@@ -277,7 +278,7 @@ custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("2_7feem")
-text = "Zen Mode"
+text = "Relax Mode"
 metadata/_edit_lock_ = true
 
 [node name="TimeButton" type="Button" parent="MainMenu"]

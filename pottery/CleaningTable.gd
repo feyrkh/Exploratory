@@ -11,7 +11,7 @@ const ITEM_COUNT_SETTING := "item_count"
 @onready var screenshot_camera:Camera2D = find_child("ScreenshotCamera")
 @onready var cursor_area:CursorArea = find_child("CursorArea")
 @onready var sidebar_menu = find_child("SidebarMenu")
-
+@onready var glue_brush_audio:AudioStreamPlayer = find_child("GlueBrushAudio")
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
 
@@ -19,17 +19,20 @@ var camera_drag_mouse_start = null
 var camera_drag_camera_start = null
 var settings
 var glue_cooldown:float = 0
+var highlighted_items = {}
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	settings = Global.next_scene_settings
 	Global.click_mode_changed.connect(update_button_text)
+	Global.click_mode_changed.connect(update_glue_brush_sfx)
 	Global.save_to_gallery.connect(save_to_gallery)
+	Global.item_highlighted.connect(func(item): highlighted_items[item] = true)
+	Global.item_unhighlighted.connect(func(item): highlighted_items.erase(item))
 	
-	#if settings == "continue_zen":
-	#	_on_load_button_pressed()
-	#	return
-	
+	glue_brush_audio.finished.connect(update_glue_brush_sfx)
+		
 	if settings == null:
 		settings = {}
 	
@@ -151,7 +154,29 @@ func set_camera_position(new_pos:Vector2):
 		new_pos.y = camera_bot_right_limit.y - view_rect.size.y / 2
 	camera.position = new_pos
 
+
+var glue_brush_streams = [ # elements are arrays [AudioStream, volume %, min_seconds]
+	[preload("res://sfx/brush2.mp3"), 0.8, 0.5], #[preload("res://sfx/brush.mp3"), 1.1], 
+]
+var glue_brush_stream_min_seconds = 1
+
+func play_glue_sfx():
+	var stream_data = glue_brush_streams.pick_random()
+	glue_brush_audio.stream = stream_data[0]
+	glue_brush_audio.volume_db = AudioPlayerPool.get_decibels_for_volume_percentage(stream_data[1] * AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT))
+	glue_brush_audio.pitch_scale = randf_range(0.9, 1.1)
+	glue_brush_stream_min_seconds = stream_data[2]
+	glue_brush_audio.play()
+
+func update_glue_brush_sfx():
+	if Global.click_mode == Global.ClickMode.glue and Input.is_action_pressed("drag_start") and highlighted_items.size() > 0:
+		if !glue_brush_audio.playing:
+			play_glue_sfx()
+	elif glue_brush_audio.playing and glue_brush_audio.get_playback_position() >= glue_brush_stream_min_seconds:
+		glue_brush_audio.stop()
+
 func _process(_delta):
+	update_glue_brush_sfx()
 	if camera_drag_mouse_start != null:
 		var offset = get_viewport().get_mouse_position() - camera_drag_mouse_start
 		offset = offset/camera.zoom.x
@@ -205,10 +230,13 @@ func handle_glue_input(event):
 	if event.is_action_pressed("drag_start"):
 		# find all pieces under the cursor and glue them together
 		do_glue_at_cursor()
+	elif event.is_action_released("drag_start"):
+		update_glue_brush_sfx()
 	elif event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
 		Global.reset_click_mode()
 
 func do_glue_at_cursor():
+		update_glue_brush_sfx()
 		glue_cooldown = 0.05
 		var pieces = cursor_area.get_overlaps()
 		if pieces.size() > 1:

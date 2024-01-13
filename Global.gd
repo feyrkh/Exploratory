@@ -1,6 +1,7 @@
 extends Node
 
 signal setting_changed(setting_id:String, old_val, new_val)
+signal enable_sound() # be sure to call this when it's ok to start playing sounds
 
 signal click_mode_changed()
 signal camera_zoom_changed(cur_zoom:float)
@@ -13,12 +14,14 @@ signal first_click_received()
 signal toggle_glue_panel()
 signal glue_color_changed()
 
+signal item_highlighted(item)
+signal item_unhighlighted(item)
+
 var next_scene_settings
 var shatter_width:float = 0.5
 var rotate_with_shuffle = false
 var glue_materials:Dictionary = {}
-var glue_material:ShaderMaterial = preload("res://shader/ItemShardEdgeLine.tres")
-var glue_color:Color = Color.GOLD:
+var glue_color:Color = Color("ffdb12"):
 	set(val):
 		glue_color = val
 		glue_material = get_glue_material(glue_color)
@@ -31,6 +34,10 @@ func get_glue_material(glue_color:Color):
 			glue_materials[glue_color] = new_mat
 		return glue_materials.get(glue_color, glue_material)
 	
+var glue_material:ShaderMaterial = preload("res://shader/ItemShardEdgeLine.tres")
+
+func _ready():
+	glue_material = get_glue_material(glue_color)
 
 func change_scene(scene):
 	cleanup_all_items.emit()

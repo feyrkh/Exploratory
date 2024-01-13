@@ -4,6 +4,7 @@ class_name ArcheologyItem
 const TOO_SMALL_POLYGON_AREA := 55
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
+const MAX_LINEAR_VELOCITY := 6000.0
 
 enum Fields {
 	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
@@ -476,6 +477,9 @@ func _integrate_forces(state):
 	if target_pos != null:
 		var desired_motion = (drag_start_item - global_position + target_pos - drag_start_mouse)
 		state.linear_velocity = desired_motion * DRAG_SPEED
+		if state.linear_velocity.length() > MAX_LINEAR_VELOCITY:
+			state.linear_velocity = state.linear_velocity.normalized() * MAX_LINEAR_VELOCITY
+		print("v=", state.linear_velocity.length())
 	if target_rot != null:
 		var item_center = to_global(center_of_mass)
 		var mouse_cursor = get_global_mouse_position()
@@ -517,11 +521,13 @@ func highlight_visual_polygons():
 		polygon.modulate = Color(1.3, 1.3, 1.3, 1.3)
 	center_of_mass_indicator.position = center_of_mass
 	center_of_mass_indicator.visible = !Global.lock_rotation or (rotate_start_item != null)
+	Global.item_highlighted.emit(self)
 
 func unhighlight_visual_polygons():
 	for polygon in visual_polygons:
 		polygon.modulate = Color.WHITE
 	center_of_mass_indicator.visible = false
+	Global.item_unhighlighted.emit(self)
 
 func add_scar(scar:ItemScar):
 	scar.refresh_scar_path(collision.polygon)
@@ -739,10 +745,14 @@ func glue(other:ArcheologyItem):
 			for g in child.get_children():
 				var pos = g.global_position
 				var rot = g.global_rotation
+				var global_poly = MyGeom.global_polygon(g)
 				child.remove_child(g)
 				glue_edges.add_child(g)
-				g.global_position = pos
-				g.global_rotation = rot
+				#g.global_position = pos
+				#g.global_rotation = rot
+				g.rotation = 0
+				g.position = Vector2.ZERO
+				g.polygon = MyGeom.local_polygon(self, global_poly)
 			glue_edges.refresh_polygons()
 	visual_polygons = []
 	collision_polygons = []
@@ -933,7 +943,7 @@ func _on_body_entered(body):
 		if relative_velocity == 0:
 			return
 		var volume_adjustment = max(0.4, min(1.0, relative_velocity / 1500.0))
-		print(body, " and ", self, " clinking at ", Time.get_ticks_msec(), " with velocity ", relative_velocity, " and volume ", volume_adjustment)
+		#print(body, " and ", self, " clinking at ", Time.get_ticks_msec(), " with velocity ", relative_velocity, " and volume ", volume_adjustment)
 		var other_area = body.area
 		var area_ratio = min(other_area, area) / max(other_area, area)
 		var pitch = 1.6 - area_ratio*1.1 + randf_range(-0.1, 0.1)

@@ -58,6 +58,7 @@ func _ready():
 	update_labels()
 	await prepare_next_item(false)
 	update_item()
+	Global.enable_sound.emit()
 	#var offset = randi_range(800, 1000)
 	#for i in range(5):
 		#var new_table = load("res://menu/main/DemoTable.tscn").instantiate()

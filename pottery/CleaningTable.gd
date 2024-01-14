@@ -244,7 +244,9 @@ func do_glue_at_cursor():
 		if pieces.size() > 1:
 			var main_piece = pieces[0]
 			for i in range(1, pieces.size()):
-				main_piece.glue(pieces[i])
+				# only glue items together if they haven't already taken part in a completed time attack game
+				if !main_piece.time_attack_seconds and !pieces[i].time_attack_seconds:
+					main_piece.glue(pieces[i])
 			main_piece.call_deferred("highlight_visual_polygons")
 			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 		elif pieces.size() == 1:
@@ -371,17 +373,21 @@ func save_to_gallery(item:Node2D):
 
 func time_attack_complete(total_seconds:int):
 	Global.click_mode = Global.ClickMode.move
-	var imgs = []
 	for piece in find_child("Pieces").get_children():
 		piece.time_attack_seconds = total_seconds
 		piece.bump_enabled = !Global.freeze_pieces
 		piece.rotate_enabled = Global.rotate_with_shuffle
 		var img = await take_screenshot_of_piece(piece)
-		imgs.append([img, piece])
-	await get_tree().process_frame
+		
+
+func time_attack_show_scoreboard():
+	var time_attack_complete_data := []
+	for piece in find_child("Pieces").get_children():
+		var img = await take_screenshot_of_piece(piece)
+		time_attack_complete_data.append([img, piece])
 	var popup = load("res://pottery/TimeAttackCompleteMenu.tscn").instantiate()
 	find_child("PopupContainer").add_child(popup)
-	popup.setup(imgs)
+	popup.setup(time_attack_complete_data)
 	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
 	
 func open_pause_menu():
@@ -472,3 +478,7 @@ func shuffle_items():
 		piece.reset_position.x += x_offset
 	#PhysicsServer2D.set_active(true)
 	
+
+
+func _on_win_button_pressed():
+	pass # Replace with function body.

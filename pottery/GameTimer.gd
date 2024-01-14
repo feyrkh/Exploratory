@@ -44,3 +44,5 @@ func complete_game():
 	var win_label = find_child("WinLabel")
 	win_label.text = "Completed! You may save items to your gallery or press escape to move on."
 	win_label.visible = true
+	var win_button = find_child("WinButton")
+	win_button.visible = true

@@ -76,8 +76,10 @@ func render_item(idx:int):
 func calc_time_attack_seconds_score(v:int) -> float:
 	if v <= 0:
 		return 0
-	if v <= 60:
-		return 1.0 + (60 - v)/10.0
+	if v <= 30:
+		return 2.0
+	elif v <= 60:
+		return 2.0 - (v-30)/30.0
 	return 1 / ((v+120) / 180.0)
 
 func calc_bump_enabled_score(v:bool) -> float:
@@ -93,9 +95,11 @@ func calc_item_count_score(v:int) -> float:
 	return (v * 1.0) - max(0, v * 0.1 - 0.1)
 
 func calc_area_pct_score(v:float) -> float:
-	if v > 0.99:
+	if v > 0.99 and v < 1.01:
 		return 1.0
-	return v
+	if v > 1.0:
+		v = (v-1)*3+1
+	return min(v, 1.0) / max(v, 1.0)
 
 func calc_shatter_desc(v:float) -> String:
 	if v < 0.1:

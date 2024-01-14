@@ -121,3 +121,20 @@ static func local_polygon(polygon_holder:Node2D, polygon):
 	for pt in polygon:
 		result.append(polygon_holder.to_local(pt))
 	return result
+
+static func random_bbox_edge_point(bbox:Rect2)->Vector2:
+	var edge_len = bbox.size.x*2 + bbox.size.y*2
+	var edge_dist = randf_range(0, edge_len)
+	if edge_dist < bbox.size.x:
+		return bbox.position + Vector2(edge_dist, 0)
+	edge_dist -= bbox.size.x
+	if edge_dist < bbox.size.y:
+		return bbox.position + Vector2(bbox.size.x, edge_dist)
+	edge_dist -= bbox.size.y
+	if edge_dist < bbox.size.x:
+		return bbox.position + Vector2(edge_dist, bbox.size.y)
+	edge_dist -= bbox.size.x
+	if edge_dist < bbox.size.y:
+		return bbox.position + Vector2(0, edge_dist)
+	push_error("Unexpectedly went outside the range of a bounding box ", bbox, " edge by ", edge_dist)
+	return Vector2.ZERO

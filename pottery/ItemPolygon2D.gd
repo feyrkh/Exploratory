@@ -22,6 +22,11 @@ var bounding_box:Rect2:
 		bounding_box = Rect2(x1, y1, x2-x1, y2-y1)
 		#bbox_poly.polygon = [Vector2(x1, y1), Vector2(x2, y1), Vector2(x2, y2), Vector2(x1, y2)]
 		return bounding_box
+var total_edge_length:float:
+	get:
+		if total_edge_length == null:
+			total_edge_length = _calc_total_edge_length()
+		return total_edge_length
 
 func _ready():
 	pass
@@ -29,8 +34,12 @@ func _ready():
 	#bbox_poly.color = Color(1, 1, 1, 0.5)
 	#add_child(bbox_poly)
 	
-	
-	
+func _calc_total_edge_length()->float:
+	var result = 0
+	for i in range(polygon.size()):
+		var j = (i+1) % polygon.size()
+		result += polygon[i].distance_to(polygon[j])
+	return result
 	
 	
 	

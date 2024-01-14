@@ -60,8 +60,10 @@ func _ready():
 			new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
 			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
 			await get_tree().process_frame
-			for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
-				new_item.random_scar()
+			var cracks := FractureGenerator.generate_standard_scars(new_item, settings.get(CRACK_COUNT_SETTING, 8))
+			new_item.create_scars_from_paths(cracks)
+			#for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
+			#	new_item.random_scar()
 			await new_item.try_shatter(Global.shatter_width, true)
 		
 		PhysicsServer2D.set_active(true)

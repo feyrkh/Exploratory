@@ -624,6 +624,15 @@ func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, mi
 	scar.generate_scar(collision.polygon, start_pos, (end_pos-start_pos).length(), start_angle, max_deviation, min_segment_len, max_segment_len)
 	add_scar(scar)
 
+func create_scars_from_paths(scar_paths:Array[PackedVector2Array]):
+	for path in scar_paths:
+		if path.size() >= 2:
+			print("Adding scar")
+			var scar:ItemScar = ItemScar.create_scar_from_path(path)
+			add_scar(scar)
+		else:
+			print("Skipping zero-length scar")
+		
 func _calculate_area(polygon) -> float:
 	var triangles = Geometry2D.triangulate_polygon(polygon)
 	if triangles.size() == 0:

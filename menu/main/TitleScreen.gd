@@ -289,10 +289,12 @@ func prepare_next_item(load_slowly=true):
 	next_bounding_box = item.bounding_box
 	item.position = -(item.bounding_box.size / 2 + item.bounding_box.position)
 	
-	for j in range(randi_range(5, 12)):
-		item.random_scar()
+	var cracks := FractureGenerator.generate_standard_scars(item, randi_range(5, 12))
+	item.create_scars_from_paths(cracks)
+	#for j in range(randi_range(5, 12)):
+	#	item.random_scar()
 	if load_slowly: await(get_tree().process_frame)
-	await item.try_shatter(randf_range(0.5, 1.5), load_slowly)
+	await item.try_shatter(randf_range(1, 2.5), load_slowly)
 	if load_slowly: await(get_tree().process_frame)
 	for i in find_child("ItemPreparation").get_children():
 		if is_instance_valid(i) and i is ArcheologyItem:

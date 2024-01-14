@@ -26,6 +26,14 @@ func clone() -> ItemScar:
 	new_scene.add_child(new_line)
 	new_scene.line = new_line
 	return new_scene
+
+static func create_scar_from_path(path:PackedVector2Array) -> ItemScar:
+	var new_scene = load("res://pottery/ItemScar.tscn").instantiate()
+	var new_line = preload("res://pottery/ItemScarLine.tscn").instantiate()
+	new_line.points = path
+	new_scene.add_child(new_line)
+	new_scene.line = new_line
+	return new_scene
 	
 
 func generate_scar(polygon:PackedVector2Array, start_pos:Vector2, len:float, initial_angle_radians:float, max_deviation_radians:float=PI/6, min_segment_len_percent:float=0.2, max_segment_len_percent:float=0.3):

@@ -6,7 +6,7 @@ const SETTINGS_PATH := "user://settings.cfg"
 
 enum CrackWidth {HAIRLINE, THIN, MEDIUM, THICK}
 const crack_widths = {
-	CrackWidth.HAIRLINE: 0.05,
+	CrackWidth.HAIRLINE: 0.08,
 	CrackWidth.THIN: 0.2,
 	CrackWidth.MEDIUM: 0.75,
 	CrackWidth.THICK: 1.5,

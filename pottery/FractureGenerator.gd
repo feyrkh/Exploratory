@@ -14,15 +14,31 @@ static func generate_standard_scars(item:ArcheologyItem, scar_count:int)->Array[
 	while total_scars < scar_count:
 		var chance := randf()
 		var potential_new_scars
-		if chance < 0.4:
+		if chance < 0.2:
+			print("##### Chisel fracture!")
 			potential_new_scars = FractureGenerator.chisel_fracture(item, randi_range(1, scar_count-total_scars))
-		elif chance < 0.9:
+		elif chance < 0.6:
+			print("##### Random fracture!")
 			item.random_scar()
 			total_scars += 1
+		elif chance < 0.8:
+			if scar_count - total_scars >= 3:
+				print("##### Hammer fracture!")
+				potential_new_scars = FractureGenerator.hammer_fracture(item, randi_range(5, 11), randf_range(10, 45), randi_range(2, scar_count-total_scars-1))
+			else:
+				print("##### Chisel fracture (converted from hammer for too few scars left: ", (scar_count-total_scars), " < 3)!")
+				potential_new_scars = FractureGenerator.chisel_fracture(item, randi_range(1, scar_count-total_scars))
+		elif chance < 0.9:
+			print("##### Lightning fracture!")
+			potential_new_scars = FractureGenerator.lightning_fracture(item)
 		else:
+			print("##### Bisecting fracture!")
 			potential_new_scars = [FractureGenerator.edge_to_edge_fracture(item)]
 		if potential_new_scars != null:
+			print("New scars: ", potential_new_scars.size())
 			for s in potential_new_scars:
+				if total_scars >= scar_count:
+					break
 				if s.size() > 3:
 					total_scars += 1
 					result.append(s)
@@ -76,17 +92,19 @@ static func hammer_fracture(item:ArcheologyItem, circle_point_count:int, circle_
 		var cur_line = PackedVector2Array([start_pt, _extend_fracture(start_pt, min_dist, max_dist, cur_angle, max_deflection)])
 		_extend_fracture_to_bbox_edge(cur_line, min_dist, max_dist, max_deflection, item.bounding_box)
 		result.append(cur_line)
-	#circle_fracture.append(circle_fracture[0]) # close the circle
+	circle_fracture.append(circle_fracture[0]) # close the circle
 	circle_fracture = MyGeom.build_convex_polygon(circle_fracture)
 	result.append(circle_fracture)
 	return result
 
 static func lightning_fracture(item:ArcheologyItem, start_pt=null, start_angle:float=0, fracture_split_chance:float=0.2, post_split_chance_multiplier:float=0.5):
 	if start_pt == null:
-		start_pt = item.center + (item.get_random_edge_point() - item.center) * randf()
-		start_angle = item.center.angle_to_point(start_pt)
+		start_pt = item.get_random_edge_point()
+		#start_pt = item.center + (item.get_random_edge_point() - item.center) * randf()
+		start_angle = start_pt.angle_to_point(item.center)
 	var result:Array[PackedVector2Array] = []
 	var cur_crack = PackedVector2Array([start_pt])
+	result.append(cur_crack)
 	var min_dist = min(item.bounding_box.size.x, item.bounding_box.size.y)/20
 	var max_dist = max(item.bounding_box.size.x, item.bounding_box.size.y)/16
 	var max_deflection = deg_to_rad(DEFAULT_DEFLECTION)
@@ -96,9 +114,11 @@ static func lightning_fracture(item:ArcheologyItem, start_pt=null, start_angle:f
 		cur_pt = _extend_fracture(cur_pt, min_dist, max_dist, cur_angle, max_deflection)
 		cur_crack.append(cur_pt)
 		if randf() < fracture_split_chance:
-			var split_cracks = lightning_fracture(item, cur_crack[-1], cur_angle + randf_range(-max_deflection*2, max_deflection*2), fracture_split_chance * post_split_chance_multiplier)
+			var new_deflection = randf_range(max_deflection*0.5, max_deflection*2)
+			if randf() > 0.5:
+				new_deflection = -new_deflection
+			var split_cracks = lightning_fracture(item, cur_crack[-1], cur_angle + new_deflection, fracture_split_chance * post_split_chance_multiplier)
 			result.append_array(split_cracks)
-	result.append(cur_crack)
 	return result
 
 static func trim_fracture(item:ArcheologyItem, fracture:PackedVector2Array) -> PackedVector2Array:
@@ -131,12 +151,12 @@ static func trim_fracture(item:ArcheologyItem, fracture:PackedVector2Array) -> P
 		cur_in_area = next_in_area
 	
 	if first_pt >= last_pt:
-		print("Returning empty fracture, it is entirely outside the area")
+		#print("Returning empty fracture, it is entirely outside the area")
 		return []
 	if first_pt == 0 and last_pt == fracture.size() - 1:
-		print("Returning full fracture, it is entirely inside the area")
+		#print("Returning full fracture, it is entirely inside the area")
 		return fracture
-	print("Returning partial fracture, from ", first_pt, " to ", last_pt, " of ", fracture.size())
+	#print("Returning partial fracture, from ", first_pt, " to ", last_pt, " of ", fracture.size())
 	return fracture.slice(first_pt, last_pt)
 	
 static func _extend_fracture(cur_pt:Vector2, min_dist:float, max_dist:float, cur_angle:float, max_deflection:float)->Vector2:

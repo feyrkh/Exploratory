@@ -67,6 +67,63 @@ static func circle_polygon(pos:Vector2, radius:float, point_count:int) -> Packed
 static func build_convex_polygon(points:PackedVector2Array) -> PackedVector2Array:
 	return Geometry2D.convex_hull(points)
 
+static func cleanup_close_points(poly:PackedVector2Array)->PackedVector2Array:
+	# Find points that are too close together and merge them
+	var points_to_delete := []
+	for i in range(1, poly.size() - 1):
+		var pt1 = poly[i-1]
+		var pt2 = poly[i]
+		if pt1.distance_squared_to(pt2) <= 1:
+			points_to_delete.append(i)
+	points_to_delete.reverse()
+	for i in points_to_delete:
+		#print("Merging points: ", poly[i], " and ", poly[i-1])
+		poly[i-1] = (poly[i] + poly[i-1])/2.0
+		poly.remove_at(i)
+	return poly
+
+static func cleanup_sharp_angles(poly:PackedVector2Array)->PackedVector2Array:
+	for i in range(-2, poly.size()-2):
+		var angle := poly[i+1].angle_to_point(poly[i]) - poly[i+1].angle_to_point(poly[i+2])
+		#print("Angle made by ", i+1, " is ", rad_to_deg(angle))
+	return poly
+
+static func cleanup_self_intersections(poly:PackedVector2Array)->PackedVector2Array:
+	var intersecting_lines := []
+	var prev_pt = poly[-1]
+	# Find all intersecting lines and their lengths
+	for i in poly.size():
+		var cur_pt = poly[i]
+		for j in range(i, poly.size()-2):
+			var other_pt1 := poly[j]
+			var other_pt2 := poly[j+1]
+			var intersects = Geometry2D.segment_intersects_segment(prev_pt, cur_pt, other_pt1, other_pt2)
+			if intersects:
+				intersecting_lines.append([i-1, i, prev_pt.distance_to(cur_pt)])
+				intersecting_lines.append([j, j+1, other_pt1.distance_to(other_pt2)])
+		prev_pt = cur_pt
+	#print("Found ", intersecting_lines.size(), " intersecting lines, ", intersecting_lines)
+	if intersecting_lines.size() == 0:
+		return poly
+		
+	var longest := {}
+	for line in intersecting_lines:
+		longest[line[0]] = max(longest.get(line[0], 0), line[2])
+		longest[line[1]] = max(longest.get(line[1], 0), line[2])
+	#print("Longest lines associated with each point: ", longest)
+	intersecting_lines.sort_custom(func(a,b): return longest.get(a[0], 999999) + longest.get(a[1], 999999) < longest.get(b[0], 999999) + longest.get(b[1], 999999))
+	#print("Point sorted by smallest impacted lines: ", intersecting_lines)
+	var idx_to_remove
+	if longest[intersecting_lines[0][0]] < longest[intersecting_lines[0][1]]:
+		#print("Pt ", intersecting_lines[0][0], " has the smallest impactful intersections, deleting it")
+		idx_to_remove = intersecting_lines[0][0]
+	else:
+		#print("Pt ", intersecting_lines[0][1], " has the smallest impactful intersections, deleting it")
+		idx_to_remove = intersecting_lines[0][1]
+	if idx_to_remove < 0: idx_to_remove += poly.size()
+	poly.remove_at(idx_to_remove)
+	return poly
+
 #static func build_convex_polygon(points:PackedVector2Array) -> PackedVector2Array:
 	#var n := points.size()
 	#if points == null or n < 3:

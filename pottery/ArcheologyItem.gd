@@ -1,7 +1,7 @@
 extends RigidBody2D
 class_name ArcheologyItem
 
-const TOO_SMALL_POLYGON_AREA := 55
+const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
 const MAX_LINEAR_VELOCITY := 6000.0
@@ -408,7 +408,7 @@ func handle_move_input(event):
 				if Global.awaiting_first_click:
 					Global.awaiting_first_click = false
 					Global.first_click_received.emit()
-				print("Starting drag")
+				#print("Starting drag")
 				drag_start_mouse = get_global_mouse_position()
 				drag_start_item = global_position
 				lock_rotation = true
@@ -456,7 +456,7 @@ func handle_move_input(event):
 			rotation_handle_indicator.visible = false
 			lock_rotation = Global.lock_rotation
 			safe_freeze(Global.freeze_pieces)
-			print("Stopping rotate")
+			#print("Stopping rotate")
 	elif drag_start_mouse != null and event is InputEventMouseMotion:
 		target_pos = get_global_mouse_position()
 	elif rotate_start_mouse != null and event is InputEventMouseMotion:
@@ -585,6 +585,11 @@ func try_shatter(shatter_width:float = Global.shatter_width, should_shatter_slow
 		new_collision_polygons = []
 	
 	var total_size = 0
+	collision_polygon_list = collision_polygon_list.map(func(poly):
+		poly = MyGeom.cleanup_self_intersections(poly)
+		poly = MyGeom.cleanup_close_points(poly)
+		return poly
+	)
 	for poly in collision_polygon_list:
 		total_size += _calculate_area(poly)
 	print("After shattering, original area changed by ", (1.0 - total_size / original_area)*100, "% (", original_area, " -> ", total_size, ")")
@@ -627,10 +632,11 @@ func specific_scar(start_pos:Vector2, end_pos:Vector2, max_deviation:float=0, mi
 func create_scars_from_paths(scar_paths:Array[PackedVector2Array]):
 	for path in scar_paths:
 		if path.size() >= 2:
-			print("Adding scar")
+			#print("Adding scar")
 			var scar:ItemScar = ItemScar.create_scar_from_path(path)
 			add_scar(scar)
 		else:
+			pass
 			print("Skipping zero-length scar")
 		
 func _calculate_area(polygon) -> float:

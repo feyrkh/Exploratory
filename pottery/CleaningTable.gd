@@ -2,7 +2,7 @@ extends Node2D
 class_name CleaningTable
 
 const CAMERA_MOVE_SPEED := 55
-const ZOOM_INCREMENT := Vector2(0.1, 0.1)
+const ZOOM_INCREMENT := Vector2(0.2, 0.2)
 
 const CRACK_COUNT_SETTING := "crack_count"
 const ITEM_COUNT_SETTING := "item_count"
@@ -255,6 +255,8 @@ func do_glue_at_cursor():
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:
 		if event.is_action_pressed("zoom_in", true):
+			if camera.zoom.x > 3:
+				camera.zoom += ZOOM_INCREMENT * 2
 			if camera.zoom.x >= 2:
 				camera.zoom += ZOOM_INCREMENT * 2
 			camera.zoom += ZOOM_INCREMENT
@@ -264,6 +266,8 @@ func handle_camera_input(event:InputEvent):
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("zoom_out", true):
+			if camera.zoom.x > 3:
+				camera.zoom -= ZOOM_INCREMENT * 2
 			if camera.zoom.x > 2:
 				camera.zoom -= ZOOM_INCREMENT * 2
 			camera.zoom -= ZOOM_INCREMENT

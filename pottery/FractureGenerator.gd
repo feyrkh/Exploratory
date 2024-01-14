@@ -28,9 +28,9 @@ static func generate_standard_scars(item:ArcheologyItem, scar_count:int)->Array[
 			else:
 				print("##### Chisel fracture (converted from hammer for too few scars left: ", (scar_count-total_scars), " < 3)!")
 				potential_new_scars = FractureGenerator.chisel_fracture(item, randi_range(1, scar_count-total_scars))
-		elif chance < 0.9:
+		elif chance < 0.85:
 			print("##### Lightning fracture!")
-			potential_new_scars = FractureGenerator.lightning_fracture(item)
+			potential_new_scars = FractureGenerator.lightning_fracture(item, null, 0, 0.1)
 		else:
 			print("##### Bisecting fracture!")
 			potential_new_scars = [FractureGenerator.edge_to_edge_fracture(item)]
@@ -101,7 +101,8 @@ static func lightning_fracture(item:ArcheologyItem, start_pt=null, start_angle:f
 	if start_pt == null:
 		start_pt = item.get_random_edge_point()
 		#start_pt = item.center + (item.get_random_edge_point() - item.center) * randf()
-		start_angle = start_pt.angle_to_point(item.center)
+		var rand_offset := Vector2(randf_range(-item.bounding_box.size.x/3, item.bounding_box.size.x/3), randf_range(-item.bounding_box.size.y/3, item.bounding_box.size.y/3))
+		start_angle = start_pt.angle_to_point(item.center + rand_offset)
 	var result:Array[PackedVector2Array] = []
 	var cur_crack = PackedVector2Array([start_pt])
 	result.append(cur_crack)

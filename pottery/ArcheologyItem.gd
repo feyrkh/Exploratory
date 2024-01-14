@@ -4,7 +4,7 @@ class_name ArcheologyItem
 const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
-const MAX_LINEAR_VELOCITY := 6000.0
+const MAX_LINEAR_VELOCITY := 5000.0
 const MAX_ANGULAR_VELOCITY := 25.0
 
 enum Fields {

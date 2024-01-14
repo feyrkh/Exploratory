@@ -89,39 +89,48 @@ static func cleanup_sharp_angles(poly:PackedVector2Array)->PackedVector2Array:
 	return poly
 
 static func cleanup_self_intersections(poly:PackedVector2Array)->PackedVector2Array:
-	var intersecting_lines := []
-	var prev_pt = poly[-1]
-	# Find all intersecting lines and their lengths
-	for i in poly.size():
-		var cur_pt = poly[i]
-		for j in range(i, poly.size()-2):
-			var other_pt1 := poly[j]
-			var other_pt2 := poly[j+1]
-			var intersects = Geometry2D.segment_intersects_segment(prev_pt, cur_pt, other_pt1, other_pt2)
-			if intersects:
-				intersecting_lines.append([i-1, i, prev_pt.distance_to(cur_pt)])
-				intersecting_lines.append([j, j+1, other_pt1.distance_to(other_pt2)])
-		prev_pt = cur_pt
-	#print("Found ", intersecting_lines.size(), " intersecting lines, ", intersecting_lines)
-	if intersecting_lines.size() == 0:
-		return poly
-		
-	var longest := {}
-	for line in intersecting_lines:
-		longest[line[0]] = max(longest.get(line[0], 0), line[2])
-		longest[line[1]] = max(longest.get(line[1], 0), line[2])
-	#print("Longest lines associated with each point: ", longest)
-	intersecting_lines.sort_custom(func(a,b): return longest.get(a[0], 999999) + longest.get(a[1], 999999) < longest.get(b[0], 999999) + longest.get(b[1], 999999))
-	#print("Point sorted by smallest impacted lines: ", intersecting_lines)
-	var idx_to_remove
-	if longest[intersecting_lines[0][0]] < longest[intersecting_lines[0][1]]:
-		#print("Pt ", intersecting_lines[0][0], " has the smallest impactful intersections, deleting it")
-		idx_to_remove = intersecting_lines[0][0]
-	else:
-		#print("Pt ", intersecting_lines[0][1], " has the smallest impactful intersections, deleting it")
-		idx_to_remove = intersecting_lines[0][1]
-	if idx_to_remove < 0: idx_to_remove += poly.size()
-	poly.remove_at(idx_to_remove)
+	var removed_intersection = true
+	while removed_intersection:
+		removed_intersection = false
+		var intersecting_lines := []
+		var prev_pt = poly[-1]
+		# Find all intersecting lines and their lengths
+		for i in poly.size():
+			var cur_pt = poly[i]
+			for j in range(i, poly.size()-2):
+				var other_pt1 := poly[j]
+				var other_pt2 := poly[j+1]
+				var intersects = Geometry2D.segment_intersects_segment(prev_pt, cur_pt, other_pt1, other_pt2)
+				if intersects:
+					if other_pt1 == cur_pt and intersects.is_equal_approx(other_pt1):
+						#print("Only intersection was at the endpoints")
+						continue
+					intersecting_lines.append([i-1, i, prev_pt.distance_to(cur_pt)])
+					intersecting_lines.append([j, j+1, other_pt1.distance_to(other_pt2)])
+			prev_pt = cur_pt
+		#print("Found ", intersecting_lines.size(), " intersecting lines, ", intersecting_lines)
+		if intersecting_lines.size() == 0:
+			return poly
+			
+		var longest := {}
+		for line in intersecting_lines:
+			longest[line[0]] = max(longest.get(line[0], 0), line[2])
+			longest[line[1]] = max(longest.get(line[1], 0), line[2])
+		#print("Longest lines associated with each point: ", longest)
+		intersecting_lines.sort_custom(func(a,b): return longest.get(a[0], 999999) + longest.get(a[1], 999999) < longest.get(b[0], 999999) + longest.get(b[1], 999999))
+		#print("Point sorted by smallest impacted lines: ", intersecting_lines)
+		var idx_to_remove
+		if longest[intersecting_lines[0][0]] < longest[intersecting_lines[0][1]]:
+			#print("Pt ", intersecting_lines[0][0], " has the smallest impactful intersections, deleting it")
+			print("Removed self-intersection with length ", intersecting_lines[0][2])
+			idx_to_remove = intersecting_lines[0][0]
+		else:
+			#print("Pt ", intersecting_lines[0][1], " has the smallest impactful intersections, deleting it")
+			print("Removed self-intersection with length ", intersecting_lines[0][2])
+			idx_to_remove = intersecting_lines[0][1]
+		if idx_to_remove < 0: idx_to_remove += poly.size()
+		poly.remove_at(idx_to_remove)
+		removed_intersection = true
 	return poly
 
 #static func build_convex_polygon(points:PackedVector2Array) -> PackedVector2Array:

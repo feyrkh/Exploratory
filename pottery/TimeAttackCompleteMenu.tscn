@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://f764jjjlawae"]
+[gd_scene load_steps=4 format=3 uid="uid://f764jjjlawae"]
 
 [ext_resource type="Script" path="res://pottery/TimeAttackCompleteMenu.gd" id="1_4s6ge"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_75gck"]
+[ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="3_kt1al"]
 
 [node name="TimeAttackCompleteMenu" type="Control"]
 process_mode = 3
@@ -202,16 +203,19 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Previous"
+script = ExtResource("3_kt1al")
 
 [node name="SaveButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Save"
+script = ExtResource("3_kt1al")
 
 [node name="NextButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Next"
+script = ExtResource("3_kt1al")
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/PrevButton" to="." method="_on_prev_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_pressed"]

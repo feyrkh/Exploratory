@@ -22,7 +22,7 @@ offset_right = 88.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group1"
 
 [node name="DecorationBase2" type="ColorRect" parent="."]
 offset_left = 110.0
@@ -31,7 +31,7 @@ offset_right = 149.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group 2"
 
 [node name="DecorationBase3" type="ColorRect" parent="."]
 offset_left = 174.0
@@ -40,7 +40,7 @@ offset_right = 213.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group3"
 
 [node name="DecorationBase4" type="ColorRect" parent="."]
 offset_left = 235.0
@@ -49,7 +49,7 @@ offset_right = 274.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group1"
 
 [node name="DecorationBase5" type="ColorRect" parent="."]
 offset_left = 296.0
@@ -58,7 +58,7 @@ offset_right = 335.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group3"
 
 [node name="DecorationBase6" type="ColorRect" parent="."]
 offset_left = 356.0
@@ -67,7 +67,7 @@ offset_right = 395.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group4"
 
 [node name="DecorationBase7" type="ColorRect" parent="."]
 offset_left = 414.0
@@ -76,7 +76,7 @@ offset_right = 453.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group 2"
 
 [node name="DecorationBase8" type="ColorRect" parent="."]
 offset_left = 474.0
@@ -85,7 +85,7 @@ offset_right = 513.0
 offset_bottom = 147.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 1"
+group = "group3"
 
 [node name="DecorationBase9" type="ColorRect" parent="."]
 offset_left = 49.0
@@ -94,7 +94,7 @@ offset_right = 88.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group1"
 
 [node name="DecorationBase10" type="ColorRect" parent="."]
 offset_left = 110.0
@@ -103,7 +103,7 @@ offset_right = 149.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group4"
 
 [node name="DecorationBase11" type="ColorRect" parent="."]
 offset_left = 174.0
@@ -112,7 +112,7 @@ offset_right = 213.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group3"
 
 [node name="DecorationBase12" type="ColorRect" parent="."]
 offset_left = 235.0
@@ -121,7 +121,7 @@ offset_right = 274.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group 2"
 
 [node name="DecorationBase13" type="ColorRect" parent="."]
 offset_left = 296.0
@@ -130,7 +130,7 @@ offset_right = 335.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group1"
 
 [node name="DecorationBase14" type="ColorRect" parent="."]
 offset_left = 356.0
@@ -139,7 +139,7 @@ offset_right = 395.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group3"
 
 [node name="DecorationBase15" type="ColorRect" parent="."]
 offset_left = 414.0
@@ -148,7 +148,7 @@ offset_right = 453.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group 2"
 
 [node name="DecorationBase16" type="ColorRect" parent="."]
 offset_left = 474.0
@@ -157,7 +157,7 @@ offset_right = 513.0
 offset_bottom = 221.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 2"
+group = "group4"
 
 [node name="DecorationBase17" type="ColorRect" parent="."]
 offset_left = 49.0
@@ -166,7 +166,7 @@ offset_right = 88.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group4"
 
 [node name="DecorationBase18" type="ColorRect" parent="."]
 offset_left = 110.0
@@ -175,7 +175,7 @@ offset_right = 149.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group4"
 
 [node name="DecorationBase19" type="ColorRect" parent="."]
 offset_left = 174.0
@@ -184,7 +184,7 @@ offset_right = 213.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group3"
 
 [node name="DecorationBase20" type="ColorRect" parent="."]
 offset_left = 235.0
@@ -193,7 +193,7 @@ offset_right = 274.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group4"
 
 [node name="DecorationBase21" type="ColorRect" parent="."]
 offset_left = 296.0
@@ -202,7 +202,7 @@ offset_right = 335.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group 2"
 
 [node name="DecorationBase22" type="ColorRect" parent="."]
 offset_left = 356.0
@@ -211,7 +211,7 @@ offset_right = 395.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group1"
 
 [node name="DecorationBase23" type="ColorRect" parent="."]
 offset_left = 414.0
@@ -220,7 +220,7 @@ offset_right = 453.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group3"
 
 [node name="DecorationBase24" type="ColorRect" parent="."]
 offset_left = 474.0
@@ -229,7 +229,7 @@ offset_right = 513.0
 offset_bottom = 299.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 3"
+group = "group 2"
 
 [node name="DecorationBase25" type="ColorRect" parent="."]
 offset_left = 49.0
@@ -238,7 +238,7 @@ offset_right = 88.0
 offset_bottom = 378.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 4"
+group = "group4"
 
 [node name="DecorationBase26" type="ColorRect" parent="."]
 offset_left = 110.0
@@ -247,7 +247,6 @@ offset_right = 149.0
 offset_bottom = 378.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 4"
 
 [node name="DecorationBase27" type="ColorRect" parent="."]
 offset_left = 174.0
@@ -256,7 +255,7 @@ offset_right = 213.0
 offset_bottom = 378.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 4"
+group = "group3"
 
 [node name="DecorationBase28" type="ColorRect" parent="."]
 offset_left = 235.0
@@ -265,7 +264,7 @@ offset_right = 274.0
 offset_bottom = 378.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 4"
+group = "group 2"
 
 [node name="DecorationBase29" type="ColorRect" parent="."]
 offset_left = 296.0
@@ -283,7 +282,7 @@ offset_right = 395.0
 offset_bottom = 378.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 4"
+group = "group3"
 
 [node name="DecorationBase31" type="ColorRect" parent="."]
 offset_left = 414.0
@@ -292,7 +291,7 @@ offset_right = 453.0
 offset_bottom = 378.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 4"
+group = "group 2"
 
 [node name="DecorationBase32" type="ColorRect" parent="."]
 offset_left = 474.0
@@ -319,7 +318,7 @@ offset_right = 149.0
 offset_bottom = 456.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 5"
+group = "group1"
 
 [node name="DecorationBase35" type="ColorRect" parent="."]
 offset_left = 174.0
@@ -328,7 +327,7 @@ offset_right = 213.0
 offset_bottom = 456.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 5"
+group = "group3"
 
 [node name="DecorationBase36" type="ColorRect" parent="."]
 offset_left = 235.0
@@ -337,7 +336,7 @@ offset_right = 274.0
 offset_bottom = 456.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 5"
+group = "group 2"
 
 [node name="DecorationBase37" type="ColorRect" parent="."]
 offset_left = 296.0
@@ -346,7 +345,7 @@ offset_right = 335.0
 offset_bottom = 456.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 5"
+group = "group3"
 
 [node name="DecorationBase38" type="ColorRect" parent="."]
 offset_left = 356.0
@@ -355,7 +354,7 @@ offset_right = 395.0
 offset_bottom = 456.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 5"
+group = "group 2"
 
 [node name="DecorationBase39" type="ColorRect" parent="."]
 offset_left = 414.0
@@ -364,7 +363,7 @@ offset_right = 453.0
 offset_bottom = 456.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 5"
+group = "group3"
 
 [node name="DecorationBase40" type="ColorRect" parent="."]
 offset_left = 474.0
@@ -391,7 +390,7 @@ offset_right = 149.0
 offset_bottom = 526.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 6"
+group = "group 2"
 
 [node name="DecorationBase43" type="ColorRect" parent="."]
 offset_left = 174.0
@@ -400,7 +399,7 @@ offset_right = 213.0
 offset_bottom = 526.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 6"
+group = "group3"
 
 [node name="DecorationBase44" type="ColorRect" parent="."]
 offset_left = 235.0
@@ -418,7 +417,7 @@ offset_right = 335.0
 offset_bottom = 526.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 6"
+group = "group 2"
 
 [node name="DecorationBase46" type="ColorRect" parent="."]
 offset_left = 356.0
@@ -436,7 +435,7 @@ offset_right = 453.0
 offset_bottom = 526.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 6"
+group = "group3"
 
 [node name="DecorationBase48" type="ColorRect" parent="."]
 offset_left = 474.0
@@ -445,4 +444,4 @@ offset_right = 513.0
 offset_bottom = 526.0
 color = Color(1, 0.521569, 0.552941, 1)
 script = ExtResource("2_q1lfp")
-group = "line 6"
+group = "group3"

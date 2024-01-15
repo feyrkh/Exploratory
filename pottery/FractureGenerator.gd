@@ -14,9 +14,9 @@ static func generate_standard_scars(item:ArcheologyItem, scar_count:int)->Array[
 	while total_scars < scar_count:
 		var chance := randf()
 		var potential_new_scars
-		if chance < 0.2:
+		if chance < 0.4:
 			print("##### Chisel fracture!")
-			potential_new_scars = FractureGenerator.chisel_fracture(item, randi_range(1, scar_count-total_scars))
+			potential_new_scars = FractureGenerator.chisel_fracture(item, randi_range(2, scar_count-total_scars))
 		elif chance < 0.6:
 			print("##### Random fracture!")
 			item.random_scar()

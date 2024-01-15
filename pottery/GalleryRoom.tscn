@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://tpag1njdnwcy"]
+[gd_scene load_steps=8 format=3 uid="uid://tpag1njdnwcy"]
 
 [ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
 [ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_dhsuc"]
+[ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_5ockw"]
 [ext_resource type="PackedScene" uid="uid://dr6w8rungysm1" path="res://menu/gallery/GalleryMenu.tscn" id="4_gxinv"]
 [ext_resource type="PackedScene" uid="uid://btr4madyriyi0" path="res://util/FadeRect.tscn" id="5_0t2vs"]
 
@@ -88,6 +89,7 @@ layout_mode = 2
 size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
 text = "Previous room"
+script = ExtResource("4_5ockw")
 
 [node name="RoomLabel" type="Label" parent="UI/PanelContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(0, 44)
@@ -112,6 +114,7 @@ layout_mode = 2
 size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
 text = "Next room"
+script = ExtResource("4_5ockw")
 
 [node name="PanelContainer" type="PanelContainer" parent="UI"]
 offset_top = 680.0
@@ -126,12 +129,14 @@ layout_mode = 2
 size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
 text = "Unpack Artifact"
+script = ExtResource("4_5ockw")
 
 [node name="ExitButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
 text = "Exit"
+script = ExtResource("4_5ockw")
 
 [node name="GalleryMenu" parent="UI" instance=ExtResource("4_gxinv")]
 visible = false
@@ -142,9 +147,12 @@ anchor_mode = 0
 [node name="FadeRect" parent="UI" instance=ExtResource("5_0t2vs")]
 
 [connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/PreviousButton" to="." method="_on_previous_button_pressed"]
+[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_click_sound"]
 [connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_on_room_label_gui_input"]
+[connection signal="mouse_entered" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_mouseover_sound"]
 [connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_gui_input"]
 [connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_text_submitted"]
+[connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_play_button_mouseover_sound"]
 [connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/UnpackButton" to="." method="_on_unpack_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

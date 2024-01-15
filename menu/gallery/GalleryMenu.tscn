@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dr6w8rungysm1"]
+[gd_scene load_steps=4 format=3 uid="uid://dr6w8rungysm1"]
 
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_3hicx"]
 [ext_resource type="Script" path="res://menu/gallery/GalleryMenu.gd" id="1_vj1ai"]
+[ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="3_ovs4m"]
 
 [node name="GalleryMenu" type="Control"]
 layout_mode = 3
@@ -45,18 +46,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_3hicx")
 text = "Previous"
+script = ExtResource("3_ovs4m")
 
 [node name="UnpackButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_3hicx")
 text = "Unpack"
+script = ExtResource("3_ovs4m")
 
 [node name="NextButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_3hicx")
 text = "Next"
+script = ExtResource("3_ovs4m")
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/PreviousButton" to="." method="_on_previous_button_pressed"]

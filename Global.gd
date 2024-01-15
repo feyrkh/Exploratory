@@ -112,3 +112,9 @@ func rotate_click_mode():
 
 func reset_click_mode():
 	click_mode = ClickMode.move
+
+func play_button_mouseover_sound():
+	AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), 1.0, 0.3)
+
+func play_button_click_sound():
+	AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), randf_range(0.9, 1.1), 0.8)

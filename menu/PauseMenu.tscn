@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cshl65com1jf3"]
+[gd_scene load_steps=5 format=3 uid="uid://cshl65com1jf3"]
 
 [ext_resource type="Script" path="res://menu/PauseMenu.gd" id="1_28fmm"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_gotgm"]
+[ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="3_7aqp1"]
+[ext_resource type="Script" path="res://menu/CustomMenuHSlider.gd" id="3_xqgw0"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -67,6 +69,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+script = ExtResource("3_xqgw0")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -86,6 +89,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+script = ExtResource("3_xqgw0")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -105,6 +109,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+script = ExtResource("3_xqgw0")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -115,12 +120,14 @@ size_flags_horizontal = 3
 theme = ExtResource("2_gotgm")
 text = "Back to game"
 alignment = 0
+script = ExtResource("3_7aqp1")
 
 [node name="QuitAndDiscardButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_gotgm")
 text = "quit without saving"
+script = ExtResource("3_7aqp1")
 
 [node name="QuitAndSaveButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -128,6 +135,7 @@ size_flags_horizontal = 3
 theme = ExtResource("2_gotgm")
 text = "Save and quit"
 alignment = 2
+script = ExtResource("3_7aqp1")
 
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer/OverallVolume" to="." method="_on_overall_volume_value_changed"]
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer3/SfxVolume" to="." method="_on_sfx_volume_value_changed"]

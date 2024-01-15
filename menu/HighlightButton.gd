@@ -1,4 +1,4 @@
-extends TextureButton
+extends CustomMenuTextureButton
 
 const HOVER_COLOR := Color.WHITE
 const NON_HOVER_COLOR := Color(1, 1, 1, 0.6)
@@ -14,6 +14,7 @@ var default_modulate = Color.WHITE:
 		modulate = NON_HOVER_COLOR * default_modulate
 
 func _ready():
+	super._ready()
 	focus_mode = Control.FOCUS_NONE
 	glow_sprite = get_parent().find_child("GlowSprite")
 	modulate = NON_HOVER_COLOR * default_modulate

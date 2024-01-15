@@ -351,4 +351,3 @@ func restore_demo_view():
 
 func show_demo_view():
 	var tween = create_tween()
-	

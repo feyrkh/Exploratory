@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cv8l8uq8upy7o"]
+[gd_scene load_steps=4 format=3 uid="uid://cv8l8uq8upy7o"]
 
 [ext_resource type="Script" path="res://pottery/SaveItemToGalleryMenu.gd" id="1_8syk8"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_40qg8"]
+[ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="3_8uads"]
 
 [node name="SaveItemToGalleryMenu" type="Control"]
 process_mode = 3
@@ -43,11 +44,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Save"
+script = ExtResource("3_8uads")
 
 [node name="CancelButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Cancel"
+script = ExtResource("3_8uads")
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_pressed"]

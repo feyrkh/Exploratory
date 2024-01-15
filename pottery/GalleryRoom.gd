@@ -22,6 +22,7 @@ func _unhandled_input(event):
 		if find_child("GalleryMenu").visible:
 			find_child("GalleryMenu").visible = false
 			get_viewport().set_input_as_handled()
+			Global.play_button_click_sound("menu_back")
 		elif find_child("RoomLabelEdit").visible:
 			cancel_room_name_edit()
 		else:
@@ -226,6 +227,7 @@ func unpack_gallery_item(item_name:String) -> Node2D:
 	return item
 
 func _on_exit_button_pressed():
+	Global.play_button_click_sound("menu_back")
 	save_current_room()
 	Global.change_scene("res://menu/main/TitleScreen.tscn")
 

@@ -51,6 +51,7 @@ layout_mode = 2
 size_flags_horizontal = 6
 text = "Cancel"
 script = ExtResource("3_8uads")
+sfx = ""
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_pressed"]

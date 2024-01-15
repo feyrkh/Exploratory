@@ -51,3 +51,9 @@ func _on_gui_input(event):
 		if visible:
 			visible = false
 			get_viewport().set_input_as_handled()
+			Global.play_button_click_sound("menu_back")
+
+
+func _on_close_button_pressed():
+	Global.play_button_click_sound("menu_back")
+	visible = false

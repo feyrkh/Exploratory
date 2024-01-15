@@ -215,6 +215,7 @@ func adjust_camera_limits():
 
 func _unhandled_input(event):
 	if event.is_action_pressed("change_click_mode"):
+		Global.play_button_click_sound()
 		Global.rotate_click_mode()
 		get_viewport().set_input_as_handled()
 	handle_camera_input(event)
@@ -226,6 +227,7 @@ func _unhandled_input(event):
 
 func handle_save_item_input(event):
 	if event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
+		Global.play_button_click_sound("menu_back")
 		Global.reset_click_mode()
 
 func handle_glue_input(event):
@@ -235,6 +237,7 @@ func handle_glue_input(event):
 	elif event.is_action_released("drag_start"):
 		update_glue_brush_sfx()
 	elif event.is_action_pressed("rotate_start") or event.is_action_pressed("ui_cancel"):
+		Global.play_button_click_sound("menu_back")
 		Global.reset_click_mode()
 
 func do_glue_at_cursor():
@@ -396,6 +399,7 @@ func time_attack_show_scoreboard():
 	
 func open_pause_menu():
 	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()
+	Global.play_button_click_sound("default")
 	find_child("PopupContainer").add_child(popup)
 	set_process(false)
 	set_process_input(false)

@@ -52,6 +52,7 @@ func _on_return_button_pressed():
 	get_tree().paused = false
 	close.emit()
 	queue_free()
+	Global.play_button_click_sound("menu_back")
 
 func _on_quit_and_discard_button_pressed():
 	get_tree().paused = false

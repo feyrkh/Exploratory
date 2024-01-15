@@ -121,6 +121,7 @@ theme = ExtResource("2_gotgm")
 text = "Back to game"
 alignment = 0
 script = ExtResource("3_7aqp1")
+sfx = ""
 
 [node name="QuitAndDiscardButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2

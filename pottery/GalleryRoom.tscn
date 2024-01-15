@@ -137,6 +137,7 @@ size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
 text = "Exit"
 script = ExtResource("4_5ockw")
+sfx = ""
 
 [node name="GalleryMenu" parent="UI" instance=ExtResource("4_gxinv")]
 visible = false
@@ -147,8 +148,8 @@ anchor_mode = 0
 [node name="FadeRect" parent="UI" instance=ExtResource("5_0t2vs")]
 
 [connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/PreviousButton" to="." method="_on_previous_button_pressed"]
-[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_click_sound"]
 [connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_on_room_label_gui_input"]
+[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_click_sound"]
 [connection signal="mouse_entered" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_mouseover_sound"]
 [connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_gui_input"]
 [connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_text_submitted"]

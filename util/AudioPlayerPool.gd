@@ -58,6 +58,7 @@ var overall_volume:float:
 		apply_sfx_volume()
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	background_music_list.shuffle()
 	get_first_free_player()
 	Global.setting_changed.connect(on_setting_change)

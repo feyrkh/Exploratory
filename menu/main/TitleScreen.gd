@@ -157,6 +157,7 @@ func _on_back_button_pressed():
 	save_config()
 	#find_child("OptionsContainer").visible = false
 	find_child("MainMenu").visible = true
+	Global.play_button_click_sound("menu_back")
 
 func _on_zen_button_pressed():
 	mode = "zen"

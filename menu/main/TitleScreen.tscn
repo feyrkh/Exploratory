@@ -260,6 +260,7 @@ theme = ExtResource("2_7feem")
 text = "Back"
 alignment = 0
 script = ExtResource("4_i7rd2")
+sfx = "none"
 
 [node name="HoverDescription" type="Label" parent="OptionsContainer"]
 layout_mode = 2

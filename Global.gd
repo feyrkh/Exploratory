@@ -38,6 +38,7 @@ var glue_material:ShaderMaterial = preload("res://shader/ItemShardEdgeLine.tres"
 
 func _ready():
 	glue_material = get_glue_material(glue_color)
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func change_scene(scene):
 	cleanup_all_items.emit()
@@ -113,8 +114,14 @@ func rotate_click_mode():
 func reset_click_mode():
 	click_mode = ClickMode.move
 
-func play_button_mouseover_sound():
-	AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), 1.0, 0.3)
+func play_button_mouseover_sound(sfx_name:String="default"):
+	match sfx_name:
+		_: AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), 1.0, 0.3)
 
-func play_button_click_sound():
-	AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), randf_range(0.9, 1.1), 0.8)
+func play_button_click_sound(sfx_name:String="default"):
+	match sfx_name:
+		"none", "": pass
+		"menu_back":  
+			AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), 0.5, 0.8)
+		_: 
+			AudioPlayerPool.play_sfx(preload("res://sfx/clink3.mp3"), randf_range(0.9, 1.1), 0.8)

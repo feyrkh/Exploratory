@@ -14,7 +14,7 @@ func _ready():
 	generate_image()
 
 func generate_image():
-	var baseImgAndCollider = load("res://art/item/"+baseName+"_collider.tscn").instantiate()
+	var baseImgAndCollider = load("res://art/item/"+baseName+".tscn").instantiate()
 	var base = ImageMerger.ImageMergeInfo.new()
 	base.img = baseImgAndCollider.find_child("Sprite2D").texture.get_image()
 	base.position = Vector2.ZERO
@@ -62,7 +62,7 @@ func generate_image():
 	sprite.position = Vector2(500, 400)
 #
 	#var combined_img:Sprite2D = $CombinedImage
-	#var base_img_and_collider = load("res://art/item/"+baseName+"_collider.tscn").instantiate()
+	#var base_img_and_collider = load("res://art/item/"+baseName+".tscn").instantiate()
 	#var base_img:Texture2D = base_img_and_collider.find_child("Sprite2D").texture
 	#combined_img.draw_texture(base_img, Vector2.ZERO, Color.RED)
 

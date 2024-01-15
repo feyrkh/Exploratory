@@ -44,7 +44,7 @@ class ItemConfig:
 		return load(item_dir+item_name+".png")
 	
 	func load_collider_scene() -> PackedScene:
-		var scene = load(item_dir+item_name+'_collider.tscn')
+		var scene = load(item_dir+item_name+'.tscn')
 		return scene
 	
 	func get_shadow_texture() -> Texture2D:
@@ -78,6 +78,8 @@ class ImageSaveData:
 		info.position = position
 		info.modulate = color
 		info.img = load(item_dir+item_name+".png").get_image()
+		if info.img.get_format() != Image.FORMAT_RGBA8:
+			info.img.convert(Image.FORMAT_RGBA8)
 		if info.img.get_size() != size:
 			info.img.resize(size.x, size.y)
 		return info
@@ -311,9 +313,9 @@ func read_file(dir_name, file_name):
 			return
 		item.img_size = texture.get_size()
 	if item.type == 'base':
-		var scene:PackedScene = load(dir_name+file_name_prefix+'_collider.tscn')
+		var scene:PackedScene = load(dir_name+file_name_prefix+'.tscn')
 		if !scene:
-			print("Found a base item config file, but it doesn't have a matching ", file_name_prefix+'_collider.tscn', " file, can't use this one!")
+			print("Found a base item config file, but it doesn't have a matching ", file_name_prefix+'.tscn', " file, can't use this one!")
 			return
 	if data.get('min_scale') != null:
 		item.min_scale = Vector2(data['min_scale'], data['min_scale'])

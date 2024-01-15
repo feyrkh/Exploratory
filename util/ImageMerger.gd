@@ -11,9 +11,11 @@ static func merge_images(image_merge_info:Array, noise:FastNoiseLite=null, noise
 	for merge_info in image_merge_info:
 		if base_img == null:
 			base_img = merge_info.img
+			print("Base image format: ", base_img.get_format())
 			await modulate_image(base_img, merge_info.modulate, null, 0, tree)
 		else:
 			var overlay_img = merge_info.img
+			print("overlay_img format: ", overlay_img.get_format())
 			await modulate_image(overlay_img, merge_info.modulate, noise, noise_cutoff, tree, merge_info.position)
 			base_img.blend_rect(overlay_img, overlay_img.get_used_rect(), merge_info.position)
 		if tree:

@@ -1,0 +1,448 @@
+[gd_scene load_steps=3 format=3 uid="uid://dwhw112dwpkvs"]
+
+[ext_resource type="Texture2D" uid="uid://nms1u3v3rfdi" path="res://art/item/tablet3.png" id="1_qb1ah"]
+[ext_resource type="Script" path="res://util/DecorationBase.gd" id="2_q1lfp"]
+
+[node name="Item" type="StaticBody2D"]
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_qb1ah")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(12, 105, 19, 92, 37, 80, 71, 67, 120, 52, 184, 43, 212, 43, 255, 46, 280, 46, 335, 53, 384, 54, 434, 49, 481, 47, 524, 49, 563, 58, 568, 66, 580, 105, 594, 156, 600, 216, 599, 310, 596, 332, 600, 412, 599, 512, 598, 544, 588, 556, 568, 565, 463, 566, 379, 565, 327, 563, 304, 565, 236, 560, 166, 566, 89, 562, 37, 561, 22, 554, 16, 543, 10, 517, 7, 491, 11, 437, 11, 406, 18, 390, 12, 368, 9, 351, 10, 293, 12, 255, 11, 221, 12, 197, 15, 177, 10, 158, 8, 125)
+metadata/_edit_lock_ = true
+
+[node name="DecorationBase" type="ColorRect" parent="."]
+offset_left = 49.0
+offset_top = 109.0
+offset_right = 88.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase2" type="ColorRect" parent="."]
+offset_left = 110.0
+offset_top = 109.0
+offset_right = 149.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase3" type="ColorRect" parent="."]
+offset_left = 174.0
+offset_top = 109.0
+offset_right = 213.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase4" type="ColorRect" parent="."]
+offset_left = 235.0
+offset_top = 109.0
+offset_right = 274.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase5" type="ColorRect" parent="."]
+offset_left = 296.0
+offset_top = 109.0
+offset_right = 335.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase6" type="ColorRect" parent="."]
+offset_left = 356.0
+offset_top = 109.0
+offset_right = 395.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase7" type="ColorRect" parent="."]
+offset_left = 414.0
+offset_top = 109.0
+offset_right = 453.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase8" type="ColorRect" parent="."]
+offset_left = 474.0
+offset_top = 109.0
+offset_right = 513.0
+offset_bottom = 147.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 1"
+
+[node name="DecorationBase9" type="ColorRect" parent="."]
+offset_left = 49.0
+offset_top = 183.0
+offset_right = 88.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase10" type="ColorRect" parent="."]
+offset_left = 110.0
+offset_top = 183.0
+offset_right = 149.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase11" type="ColorRect" parent="."]
+offset_left = 174.0
+offset_top = 183.0
+offset_right = 213.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase12" type="ColorRect" parent="."]
+offset_left = 235.0
+offset_top = 183.0
+offset_right = 274.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase13" type="ColorRect" parent="."]
+offset_left = 296.0
+offset_top = 183.0
+offset_right = 335.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase14" type="ColorRect" parent="."]
+offset_left = 356.0
+offset_top = 183.0
+offset_right = 395.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase15" type="ColorRect" parent="."]
+offset_left = 414.0
+offset_top = 183.0
+offset_right = 453.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase16" type="ColorRect" parent="."]
+offset_left = 474.0
+offset_top = 183.0
+offset_right = 513.0
+offset_bottom = 221.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 2"
+
+[node name="DecorationBase17" type="ColorRect" parent="."]
+offset_left = 49.0
+offset_top = 261.0
+offset_right = 88.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase18" type="ColorRect" parent="."]
+offset_left = 110.0
+offset_top = 261.0
+offset_right = 149.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase19" type="ColorRect" parent="."]
+offset_left = 174.0
+offset_top = 261.0
+offset_right = 213.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase20" type="ColorRect" parent="."]
+offset_left = 235.0
+offset_top = 261.0
+offset_right = 274.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase21" type="ColorRect" parent="."]
+offset_left = 296.0
+offset_top = 261.0
+offset_right = 335.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase22" type="ColorRect" parent="."]
+offset_left = 356.0
+offset_top = 261.0
+offset_right = 395.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase23" type="ColorRect" parent="."]
+offset_left = 414.0
+offset_top = 261.0
+offset_right = 453.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase24" type="ColorRect" parent="."]
+offset_left = 474.0
+offset_top = 261.0
+offset_right = 513.0
+offset_bottom = 299.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 3"
+
+[node name="DecorationBase25" type="ColorRect" parent="."]
+offset_left = 49.0
+offset_top = 340.0
+offset_right = 88.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase26" type="ColorRect" parent="."]
+offset_left = 110.0
+offset_top = 340.0
+offset_right = 149.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase27" type="ColorRect" parent="."]
+offset_left = 174.0
+offset_top = 340.0
+offset_right = 213.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase28" type="ColorRect" parent="."]
+offset_left = 235.0
+offset_top = 340.0
+offset_right = 274.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase29" type="ColorRect" parent="."]
+offset_left = 296.0
+offset_top = 340.0
+offset_right = 335.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase30" type="ColorRect" parent="."]
+offset_left = 356.0
+offset_top = 340.0
+offset_right = 395.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase31" type="ColorRect" parent="."]
+offset_left = 414.0
+offset_top = 340.0
+offset_right = 453.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase32" type="ColorRect" parent="."]
+offset_left = 474.0
+offset_top = 340.0
+offset_right = 513.0
+offset_bottom = 378.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 4"
+
+[node name="DecorationBase33" type="ColorRect" parent="."]
+offset_left = 49.0
+offset_top = 418.0
+offset_right = 88.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase34" type="ColorRect" parent="."]
+offset_left = 110.0
+offset_top = 418.0
+offset_right = 149.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase35" type="ColorRect" parent="."]
+offset_left = 174.0
+offset_top = 418.0
+offset_right = 213.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase36" type="ColorRect" parent="."]
+offset_left = 235.0
+offset_top = 418.0
+offset_right = 274.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase37" type="ColorRect" parent="."]
+offset_left = 296.0
+offset_top = 418.0
+offset_right = 335.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase38" type="ColorRect" parent="."]
+offset_left = 356.0
+offset_top = 418.0
+offset_right = 395.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase39" type="ColorRect" parent="."]
+offset_left = 414.0
+offset_top = 418.0
+offset_right = 453.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase40" type="ColorRect" parent="."]
+offset_left = 474.0
+offset_top = 418.0
+offset_right = 513.0
+offset_bottom = 456.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 5"
+
+[node name="DecorationBase41" type="ColorRect" parent="."]
+offset_left = 49.0
+offset_top = 488.0
+offset_right = 88.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase42" type="ColorRect" parent="."]
+offset_left = 110.0
+offset_top = 488.0
+offset_right = 149.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase43" type="ColorRect" parent="."]
+offset_left = 174.0
+offset_top = 488.0
+offset_right = 213.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase44" type="ColorRect" parent="."]
+offset_left = 235.0
+offset_top = 488.0
+offset_right = 274.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase45" type="ColorRect" parent="."]
+offset_left = 296.0
+offset_top = 488.0
+offset_right = 335.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase46" type="ColorRect" parent="."]
+offset_left = 356.0
+offset_top = 488.0
+offset_right = 395.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase47" type="ColorRect" parent="."]
+offset_left = 414.0
+offset_top = 488.0
+offset_right = 453.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"
+
+[node name="DecorationBase48" type="ColorRect" parent="."]
+offset_left = 474.0
+offset_top = 488.0
+offset_right = 513.0
+offset_bottom = 526.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")
+group = "line 6"

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0ypgifk3l66d"]
+
+[ext_resource type="Texture2D" uid="uid://xlgk7s363117" path="res://art/item/teapot2.png" id="1_moti7"]
+[ext_resource type="Script" path="res://util/DecorationBase.gd" id="2_q1lfp"]
+
+[node name="Item" type="StaticBody2D"]
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_moti7")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(327, 210, 358, 213, 393, 222, 414, 233, 428, 234, 445, 239, 448, 244, 441, 269, 463, 278, 483, 290, 493, 301, 511, 325, 527, 361, 533, 412, 530, 452, 516, 488, 494, 521, 472, 542, 457, 552, 437, 562, 427, 578, 392, 593, 338, 599, 290, 600, 254, 597, 214, 593, 174, 584, 160, 560, 132, 548, 106, 525, 83, 497, 69, 467, 61, 434, 61, 395, 52, 366, 55, 317, 50, 302, 36, 277, 27, 270, 17, 265, 1, 260, 0, 254, 2, 251, 6, 248, 10, 244, 16, 239, 26, 232, 37, 225, 40, 223, 44, 223, 52, 226, 76, 235, 96, 245, 112, 254, 129, 265, 135, 273, 147, 271, 159, 271, 155, 261, 149, 246, 149, 243, 152, 240, 167, 237, 180, 237, 191, 234, 218, 224, 240, 218, 271, 211, 283, 208, 283, 202, 276, 199, 266, 187, 264, 182, 264, 174, 266, 170, 269, 166, 273, 164, 290, 162, 307, 161, 323, 160, 330, 160, 334, 163, 339, 167, 341, 171, 343, 175, 343, 182, 342, 186, 338, 192, 327, 202)
+metadata/_edit_lock_ = true
+
+[node name="DecorationBase2" type="ColorRect" parent="."]
+offset_left = 19.0
+offset_top = 388.0
+offset_right = 586.0
+offset_bottom = 510.0
+script = ExtResource("2_q1lfp")
+type = "band"
+
+[node name="DecorationBase" type="ColorRect" parent="."]
+offset_left = 276.0
+offset_top = 355.0
+offset_right = 449.0
+offset_bottom = 477.0
+color = Color(1, 0.521569, 0.552941, 1)
+script = ExtResource("2_q1lfp")

@@ -59,3 +59,8 @@ func _on_mouse_exited():
 	$Timer.paused = true
 	first_frame_showing = false
 	toggle_frames()
+
+
+func _gui_input(event):
+	if event.is_action_pressed("left_click"):
+		toggle_slide()

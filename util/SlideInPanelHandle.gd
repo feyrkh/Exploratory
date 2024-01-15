@@ -18,6 +18,6 @@ func _ready():
 
 func toggle_parent_slide():
 	if attached_panel.slide_open_next:
-		attached_panel.slide_out()
-	else:
 		attached_panel.slide_in()
+	else:
+		attached_panel.slide_out()

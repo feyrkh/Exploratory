@@ -36,12 +36,18 @@ func get_end_pos()->Vector2:
 func slide_in(override_time=null):
 	reset_tween()
 	tween.tween_property(self, "position", get_end_pos(), override_time if override_time != null else slide_time)
-	slide_open_next = true
+	slide_open_next = false
 
 func slide_out(override_time=null):
 	reset_tween()
 	tween.tween_property(self, "position", start_pos, override_time if override_time != null else slide_time)
-	slide_open_next = false
+	slide_open_next = true
+
+func toggle_slide():
+	if slide_open_next:
+		slide_in()
+	else:
+		slide_out()
 
 func is_hidden():
 	return position.is_equal_approx(start_pos)

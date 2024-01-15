@@ -1,5 +1,7 @@
 extends Control
 
+signal closed
+
 var cur_page:int = 0
 var items_per_page:int = 1
 var available_items := []
@@ -49,11 +51,10 @@ func _on_next_button_pressed():
 func _on_gui_input(event):
 	if event.is_action_pressed("right_click"):
 		if visible:
-			visible = false
 			get_viewport().set_input_as_handled()
-			Global.play_button_click_sound("menu_back")
-
+			_on_close_button_pressed()
 
 func _on_close_button_pressed():
+	closed.emit()
 	Global.play_button_click_sound("menu_back")
 	visible = false

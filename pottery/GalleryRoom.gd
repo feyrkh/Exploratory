@@ -16,11 +16,12 @@ var cur_room_name:String = "Gallery 1"
 
 @onready var camera = find_child("Camera2D")
 @onready var fade_rect = find_child("FadeRect")
+@onready var control_hints:ControlHints = find_child("ControlHints")
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel"):
 		if find_child("GalleryMenu").visible:
-			find_child("GalleryMenu").visible = false
+			hide_gallery_menu()
 			get_viewport().set_input_as_handled()
 			Global.play_button_click_sound("menu_back")
 		elif find_child("RoomLabelEdit").visible:
@@ -29,7 +30,7 @@ func _unhandled_input(event):
 			_on_exit_button_pressed()
 	elif event.is_action_pressed("right_click"):
 		if find_child("GalleryMenu").visible:
-			find_child("GalleryMenu").visible = false
+			hide_gallery_menu()
 			get_viewport().set_input_as_handled()
 	else:
 		handle_camera_input(event)
@@ -183,8 +184,12 @@ func _init():
 func _ready():
 	Global.unpack_gallery_item.connect(unpack_gallery_item)
 	Global.delete_archeology_item.connect(item_deleted)
+	find_child("GalleryMenu").closed.connect(update_control_hints)
 	fade_rect.visible = true
 	load_gallery_room(0)
+	update_control_hints()
+	await(get_tree().process_frame)
+	find_child("ControlHints").slide_in(0.01)
 
 func item_deleted(item:ArcheologyItem):
 	gallery_items_unused.append(item.gallery_id)
@@ -213,9 +218,14 @@ func load_gallery_room(idx:int):
 func display_gallery_menu():
 	find_child("GalleryMenu").setup(gallery_items_unused)
 	find_child("GalleryMenu").visible = true
+	control_hints.set_hints([
+		["Close window", preload("res://art/mouse_right.png"), preload("res://art/mouse_none.png")],
+		["Close window", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
+	])
 
 func hide_gallery_menu():
-	find_child("GalleryMenu").visible = true
+	find_child("GalleryMenu").visible = false
+	update_control_hints()
 
 func unpack_gallery_item(item_name:String) -> Node2D:
 	var item = await GalleryMgr.unpack_from_gallery(item_name, report_error)
@@ -280,3 +290,14 @@ func cancel_room_name_edit():
 	find_child("RoomLabelEdit").text = cur_room_name
 	find_child("RoomLabel").visible = true
 	find_child("RoomLabelEdit").visible = false
+
+func update_control_hints():
+	control_hints.set_hints([
+		["Move item", preload("res://art/mouse_left.png"), preload("res://art/mouse_none.png")],
+		["Rotate item", preload("res://art/mouse_right.png"), preload("res://art/mouse_none.png")],
+		["Pan camera", preload("res://art/mouse_middle.png"), preload("res://art/mouse_none.png")],
+		["Pan camera", preload("res://art/arrow_keys.png"), preload("res://art/arrow_keys.png")],
+		["Zoom camera", preload("res://art/mouse_scroll_up.png"), preload("res://art/mouse_scroll_down.png")],
+		["Pack item", preload("res://art/delete_key.png"), preload("res://art/delete_key.png")],
+		["Exit gallery", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
+	])

@@ -12,6 +12,7 @@ const ITEM_COUNT_SETTING := "item_count"
 @onready var cursor_area:CursorArea = find_child("CursorArea")
 @onready var sidebar_menu = find_child("SidebarMenu")
 @onready var glue_brush_audio:AudioStreamPlayer = find_child("GlueBrushAudio")
+@onready var control_hints:ControlHints = find_child("ControlHints")
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
 
@@ -27,6 +28,7 @@ func _ready():
 	settings = Global.next_scene_settings
 	Global.click_mode_changed.connect(update_button_text)
 	Global.click_mode_changed.connect(update_glue_brush_sfx)
+	Global.click_mode_changed.connect(update_control_hints)
 	Global.save_to_gallery.connect(save_to_gallery)
 	Global.item_highlighted.connect(func(item): highlighted_items[item] = true)
 	Global.item_unhighlighted.connect(func(item): highlighted_items.erase(item))
@@ -40,6 +42,10 @@ func _ready():
 	var fade_label:Label = find_child("FadeLabel")
 	fade_rect.visible = true
 	fade_rect.modulate.a = 1.0
+	
+	update_control_hints()
+	await(get_tree().process_frame)
+	find_child("ControlHints").slide_in(0.01)
 	
 	if settings.get("mode") == "continue":
 		fade_label.text = "Restoring..."
@@ -398,6 +404,9 @@ func time_attack_show_scoreboard():
 	popup.position = get_viewport_rect().size/2 - popup.get_rect().size/2
 	
 func open_pause_menu():
+	control_hints.set_hints([
+		["Return to game", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")]
+	])
 	var popup:PauseMenu = preload("res://menu/PauseMenu.tscn").instantiate()
 	Global.play_button_click_sound("default")
 	find_child("PopupContainer").add_child(popup)
@@ -406,6 +415,7 @@ func open_pause_menu():
 	popup.close.connect(func(): 
 		set_process_input(true)
 		set_process(true)
+		update_control_hints()
 	)
 	popup.save_game.connect(_on_save_button_pressed)
 	popup.exit_game.connect(func():
@@ -486,7 +496,35 @@ func shuffle_items():
 		piece.reset_position.x += x_offset
 	#PhysicsServer2D.set_active(true)
 	
-
+func update_control_hints():
+	match Global.click_mode:
+		Global.ClickMode.move:
+			control_hints.set_hints([
+				["Move item", preload("res://art/mouse_left.png"), preload("res://art/mouse_none.png")],
+				["Rotate item", preload("res://art/mouse_right.png"), preload("res://art/mouse_none.png")],
+				["Disable bump", preload("res://art/shift_key.png"), preload("res://art/shift_key.png")],
+				["Pan camera", preload("res://art/mouse_middle.png"), preload("res://art/mouse_none.png")],
+				["Pan camera", preload("res://art/arrow_keys.png"), preload("res://art/arrow_keys.png")],
+				["Zoom camera", preload("res://art/mouse_scroll_up.png"), preload("res://art/mouse_scroll_down.png")],
+				["Glue brush", preload("res://art/tab_key.png"), preload("res://art/tab_key.png")],
+				["Options menu", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
+			])
+		Global.ClickMode.glue:
+			control_hints.set_hints([
+				["Glue items", preload("res://art/mouse_left.png"), preload("res://art/mouse_none.png")],
+				["Stop gluing", preload("res://art/mouse_right.png"), preload("res://art/mouse_none.png")],
+				["Stop gluing", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
+				["Pan camera", preload("res://art/mouse_middle.png"), preload("res://art/mouse_none.png")],
+				["Pan camera", preload("res://art/arrow_keys.png"), preload("res://art/arrow_keys.png")],
+				["Zoom camera", preload("res://art/mouse_scroll_up.png"), preload("res://art/mouse_scroll_down.png")],
+			])
+		Global.ClickMode.save_item:
+			control_hints.set_hints([
+				["Save item", preload("res://art/mouse_left.png"), preload("res://art/mouse_none.png")],
+				["Stop saving", preload("res://art/mouse_right.png"), preload("res://art/mouse_none.png")],
+				["Stop saving", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
+			])
+		_: control_hints.set_hints([])
 
 func _on_win_button_pressed():
 	pass # Replace with function body.

@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://bpkmbst6b1h3"]
+
+[ext_resource type="Script" path="res://control_hints/ControlHints.gd" id="1_3unfi"]
+[ext_resource type="Texture2D" uid="uid://b5ij3m7w65djn" path="res://art/broken_clay.png" id="2_h4ptv"]
+[ext_resource type="Script" path="res://util/SlideInPanelHandle.gd" id="3_peakj"]
+
+[node name="ControlHints" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1270.0
+offset_right = 104.0
+offset_bottom = -620.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3unfi")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+focus_mode = 0
+texture_normal = ExtResource("2_h4ptv")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("3_peakj")
+
+[node name="Label" type="Label" parent="HBoxContainer/TextureButton"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 86.0
+offset_bottom = 39.0
+rotation = 1.5708
+text = "Controls"
+
+[node name="HintContainer" type="GridContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

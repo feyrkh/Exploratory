@@ -283,10 +283,10 @@ func global_collide(val:bool):
 	# Called by Global.collide when piece collisions should be disabled
 	if val:
 		collision_mask |= 1 # allow this piece to collide with elements on layer 1
-		#modulate.a = 1.0
+		modulate = Color.WHITE
 	else:
 		collision_mask &= ~1 # prevent this piece from colliding with elements on layer 1
-		#modulate.a = 0.8
+		modulate = Color(0.8, 0.8, 0.8)
 
 func clone(new_polygon:Array, should_clone_slow=false):
 	## TODO: Make this handle cloning glued items

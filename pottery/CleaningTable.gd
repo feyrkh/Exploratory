@@ -13,6 +13,8 @@ const ITEM_COUNT_SETTING := "item_count"
 @onready var sidebar_menu = find_child("SidebarMenu")
 @onready var glue_brush_audio:AudioStreamPlayer = find_child("GlueBrushAudio")
 @onready var control_hints:ControlHints = find_child("ControlHints")
+@onready var pieces_container:Node2D = find_child("Pieces")
+
 @export var camera_top_left_limit:Vector2 = Vector2(-100, -100)
 @export var camera_bot_right_limit:Vector2 = Vector2(4500, 3300)
 
@@ -58,19 +60,8 @@ func _ready():
 		var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
 		var total_items = settings.get(ITEM_COUNT_SETTING, 1)
 		for i in range(total_items):
-			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nGenerating..."
-			await get_tree().process_frame
-			var new_item = await ItemBuilder.build_random_item(null, false)
-			new_item.original_item_count = total_items
-			$Pieces.add_child(new_item)
-			new_item.position = scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400))
 			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
-			await get_tree().process_frame
-			var cracks := FractureGenerator.generate_standard_scars(new_item, settings.get(CRACK_COUNT_SETTING, 8))
-			new_item.create_scars_from_paths(cracks)
-			#for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
-			#	new_item.random_scar()
-			await new_item.try_shatter(Global.shatter_width, true)
+			await generate_one_random_item($Pieces, i, scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400)))
 		
 		PhysicsServer2D.set_active(true)
 		fade_label.text = "Shuffling..."
@@ -124,7 +115,19 @@ func _ready():
 
 	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
-
+func generate_one_random_item(piece_container:Node2D, item_id:int, generation_coords:Vector2):
+	await get_tree().process_frame
+	var new_item = await ItemBuilder.build_random_item(null, false)
+	new_item.original_item_count = item_id
+	piece_container.add_child(new_item)
+	new_item.position = generation_coords
+	await get_tree().process_frame
+	var cracks := FractureGenerator.generate_standard_scars(new_item, settings.get(CRACK_COUNT_SETTING, 8))
+	new_item.create_scars_from_paths(cracks)
+	#for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
+	#	new_item.random_scar()
+	await new_item.try_shatter(Global.shatter_width, true)
+			
 func setup_game_mode():
 	var game_timer := find_child("GameTimer")
 	match Global.game_mode:
@@ -422,11 +425,44 @@ func open_pause_menu():
 		Global.change_scene("res://menu/main/TitleScreen.tscn")
 	)
 
+var adding_items_list:Array[Node2D] = []
+func _physics_process(_delta:float):
+	if adding_items_list.size() > 0:
+		try_place_newly_added_fragments()
 
 func _on_sidebar_menu_add_item_button_pressed():
-	var new_item = await ItemBuilder.build_random_item()
-	$Pieces.add_child(new_item)
-	new_item.position = Vector2(350,150)
+	var fragment_container := Node2D.new()
+	add_child(fragment_container)
+	fragment_container.position = Vector2(15000, 15000)
+	await generate_one_random_item(fragment_container, randi(), Vector2(randf_range(0, 10000), randf_range(0, 10000)))
+	adding_items_list.append(fragment_container)
+
+func try_place_newly_added_fragments():
+	if adding_items_list.size() <= 0: return
+	var fragment_container:Node2D = adding_items_list.pop_back()
+	for fragment:ArcheologyItem in fragment_container.get_children():
+		if !Global.lock_rotation:
+			fragment.rotation = randf_range(0, 2*PI)
+		var tries := 10
+
+		while tries > 0:
+			tries -= 1
+			var try_position := Vector2(randf_range(camera_top_left_limit.x, camera_bot_right_limit.x), randf_range(camera_top_left_limit.y, camera_bot_right_limit.y))
+			var collision := fragment.test_move(Transform2D(fragment.rotation, Vector2.ONE, 0, try_position), Vector2.ONE*15)
+			if !collision:
+				collision = fragment.test_move(Transform2D(fragment.rotation, Vector2.ONE, 0, try_position), -Vector2.ONE*15)
+			if !collision:
+				collision = fragment.test_move(Transform2D(fragment.rotation, Vector2.ONE, 0, try_position), Vector2(1, -1)*15)
+			if !collision:
+				collision = fragment.test_move(Transform2D(fragment.rotation, Vector2.ONE, 0, try_position), Vector2(-1, 1)*15)
+			if !collision or tries <= 0:
+				fragment_container.remove_child(fragment)
+				pieces_container.add_child(fragment)
+				fragment.global_position = try_position
+				print("Placed item after ", tries, " tries")
+				
+				break
+	fragment_container.queue_free()
 
 func _on_sidebar_menu_movement_button_toggled(new_val):
 	Global.freeze_pieces = new_val

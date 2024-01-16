@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://tpag1njdnwcy"]
+[gd_scene load_steps=10 format=3 uid="uid://tpag1njdnwcy"]
 
 [ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
 [ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_dhsuc"]
+[ext_resource type="Texture2D" uid="uid://dghql4vk2n04v" path="res://art/background/gallery_bg2.png" id="2_gw2lf"]
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_5ockw"]
 [ext_resource type="PackedScene" uid="uid://dr6w8rungysm1" path="res://menu/gallery/GalleryMenu.tscn" id="4_gxinv"]
 [ext_resource type="PackedScene" uid="uid://btr4madyriyi0" path="res://util/FadeRect.tscn" id="5_0t2vs"]
@@ -21,33 +22,56 @@ position = Vector2(2136, 1200)
 zoom = Vector2(0.3, 0.3)
 position_smoothing_enabled = true
 
-[node name="Shelf2" type="Sprite2D" parent="."]
+[node name="BackgroundSprite" type="Sprite2D" parent="."]
+scale = Vector2(3.33437, 3.32639)
+texture = ExtResource("2_gw2lf")
+centered = false
+
+[node name="L1" type="Sprite2D" parent="."]
 position = Vector2(1103.15, 1863.25)
 scale = Vector2(2, 2)
 texture = ExtResource("1_klnyf")
 
-[node name="Shelf" type="Sprite2D" parent="."]
+[node name="L2" type="Sprite2D" parent="."]
 position = Vector2(1103.15, 1263.25)
 scale = Vector2(2, 2)
 texture = ExtResource("1_klnyf")
 
-[node name="Shelf3" type="Sprite2D" parent="."]
+[node name="L3" type="Sprite2D" parent="."]
 position = Vector2(1103.15, 671.25)
 scale = Vector2(2, 2)
 texture = ExtResource("1_klnyf")
 
-[node name="Shelf4" type="Sprite2D" parent="."]
+[node name="R1" type="Sprite2D" parent="."]
 position = Vector2(3143.15, 1863.25)
 scale = Vector2(2, 2)
 texture = ExtResource("1_klnyf")
 
-[node name="Shelf5" type="Sprite2D" parent="."]
+[node name="R2" type="Sprite2D" parent="."]
 position = Vector2(3143.15, 1263.25)
 scale = Vector2(2, 2)
 texture = ExtResource("1_klnyf")
 
-[node name="Shelf6" type="Sprite2D" parent="."]
+[node name="R3" type="Sprite2D" parent="."]
 position = Vector2(3143.15, 671.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="C1" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2118.15, 1863.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="C2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2118.15, 1263.25)
+scale = Vector2(2, 2)
+texture = ExtResource("1_klnyf")
+
+[node name="C3" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2118.15, 671.25)
 scale = Vector2(2, 2)
 texture = ExtResource("1_klnyf")
 
@@ -125,6 +149,24 @@ offset_bottom = 720.0
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/PanelContainer"]
 layout_mode = 2
 
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackgroundButton" type="Button" parent="UI/PanelContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Background"
+script = ExtResource("4_5ockw")
+
+[node name="ShelfButton" type="Button" parent="UI/PanelContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+theme = ExtResource("2_dhsuc")
+text = "Shelves"
+script = ExtResource("4_5ockw")
+
 [node name="UnpackButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 7
@@ -163,5 +205,7 @@ offset_bottom = -87.0
 [connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_text_submitted"]
 [connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_play_button_mouseover_sound"]
 [connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="UI/PanelContainer/HBoxContainer/HBoxContainer/BackgroundButton" to="." method="_on_background_button_pressed"]
+[connection signal="pressed" from="UI/PanelContainer/HBoxContainer/HBoxContainer/ShelfButton" to="." method="_on_shelf_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/UnpackButton" to="." method="_on_unpack_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

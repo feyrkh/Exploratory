@@ -9,6 +9,18 @@ const FADE_TIME := 0.25
 var camera_drag_mouse_start = null
 var camera_drag_camera_start = null
 
+var background_imgs:Array[String] = []
+var cur_background_img_idx:int = -1:
+	set(val):
+		if val >= background_imgs.size():
+			val = -1
+		cur_background_img_idx = val
+		update_background()
+var shelf_configuration:int = 0:
+	set(val):
+		shelf_configuration = val
+		update_shelf_configuration()
+
 var gallery_items_unused := []
 var gallery_rooms := [] # Array[Dictionary]
 var cur_room_idx:int = 0
@@ -119,6 +131,8 @@ func adjust_camera_limits():
 
 const ROOM_FIELD_NAME := 0
 const ROOM_FIELD_ITEMS := 1
+const ROOM_FIELD_BG_FILE := 2
+const ROOM_FIELD_SHELF_CONFIG := 3
 const ITEM_FIELD_ID := 0
 const ITEM_FIELD_POS := 1
 const ITEM_FIELD_ROT := 2
@@ -130,7 +144,12 @@ func save_current_room():
 	var cur_room_items = []
 	for child in find_child("Items").get_children():
 		cur_room_items.append([child.gallery_id, child.global_position, child.global_rotation])
-	var cur_room_data = [cur_room_name, cur_room_items]
+	var room_name
+	if cur_background_img_idx == -1:
+		room_name = ""
+	else:
+		room_name = background_imgs[cur_background_img_idx]
+	var cur_room_data = [cur_room_name, cur_room_items, room_name, shelf_configuration]
 	gallery_rooms[cur_room_idx] = cur_room_data
 	save_gallery_rooms()
 
@@ -182,6 +201,7 @@ func _init():
 	load_gallery_rooms()
 
 func _ready():
+	load_background_images()
 	Global.unpack_gallery_item.connect(unpack_gallery_item)
 	Global.delete_archeology_item.connect(item_deleted)
 	find_child("GalleryMenu").closed.connect(update_control_hints)
@@ -200,7 +220,7 @@ func load_gallery_room(idx:int):
 	cur_room_idx = idx
 	var room_data
 	if idx >= gallery_rooms.size():
-		room_data = ["Gallery "+str(cur_room_idx+1), []]
+		room_data = ["Gallery "+str(cur_room_idx+1), [], -1, 0]
 	else:
 		room_data = gallery_rooms[idx]
 	cur_room_name = room_data[ROOM_FIELD_NAME]
@@ -212,6 +232,8 @@ func load_gallery_room(idx:int):
 		var item = await unpack_gallery_item(item_data[ITEM_FIELD_ID])
 		item.global_position = item_data[ITEM_FIELD_POS]
 		item.global_rotation = item_data[ITEM_FIELD_ROT]
+	cur_background_img_idx = background_imgs.find(room_data[ROOM_FIELD_BG_FILE])
+	shelf_configuration = room_data[ROOM_FIELD_SHELF_CONFIG]
 	await find_child("FadeRect").fade_in(FADE_TIME*2)
 		
 
@@ -301,3 +323,49 @@ func update_control_hints():
 		["Pack item", preload("res://art/delete_key.png"), preload("res://art/delete_key.png")],
 		["Exit gallery", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
 	])
+
+func load_background_images():
+	var dir := DirAccess.open("res://art/background")
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if !dir.current_is_dir() and (file_name.ends_with(".png") or file_name.ends_with(".jpg") or file_name.ends_with(".jpeg")):
+				background_imgs.append("res://art/background/"+file_name)
+			file_name = dir.get_next()
+	
+func update_background():
+	if cur_background_img_idx < 0 or cur_background_img_idx >= background_imgs.size():
+		$BackgroundSprite.visible = false
+	else:
+		$BackgroundSprite.visible = true
+		$BackgroundSprite.texture = load(background_imgs[cur_background_img_idx])
+
+func update_shelf_configuration():
+	set_shelf_config(["L1", "L2", "L3", "R1", "R2", "R3", "C1", "C2", "C3"], false)
+	if shelf_configuration > 10:
+		shelf_configuration = shelf_configuration % 11
+	match shelf_configuration:
+		0: set_shelf_config(["L1", "L2", "L3", "R1", "R2", "R3"])
+		1: set_shelf_config(["L1", "L2", "L3"])
+		2: set_shelf_config(["R1", "R2", "R3"])
+		3: set_shelf_config(["L1", "L2", "R1", "R2"])
+		4: set_shelf_config(["L1", "R1",])
+		5: set_shelf_config(["L1"])
+		6: set_shelf_config(["R1"])
+		7: set_shelf_config(["C1", "C2", "C3"])
+		8: set_shelf_config(["C1", "C2"])
+		9: set_shelf_config(["C1"])
+		10: set_shelf_config([])
+
+func set_shelf_config(items:Array[String], is_visible:=true):
+	for item in items:
+		find_child(item).visible = is_visible
+
+
+func _on_shelf_button_pressed():
+	shelf_configuration += 1
+
+
+func _on_background_button_pressed():
+	cur_background_img_idx += 1

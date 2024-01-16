@@ -40,6 +40,7 @@ func _on_previous_button_pressed():
 
 func _on_unpack_button_pressed():
 	Global.unpack_gallery_item.emit(available_items[cur_page]) # NOTE: assumes 1 item per page
+	closed.emit()
 	visible = false
 
 func _on_next_button_pressed():

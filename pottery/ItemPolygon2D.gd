@@ -2,7 +2,7 @@ extends Polygon2D
 class_name ItemPolygon2D
 
 #var bbox_poly:Polygon2D
-var save_data:Array #[ImageBuilder.ImageSaveData]
+var save_data:Array #[ItemBuilder.ImageSaveData]
 var bounding_box:Rect2:
 	get:
 		if bounding_box != null and bounding_box.size != Vector2.ZERO:

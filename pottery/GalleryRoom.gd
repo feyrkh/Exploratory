@@ -206,10 +206,13 @@ func _ready():
 	Global.delete_archeology_item.connect(item_deleted)
 	find_child("GalleryMenu").closed.connect(update_control_hints)
 	fade_rect.visible = true
-	load_gallery_room(0)
 	update_control_hints()
 	await(get_tree().process_frame)
 	find_child("ControlHints").slide_in(0.01)
+	await(get_tree().process_frame)
+	if !Global.control_hints_visible:
+		find_child("ControlHints").slide_out(0.01)
+	load_gallery_room(0)
 
 func item_deleted(item:ArcheologyItem):
 	gallery_items_unused.append(item.gallery_id)
@@ -330,7 +333,8 @@ func load_background_images():
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
-			if !dir.current_is_dir() and (file_name.ends_with(".png") or file_name.ends_with(".jpg") or file_name.ends_with(".jpeg")):
+			if !dir.current_is_dir() and (file_name.ends_with(".png.import") or file_name.ends_with(".jpg.import") or file_name.ends_with(".jpeg.import")):
+				file_name = file_name.substr(0, file_name.length() - 7)
 				background_imgs.append("res://art/background/"+file_name)
 			file_name = dir.get_next()
 	

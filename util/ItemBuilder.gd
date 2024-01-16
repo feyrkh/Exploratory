@@ -1,5 +1,4 @@
 extends Node
-class_name ImageBuilder
 
 ## Valid entries for the 'type' field of .cfg files
 const VALID_TYPES := ['icon', 'band', 'base']
@@ -307,7 +306,7 @@ func read_file(dir_name, file_name):
 		return
 	item.type = data['type']
 	if item.type in IMAGE_TYPES:
-		var texture:Texture2D = load(dir_name+file_name_prefix+".png")
+		var texture:Texture2D = ResourceLoader.load(dir_name+file_name_prefix+".png", "Texture2D")
 		if !texture:
 			print("Found an item/deco config file, but it doesn't have a matching .png file, can't use this one!")
 			return

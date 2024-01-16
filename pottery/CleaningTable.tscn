@@ -108,9 +108,9 @@ visible = false
 
 [node name="ControlHints" parent="CanvasLayer" instance=ExtResource("11_oks8m")]
 offset_left = 1265.0
-offset_top = 526.0
+offset_top = 438.0
 offset_right = 160.0
-offset_bottom = -5.0
+offset_bottom = -93.0
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0

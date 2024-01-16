@@ -39,6 +39,11 @@ var glue_material:ShaderMaterial = preload("res://shader/ItemShardEdgeLine.tres"
 func _ready():
 	glue_material = get_glue_material(glue_color)
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	setting_changed.connect(_on_setting_changed)
+
+func _on_setting_changed(setting, old_val, new_val):
+	match setting:
+		"control_hints_visible": control_hints_visible = new_val
 
 func change_scene(scene):
 	cleanup_all_items.emit()
@@ -81,6 +86,18 @@ var click_mode = ClickMode.move:
 var game_mode:String
 var awaiting_first_click:bool = false
 var center_of_mass_indicator_size:float = 5
+
+var global_user_settings := SettingsFile.new("user://global.cfg", {
+	"control_hints_visible": true,
+})
+var control_hints_visible:bool = true:
+	get:
+		return global_user_settings.get_config("control_hints_visible", true)
+	set(val):
+		if val != global_user_settings.get_config("control_hints_visible", true):
+			control_hints_visible = val
+			global_user_settings.set_config("control_hints_visible", val)
+			global_user_settings.save_config()
 
 func get_save_data() -> Dictionary:
 	return {

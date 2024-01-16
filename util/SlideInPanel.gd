@@ -1,6 +1,10 @@
 extends PanelContainer
 class_name SlideInPanel
 
+signal slide_shown()
+signal slide_hidden()
+signal slide_toggled()
+
 @export var slide_in_direction:Vector2 = Vector2.LEFT
 @export var slide_in_edge_buffer:float = 10
 @export var slide_time:float = 0.5
@@ -37,17 +41,21 @@ func slide_in(override_time=null):
 	reset_tween()
 	tween.tween_property(self, "position", get_end_pos(), override_time if override_time != null else slide_time)
 	slide_open_next = false
+	slide_shown.emit()
 
 func slide_out(override_time=null):
 	reset_tween()
 	tween.tween_property(self, "position", start_pos, override_time if override_time != null else slide_time)
 	slide_open_next = true
+	slide_hidden.emit()
 
 func toggle_slide():
 	if slide_open_next:
 		slide_in()
+		slide_toggled.emit()
 	else:
 		slide_out()
+		slide_toggled.emit()
 
 func is_hidden():
 	return position.is_equal_approx(start_pos)

@@ -118,7 +118,7 @@ var collision_polygons:Array[CollisionPolygon2D] = []:
 var _gallery_mode = false
 var gallery_id:String
 
-func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[String, ImageBuilder.ImageSaveData]
+func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[String, ItemBuilder.ImageSaveData]
 	var result := []
 	var img_save_data = []
 	var scar_save_data = []
@@ -128,7 +128,7 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 		if child is ItemPolygon2D:
 			var child_image_data = child.save_data
 			if !image_save_data.has(child_image_data):
-				image_save_data[child_image_data] = ImageBuilder.get_next_unique_id()
+				image_save_data[child_image_data] = ItemBuilder.get_next_unique_id()
 			img_save_data.append({
 				Fields.IMG_DATA: image_save_data[child_image_data],
 				Fields.POSITION: child.position,
@@ -157,7 +157,7 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "glue":glue_save_data, "me":me_data}
 
 ## item_save = as returned from get_save_data
-## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), Array[ImageBuilder.ImageSaveData]]
+## image_save_data = Dictionary[int (referenced from item_save[IMG_DATA]), Array[ItemBuilder.ImageSaveData]]
 ## rebuilt_textures = Dictionary[int (referenced from item_save[IMG_DATA]), Texture2D]
 ## image_save_data values may be either an array of ImageSaveData objects, or an inverted copy of the map
 ## 		populated by the parameter to ArcheologyItem.get_save_data()
@@ -238,7 +238,7 @@ func _post_load():
 	apply_global_settings()
 
 func _ready():
-	Global.cleanup_all_items.connect(func():self.free())
+	Global.cleanup_all_items.connect(func():self.queue_free())
 	if !loading:
 		refresh_polygon()
 	if original_area == null:

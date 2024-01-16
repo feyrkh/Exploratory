@@ -7,6 +7,8 @@ var hints_loaded := false
 
 func _ready():
 	_on_mouse_exited()
+	slide_toggled.connect(func(): 
+		Global.control_hints_visible = !slide_open_next)
 
 func set_hints(hint_data:Array): 
 	hints_loaded = false

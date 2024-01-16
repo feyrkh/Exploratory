@@ -48,6 +48,9 @@ func _ready():
 	update_control_hints()
 	await(get_tree().process_frame)
 	find_child("ControlHints").slide_in(0.01)
+	await(get_tree().process_frame)
+	if !Global.control_hints_visible:
+		find_child("ControlHints").slide_out(0.01)
 	
 	if settings.get("mode") == "continue":
 		fade_label.text = "Restoring..."
@@ -336,7 +339,7 @@ func _on_click_mode_pressed():
 	Global.rotate_click_mode()
 
 func _on_save_button_pressed():
-	var image_save_data := {} # ImageBuilder.ImageSaveData -> int index
+	var image_save_data := {} # ItemBuilder.ImageSaveData -> int index
 	var item_save_data = []
 	for item in $Pieces.get_children():
 		item_save_data.append(item.get_save_data(image_save_data))

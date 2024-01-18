@@ -59,8 +59,9 @@ class ImageSaveData:
 	var color:Color
 	var position:Vector2
 	var size:Vector2i
+	var weathering:WeatheringConfig
 	
-	func _init(placement:DecorationBase = null):
+	func _init(placement:DecorationBase = null, weathering:WeatheringConfig = null):
 		if placement:
 			item_dir = placement.item_dir
 			item_name = placement.item_name
@@ -129,7 +130,7 @@ func build_specific_item(save_data:Array) -> Texture2D: # Array[ImageSaveData] a
 	return await ImageMerger.merge_images(image_details)
 	
 
-func build_random_item(base_item_name=null, should_load_slowly=false, noise:FastNoiseLite=null, noise_cutoff:float=1.0) -> ArcheologyItem:
+func build_random_item(base_item_name=null, should_load_slowly=false, weathering:WeatheringConfig=null) -> ArcheologyItem:
 	if base_item_name == null:
 		base_item_name = base_item_names.pick_random()
 	print("Building random item with ", base_item_name)
@@ -255,8 +256,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false, noise:Fast
 		save_data_item.position = shadow_details.position
 		save_data_item.size = shadow_details.img.get_size()
 		save_data.append(save_data_item)
-	
-	var combined_img := await ImageMerger.merge_images(image_details, noise, noise_cutoff, get_tree() if should_load_slowly else null)
+	var combined_img := await ImageMerger.merge_images(image_details, weathering, get_tree() if should_load_slowly else null)
 	retval_img.texture = combined_img
 	retval.find_child("Polygon2D").save_data = save_data
 

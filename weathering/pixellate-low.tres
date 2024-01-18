@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_jt7y3"]
+
+[resource]
+script = ExtResource("1_jt7y3")
+sort_order = -40
+weathering_name = "Pixellated"
+noise_type = 2
+noise_floor = -1.0
+noise_cutoff = 1.0
+frequency = 0.007
+fractal_type = 1
+fractal_lacunarity = 3.3
+fractal_gain = 3.7
+fractal_octaves = 4
+cell_distance = 0
+cell_return = 0
+cell_jitter = 0.0

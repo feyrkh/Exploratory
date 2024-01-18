@@ -274,16 +274,7 @@ func update_item():
 	call_deferred("update_item")
 
 func prepare_next_item(load_slowly=true):
-	var noise:FastNoiseLite = null
-	noise = FastNoiseLite.new()
-	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	noise.frequency = 0.1
-	noise.fractal_lacunarity = 2
-	noise.fractal_gain = 0.5
-	noise.fractal_octaves = 8
-	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
-	noise.seed = randf()
-	var item := await ItemBuilder.build_random_item(null, load_slowly, noise if randf() < 0.3 else null, randf_range(0.1, 1.0))
+	var item := await ItemBuilder.build_random_item(null, load_slowly, null)
 	item.is_display = true
 	find_child("ItemPreparation").add_child(item)
 	item.global_rotation = 0

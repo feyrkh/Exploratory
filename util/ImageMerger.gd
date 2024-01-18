@@ -6,8 +6,15 @@ class ImageMergeInfo:
 	var position:Vector2
 	var modulate:Color
 
-static func merge_images(image_merge_info:Array, noise:FastNoiseLite=null, noise_cutoff:float=1.0, tree:SceneTree=null) -> Texture2D: # Array[ImageMergeInfo] as input
+static func merge_images(image_merge_info:Array, weathering:WeatheringConfig=null, tree:SceneTree=null) -> Texture2D: # Array[ImageMergeInfo] as input
 	var base_img:Image
+	var noise:FastNoiseLite
+	var noise_cutoff := 1.0
+	var noise_floor := 0.0
+	if weathering:
+		noise = weathering.noise
+		noise_cutoff = weathering.noise_cutoff
+		noise_floor = weathering.noise_floor
 	for merge_info in image_merge_info:
 		if base_img == null:
 			base_img = merge_info.img
@@ -16,7 +23,7 @@ static func merge_images(image_merge_info:Array, noise:FastNoiseLite=null, noise
 		else:
 			var overlay_img = merge_info.img
 			print("overlay_img format: ", overlay_img.get_format())
-			await modulate_image(overlay_img, merge_info.modulate, noise, noise_cutoff, tree, merge_info.position)
+			await modulate_image(overlay_img, merge_info.modulate, noise, noise_cutoff, tree, merge_info.position, noise_floor)
 			base_img.blend_rect(overlay_img, overlay_img.get_used_rect(), merge_info.position)
 		if tree:
 			await(tree.process_frame)
@@ -24,7 +31,7 @@ static func merge_images(image_merge_info:Array, noise:FastNoiseLite=null, noise
 		base_img.generate_mipmaps()
 	return ImageTexture.create_from_image(base_img)
 
-static func modulate_image(img:Image, color:Color, noise:FastNoiseLite, noise_cutoff:float, tree:SceneTree=null, noise_offset:Vector2=Vector2.ZERO):
+static func modulate_image(img:Image, color:Color, noise:FastNoiseLite, noise_cutoff:float, tree:SceneTree=null, noise_offset:Vector2=Vector2.ZERO, noise_floor:float=0.0):
 	for y in img.get_height():
 		if tree and randf() < 0.3:
 			await(tree.process_frame)
@@ -32,7 +39,18 @@ static func modulate_image(img:Image, color:Color, noise:FastNoiseLite, noise_cu
 			var c:Color = img.get_pixel(x, y)
 			if c.a > 0:
 				if noise != null:
-					var n = (0.5 + noise.get_noise_2d((noise_offset.x+x)/5.0, (noise_offset.y+y)/5.0))
-					if n < noise_cutoff:
+					var n = (noise.get_noise_2d((noise_offset.x+x), (noise_offset.y+y)) + 1)/2.0
+					if noise_floor < 0:
+						n = (n - noise_floor) / (1.0 - noise_floor)
+					if noise_floor > 0:
+						if n <= noise_floor:
+							n = 0
+						else:
+							n = (n - noise_floor) / (1.0 - noise_floor)
+					if n < noise_floor:
+						pass
+					if n <= 0:
+						n = 0.01
+					if n < noise_cutoff or noise_cutoff >= 1.0:
 						c.a = c.a * n
 				img.set_pixel(x, y, c * color)

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_jdpvm"]
+
+[resource]
+script = ExtResource("1_jdpvm")
+sort_order = -60
+weathering_name = "Dissolved"
+noise_type = 2
+noise_floor = 0.28
+noise_cutoff = 1.0
+frequency = 0.009
+fractal_type = 3
+fractal_lacunarity = 2.0
+fractal_gain = 0.6
+fractal_octaves = 4
+cell_distance = 0
+cell_return = 1
+cell_jitter = 1.0

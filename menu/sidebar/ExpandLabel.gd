@@ -8,8 +8,7 @@ var reveal_timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	text = ""
-	set_process(false)
+	hide_text()
 
 func reveal_text():
 	set_process(true)

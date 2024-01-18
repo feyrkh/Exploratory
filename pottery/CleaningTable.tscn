@@ -19,7 +19,7 @@ radius = 15.0
 visibility_layer = 3
 script = ExtResource("1_avayf")
 camera_top_left_limit = Vector2(-400, -250)
-metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0, 8.0, 55.0]
+metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0]
 metadata/_edit_horizontal_guides_ = [3199.0, 1523.0]
 
 [node name="TextureRect" type="TextureRect" parent="."]

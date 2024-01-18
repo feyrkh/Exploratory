@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_4inv1"]
+
+[resource]
+script = ExtResource("1_4inv1")
+sort_order = -80
+weathering_name = "Parched"
+noise_type = 2
+noise_floor = 0.85
+noise_cutoff = 1.0
+frequency = 0.009
+fractal_type = 2
+fractal_lacunarity = 2.0
+fractal_gain = 10.0
+fractal_octaves = 4
+cell_distance = 0
+cell_return = 6
+cell_jitter = 1.0

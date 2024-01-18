@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_5lpl3"]
+
+[resource]
+script = ExtResource("1_5lpl3")
+sort_order = -10
+weathering_name = "Eldritch"
+noise_type = 2
+noise_floor = 0.34
+noise_cutoff = 0.73
+frequency = 0.014
+fractal_type = 3
+fractal_lacunarity = 3.1
+fractal_gain = 10.0
+fractal_octaves = 3
+cell_distance = 1
+cell_return = 3
+cell_jitter = 1.0

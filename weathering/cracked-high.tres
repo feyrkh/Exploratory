@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_6m540"]
+
+[resource]
+script = ExtResource("1_6m540")
+sort_order = -70
+weathering_name = "Cracked"
+noise_type = 2
+noise_floor = -0.28
+noise_cutoff = 0.25
+frequency = 0.045
+fractal_type = 0
+fractal_lacunarity = 1.1
+fractal_gain = 3.5
+fractal_octaves = 5
+cell_distance = 2
+cell_return = 4
+cell_jitter = 2.0

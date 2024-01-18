@@ -1,0 +1,212 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyrsqjm8xdhr2"]
+
+[ext_resource type="Script" path="res://test/weathering_test.gd" id="1_045mg"]
+[ext_resource type="Script" path="res://test/ConstructiveTexture.gd" id="1_b3gbf"]
+
+[node name="WeatheringTest" type="Node2D"]
+script = ExtResource("1_045mg")
+
+[node name="ConstructiveTexture" type="Polygon2D" parent="."]
+position = Vector2(-200, -136)
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(0, 0, 500, 0, 500, 500, 0, 500)
+script = ExtResource("1_b3gbf")
+baseName = "tablet3"
+bandName = "shield_knot1"
+knotName = "knot_band1"
+metadata/_edit_lock_ = true
+
+[node name="SavedLabel" type="Label" parent="."]
+visible = false
+offset_left = 235.0
+offset_top = 205.0
+offset_right = 335.0
+offset_bottom = 254.0
+theme_override_font_sizes/font_size = 35
+text = "Saved"
+
+[node name="GridContainer" type="GridContainer" parent="."]
+offset_left = 664.0
+offset_top = 2.0
+offset_right = 1273.0
+offset_bottom = 717.0
+columns = 3
+metadata/_edit_lock_ = true
+
+[node name="NoiseTypeLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Noise type"
+
+[node name="NoiseType" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 5.0
+
+[node name="NoiseTypeValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Noise floor"
+
+[node name="NoiseFloor" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -1.0
+max_value = 1.0
+step = 0.01
+
+[node name="NoiseFloorValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Noise cutoff"
+
+[node name="NoiseCutoff" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 0.4
+
+[node name="NoiseCutoffValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Frequency"
+
+[node name="Frequency" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 0.05
+step = 0.001
+value = 0.007
+
+[node name="FrequencyValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Fractal Type"
+
+[node name="FractalType" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 3.0
+value = 2.0
+
+[node name="FractalTypeValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Lacunarity"
+
+[node name="FractalLacunarity" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 6.0
+step = 0.1
+value = 2.0
+
+[node name="FractalLacunarityValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label6" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Fractal Gain"
+
+[node name="FractalGain" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10.0
+step = 0.1
+value = 2.0
+
+[node name="FractalGainValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label7" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Fractal Octaves"
+
+[node name="FractalOctaves" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 12.0
+value = 4.0
+
+[node name="FractalOctavesValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label8" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Seed"
+
+[node name="Seed" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+value = 4.0
+
+[node name="SeedValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label10" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Cell Distance"
+
+[node name="CellDistance" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 3.0
+
+[node name="CellDistanceValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label11" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Cell Return"
+
+[node name="CellReturn" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 6.0
+
+[node name="CellReturnValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label12" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Cell Jitter"
+
+[node name="CellJitter" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -2.0
+max_value = 2.0
+step = 0.1
+value = 1.5
+
+[node name="CellJitterValue" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Label9" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Save File"
+
+[node name="SaveFileName" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+text = "tmp"
+
+[node name="SaveButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Save"
+
+[connection signal="value_changed" from="GridContainer/NoiseType" to="." method="_on_noise_type_value_changed"]
+[connection signal="value_changed" from="GridContainer/FractalType" to="." method="_on_fractal_type_value_changed"]
+[connection signal="value_changed" from="GridContainer/CellDistance" to="." method="_on_cell_distance_value_changed"]
+[connection signal="value_changed" from="GridContainer/CellReturn" to="." method="_on_cell_return_value_changed"]
+[connection signal="pressed" from="GridContainer/SaveButton" to="." method="_on_save_button_pressed"]

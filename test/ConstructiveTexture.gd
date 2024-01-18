@@ -13,29 +13,34 @@ func _process(_delta):
 func _ready():
 	generate_image()
 
-func generate_image():
+func generate_image(weathering:WeatheringConfig=null):
 	var baseImgAndCollider = load("res://art/item/"+baseName+".tscn").instantiate()
 	var base = ImageMerger.ImageMergeInfo.new()
 	base.img = baseImgAndCollider.find_child("Sprite2D").texture.get_image()
 	base.position = Vector2.ZERO
-	base.modulate = [Color.RED, Color.BLUE, Color.ORANGE_RED].pick_random()
+	base.modulate = [Color.WHITE].pick_random()
 	var band = ImageMerger.ImageMergeInfo.new()
 	band.img = load("res://art/item/"+bandName+".png").get_image()
-	band.position = Vector2(base.img.get_width()/2 - band.img.get_width()/2, randi_range(50, 120))
-	band.modulate = [Color.GREEN, Color.BLACK, Color.WHITE_SMOKE].pick_random()
+	band.position = Vector2(base.img.get_width()/2 - band.img.get_width()/2, 70)
+	band.modulate = [Color.BLACK].pick_random()
 	var knot = ImageMerger.ImageMergeInfo.new()
 	knot.img = load("res://art/item/"+knotName+".png").get_image()
 	knot.img.resize(knot.img.get_width()/2, knot.img.get_height()/2)
-	knot.position = Vector2(base.img.get_width()/2 - knot.img.get_width()/2, randi_range(band.position.y + band.img.get_height() + 10, base.img.get_height() - knot.img.get_height() - 10))
-	var noise:FastNoiseLite = FastNoiseLite.new()
-	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	noise.frequency = 0.1
-	noise.fractal_lacunarity = 2
-	noise.fractal_gain = 0.5
-	noise.fractal_octaves = 8
-	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
-	noise.seed = randf()
-	var final_img := await ImageMerger.merge_images([base, band, knot], noise, 0.4)
+	knot.position = Vector2(base.img.get_width()/2 - knot.img.get_width()/2, band.position.y + band.img.get_height() + 10)
+	knot.modulate = Color.BLUE
+	var band2 = ImageMerger.ImageMergeInfo.new()
+	band2.img = load("res://art/item/"+bandName+".png").get_image()
+	band2.position = Vector2(base.img.get_width()/2 - band.img.get_width()/2, knot.position.y + knot.img.get_height() + 10)
+	band2.modulate = [Color.RED].pick_random()
+	#var noise:FastNoiseLite = FastNoiseLite.new()
+	#noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	#noise.frequency = 0.1
+	#noise.fractal_lacunarity = 2
+	#noise.fractal_gain = 0.5
+	#noise.fractal_octaves = 8
+	#noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	#noise.seed = randf()
+	var final_img := await ImageMerger.merge_images([base, band, knot, band2], weathering)
 	#
 	#var baseSprite:Sprite2D = baseImgAndCollider.find_child("Sprite2D")
 	#var baseImg = baseSprite.texture.get_image()

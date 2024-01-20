@@ -60,6 +60,8 @@ class ImageSaveData:
 	var position:Vector2
 	var size:Vector2i
 	var weathering:WeatheringConfig
+	var repeat_x:int = 1
+	var repeat_y:int = 1
 	
 	func _init(placement:DecorationBase = null, weathering:WeatheringConfig = null):
 		if placement:
@@ -81,6 +83,10 @@ class ImageSaveData:
 		info.img = load(item_dir+item_name+".png").get_image()
 		if info.img.get_format() != Image.FORMAT_RGBA8:
 			info.img.convert(Image.FORMAT_RGBA8)
+		info.repeat_x = repeat_x
+		info.repeat_y = repeat_y
+		if info.repeat_x == 1 and info.repeat_y > 1:
+			info.img.rotate_90(CLOCKWISE)
 		if info.img.get_size() != size:
 			info.img.resize(size.x, size.y)
 		return info
@@ -93,7 +99,7 @@ class ImageSaveData:
 				weathering_data[weathering] = weathering_id
 			else:
 				weathering_id = weathering_data[weathering]
-		return [item_dir, item_name, type, color, position, size, weathering_id]
+		return [item_dir, item_name, type, color, position, size, weathering_id, repeat_x, repeat_y]
 	
 	static func load_save_data(dat:Array, weathering_data:Dictionary):
 		var result = ImageSaveData.new()
@@ -105,6 +111,8 @@ class ImageSaveData:
 		result.size = dat[5]
 		if dat[6] != null:
 			result.weathering = WeatheringConfig.load_save_data(weathering_data.get(dat[6]))
+		result.repeat_x = dat[7]
+		result.repeat_y = dat[8]
 		return result
 
 func _ready():
@@ -169,7 +177,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 			else:
 				placement_groups[str(child.group)].append(child)
 	# pick a random placement group, discard any groups that conflict with it, and repeat
-	var placements_used = []
+	var placements_used:Array[DecorationBase] = []
 	var groups_used = 0
 	var img_groups = {}
 	while placement_groups.size() > 0:
@@ -234,15 +242,26 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 	
 	var image_details:Array[ImageMerger.ImageMergeInfo] = [base_image_details]
 	
-	for placement in placements_used:
+	for placement:DecorationBase in placements_used:
 		var info := ImageMerger.ImageMergeInfo.new()
 		info.img = img_group_choices[placement.img_id].get_texture().get_image()
+
 		var x_scale = placement.get_size().x / info.img.get_size().x 
 		var y_scale = placement.get_size().y / info.img.get_size().y
 		var actual_scale = Vector2(min(x_scale, y_scale), min(x_scale, y_scale))
 		info.img.resize(info.img.get_size().x * min(x_scale, y_scale), info.img.get_size().y * min(x_scale, y_scale))
-		info.position = placement.position + placement.get_size()/2 - Vector2(info.img.get_size())/2
 		info.modulate = img_group_colors[placement.img_id]
+		if placement.type == 'band':
+			var directional_size := placement.get_size().x - placement.get_size().y
+			if directional_size < 0:
+				# Placement zone is taller than it is wide, rotate the image by 90 degrees and repeat on y axis 
+				info.img.rotate_90(CLOCKWISE)
+				info.repeat_y = ceili(placement.get_size().y / float(info.img.get_size().y))
+			else:
+				info.repeat_x = ceili(placement.get_size().x / float(info.img.get_size().x))
+			info.position = placement.position
+		else:
+			info.position = placement.position + placement.get_size()/2 - Vector2(info.img.get_size())/2
 		placement.position = info.position
 		placement.size = info.img.get_size()
 		placement.color = info.modulate
@@ -250,6 +269,8 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 		placement.item_name = img_group_choices[placement.img_id].item_name
 		image_details.append(info)
 		var save_data_item = ImageSaveData.new(placement, weathering)
+		save_data_item.repeat_x = info.repeat_x
+		save_data_item.repeat_y = info.repeat_y
 		save_data.append(save_data_item)
 	
 	var shadow = base_item_cfg.get_shadow_texture()

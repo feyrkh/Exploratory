@@ -290,7 +290,10 @@ func update_item():
 	call_deferred("update_item")
 
 func prepare_next_item(load_slowly=true):
-	var item := await ItemBuilder.build_random_item(null, load_slowly, null)
+	var weathering_type = null
+	if randf() < 0.7:
+		weathering_type = WeatheringMgr.get_random_option(0.6)
+	var item := await ItemBuilder.build_random_item(null, load_slowly, weathering_type)
 	item.is_display = true
 	find_child("ItemPreparation").add_child(item)
 	item.global_rotation = 0
@@ -397,7 +400,7 @@ func _on_weathering_label_mouse_entered():
 
 func _on_settings_button_pressed():
 	enter_settings_menu()
-	show_audio_settings()
+	show_weathering_settings()
 
 func show_audio_settings():
 	find_child("WeatheringSettingsContainer").visible = false

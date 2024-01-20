@@ -15,6 +15,24 @@ metadata/_edit_lock_ = true
 polygon = PackedVector2Array(12, 105, 19, 92, 37, 80, 71, 67, 120, 52, 184, 43, 212, 43, 255, 46, 280, 46, 335, 53, 384, 54, 434, 49, 481, 47, 524, 49, 563, 58, 568, 66, 580, 105, 594, 156, 600, 216, 599, 310, 596, 332, 600, 412, 599, 512, 598, 544, 588, 556, 568, 565, 463, 566, 379, 565, 327, 563, 304, 565, 236, 560, 166, 566, 89, 562, 37, 561, 22, 554, 16, 543, 10, 517, 7, 491, 11, 437, 11, 406, 18, 390, 12, 368, 9, 351, 10, 293, 12, 255, 11, 221, 12, 197, 15, 177, 10, 158, 8, 125)
 metadata/_edit_lock_ = true
 
+[node name="DecorationBase50" type="ColorRect" parent="."]
+offset_left = -43.0
+offset_top = -126.0
+offset_right = 105.0
+offset_bottom = 694.0
+color = Color(0.231373, 0.329412, 1, 1)
+script = ExtResource("2_q1lfp")
+type = "band"
+
+[node name="DecorationBase49" type="ColorRect" parent="."]
+offset_left = 460.0
+offset_top = -121.0
+offset_right = 608.0
+offset_bottom = 699.0
+color = Color(0.231373, 0.329412, 1, 1)
+script = ExtResource("2_q1lfp")
+type = "band"
+
 [node name="DecorationBase" type="ColorRect" parent="."]
 offset_left = 49.0
 offset_top = 109.0

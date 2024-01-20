@@ -23,11 +23,17 @@ const SAVE_FIELDS = [
 func get_save_data() -> Array:
 	return SAVE_FIELDS.map(func(field): return self.get(field))
 
-static func load_save_data(data:Array) -> WeatheringConfig:
-	var result = WeatheringConfig.new()
-	for i in range(SAVE_FIELDS.size()):
-		result.set(SAVE_FIELDS[i], data[i])
-	return result
+static func load_save_data(data) -> WeatheringConfig:
+	if data is Array:
+		var result = WeatheringConfig.new()
+		for i in range(SAVE_FIELDS.size()):
+			result.set(SAVE_FIELDS[i], data[i])
+		return result
+	elif data is WeatheringConfig:
+		return data
+	else:
+		push_error("Unexpected weathering save data: ", data)
+		return null
 
 var noise:FastNoiseLite:
 	get:

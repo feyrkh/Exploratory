@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3 uid="uid://ctafpn26iy77c"]
 
 [ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_x85sl"]
 
@@ -7,7 +7,7 @@ script = ExtResource("1_x85sl")
 sort_order = -80
 weathering_name = "Parched"
 noise_type = 2
-noise_floor = 0.51
+noise_floor = 0.2
 noise_cutoff = 1.0
 frequency = 0.009
 fractal_type = 2
@@ -17,3 +17,4 @@ fractal_octaves = 4
 cell_distance = 0
 cell_return = 6
 cell_jitter = 1.0
+seed = 0

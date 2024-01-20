@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeatheringConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pottery/WeatheringConfig.gd" id="1_y2f3b"]
+
+[resource]
+script = ExtResource("1_y2f3b")
+sort_order = 999
+weathering_name = "None"
+noise_type = 5
+noise_floor = 0.0
+noise_cutoff = 0.0
+frequency = 0.0
+fractal_type = 0
+fractal_lacunarity = 0.0
+fractal_gain = 0.0
+fractal_octaves = 0
+cell_distance = 0
+cell_return = 0
+cell_jitter = 1.5
+seed = 4

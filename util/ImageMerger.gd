@@ -5,6 +5,8 @@ class ImageMergeInfo:
 	var img:Image
 	var position:Vector2
 	var modulate:Color
+	var repeat_x:int = 1
+	var repeat_y:int = 1
 
 static func merge_images(image_merge_info:Array, weathering:WeatheringConfig=null, tree:SceneTree=null) -> Texture2D: # Array[ImageMergeInfo] as input
 	var base_img:Image
@@ -18,13 +20,21 @@ static func merge_images(image_merge_info:Array, weathering:WeatheringConfig=nul
 	for merge_info in image_merge_info:
 		if base_img == null:
 			base_img = merge_info.img
-			print("Base image format: ", base_img.get_format())
 			await modulate_image(base_img, merge_info.modulate, null, 0, tree)
+		elif merge_info.repeat_y > 1 or merge_info.repeat_y > 0:
+			var unmodified_img = merge_info.img
+			for y_block in merge_info.repeat_y:
+				for x_block in merge_info.repeat_x:
+					var cur_pos = merge_info.position + Vector2(x_block * merge_info.img.get_size().x, y_block * merge_info.img.get_size().y)
+					var overlay_img = Image.new()
+					overlay_img.copy_from(unmodified_img)
+					await modulate_image(overlay_img, merge_info.modulate, noise, noise_cutoff, tree, cur_pos, noise_floor)
+					base_img.blend_rect(overlay_img, overlay_img.get_used_rect(), cur_pos)
 		else:
 			var overlay_img = merge_info.img
-			print("overlay_img format: ", overlay_img.get_format())
 			await modulate_image(overlay_img, merge_info.modulate, noise, noise_cutoff, tree, merge_info.position, noise_floor)
 			base_img.blend_rect(overlay_img, overlay_img.get_used_rect(), merge_info.position)
+
 		if tree:
 			await(tree.process_frame)
 	if !base_img.has_mipmaps():

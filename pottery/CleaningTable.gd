@@ -361,9 +361,10 @@ func _on_save_button_pressed():
 	for k in weathering_save_data.keys():
 		reversed_weathering_save_data[weathering_save_data[k]] = k.get_save_data()
 	save_file.store_var(Global.get_save_data())
-	save_file.store_var((reversed_image_save_data))
+	save_file.store_var(reversed_image_save_data)
 	save_file.store_var(reversed_weathering_save_data)
-	save_file.store_var((item_save_data))
+	save_file.store_var(item_save_data)
+	save_file.store_var(settings)
 	save_file.close()
 
 func _on_load_button_pressed():
@@ -380,6 +381,7 @@ func _on_load_button_pressed():
 	#	image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
 	#	rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
 	var item_save_data = save_file.get_var()
+	settings = save_file.get_var()
 	for item_save in item_save_data:
 		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, weathering_save_data, rebuilt_textures)
 		$Pieces.add_child(new_item)

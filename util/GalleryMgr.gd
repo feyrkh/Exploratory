@@ -8,8 +8,8 @@ static func save_to_gallery(image, item, report_error:Callable):
 	if err == OK:
 		print("Saved image to ", filename+".png")
 		var image_save_data = {}
-		var weathering_dave_data = {}
-		var item_save_data = item.get_save_data(image_save_data, weathering_dave_data)
+		var weathering_save_data = {}
+		var item_save_data = item.get_save_data(image_save_data, weathering_save_data)
 		var reversed_image_save_data = {}
 		var save_file := FileAccess.open_compressed(filename+".dat", FileAccess.WRITE)
 		if save_file == null:
@@ -17,10 +17,10 @@ static func save_to_gallery(image, item, report_error:Callable):
 			return
 		for k in image_save_data.keys():
 			reversed_image_save_data[image_save_data[k]] = k
-		for k in weathering_dave_data.keys():
-			weathering_dave_data[weathering_dave_data[k]] = k.get_save_data()
+		for k in weathering_save_data.keys():
+			weathering_save_data[weathering_save_data[k]] = k.get_save_data()
 		save_file.store_var((reversed_image_save_data))
-		save_file.store_var((weathering_dave_data))
+		save_file.store_var((weathering_save_data))
 		save_file.store_var((item_save_data))
 		save_file.close()
 	else:

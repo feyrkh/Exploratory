@@ -5,7 +5,7 @@ const ALLOWED_RANDOM := "allowed_random"
 var weather_low := {}
 var weather_high := {}
 var weather_settings := SettingsFile.new("user://weathering.cfg", {
-	ALLOWED_RANDOM: ["Cracked", "Crystallized", "Dissolved", "Faded", "Parched", "Sandblasted"]
+	ALLOWED_RANDOM: ["None", "Cracked", "Crystallized", "Dissolved", "Faded", "Sandblasted"]
 })
 
 func _ready():

@@ -6,10 +6,11 @@ static func inflate_polyline(pts, offset):
 		return []
 	if pts.size() == 1:
 		return [pts[0] + Vector2(-offset, -offset), pts[0] + Vector2(+offset, -offset), pts[0] + Vector2(+offset, +offset), pts[0] + Vector2(-offset, +offset)]
+	var line_dir:Vector2
 	if pts.size() == 2:
-		var line_dir = (pts[1] - pts[0]).normalized()
+		line_dir = (pts[1] - pts[0]).normalized()
 		return [pts[0] + line_dir.rotated(deg_to_rad(135)), pts[0] + line_dir.rotated(deg_to_rad(225)), pts[1] + line_dir.rotated(deg_to_rad(-45)), pts[1] + line_dir.rotated(45)]
-	var line_dir = (pts[1] - pts[0]).normalized() * offset
+	line_dir = (pts[1] - pts[0]).normalized() * offset
 	# two points near start point
 	var result = [pts[0] + line_dir.rotated(deg_to_rad(135))/2, pts[0] - line_dir * 2, pts[0] + line_dir.rotated(deg_to_rad(225))/2]
 	if !Geometry2D.is_polygon_clockwise(result):
@@ -21,7 +22,6 @@ static func inflate_polyline(pts, offset):
 		var seg1 = Vector2(pts[i-1] - pts[i])
 		var seg2 = Vector2(pts[i+1] - pts[i])
 		var half_rads_between = seg1.angle_to(seg2) / 2
-		var half_degs_between = rad_to_deg(half_rads_between)
 		if half_rads_between < 0:
 			top_line.append(pts[i] + seg1.normalized().rotated(half_rads_between) * offset)
 			bottom_line.append(pts[i] + seg1.normalized().rotated(half_rads_between + PI) * offset)
@@ -83,8 +83,8 @@ static func cleanup_close_points(poly:PackedVector2Array)->PackedVector2Array:
 	return poly
 
 static func cleanup_sharp_angles(poly:PackedVector2Array)->PackedVector2Array:
-	for i in range(-2, poly.size()-2):
-		var angle := poly[i+1].angle_to_point(poly[i]) - poly[i+1].angle_to_point(poly[i+2])
+	#for i in range(-2, poly.size()-2):
+		#var angle := poly[i+1].angle_to_point(poly[i]) - poly[i+1].angle_to_point(poly[i+2])
 		#print("Angle made by ", i+1, " is ", rad_to_deg(angle))
 	return poly
 

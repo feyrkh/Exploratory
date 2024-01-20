@@ -409,13 +409,14 @@ func save_to_gallery(item:Node2D):
 			_on_save_button_pressed()
 	, CONNECT_ONE_SHOT)
 
-func time_attack_complete(total_seconds:int):
-	Global.click_mode = Global.ClickMode.move
-	for piece in find_child("Pieces").get_children():
-		piece.time_attack_seconds = total_seconds
-		piece.bump_enabled = !Global.freeze_pieces
-		piece.rotate_enabled = Global.rotate_with_shuffle
-		var img = await take_screenshot_of_piece(piece)
+func time_attack_complete(_total_seconds:int):
+	pass
+	#Global.click_mode = Global.ClickMode.move
+	#for piece in find_child("Pieces").get_children():
+		#piece.time_attack_seconds = total_seconds
+		#piece.bump_enabled = !Global.freeze_pieces
+		#piece.rotate_enabled = Global.rotate_with_shuffle
+		#var img = await take_screenshot_of_piece(piece)
 		
 
 func time_attack_show_scoreboard():
@@ -548,7 +549,7 @@ func shuffle_items():
 		piece.set_deferred("freeze", false) #should get reset to whatever it should be after the position is changed
 	var area_center = camera_top_left_limit + (camera_bot_right_limit - camera_top_left_limit)/2
 	var y_offset = area_center.y - ((cur_min_y + cur_row_height) / 2)
-	var x_offset = area_center.x - (largest_x_seen / 2)
+	var x_offset = area_center.x - (largest_x_seen / 2.0)
 	for piece:ArcheologyItem in pieces:
 		piece.reset_position.y += y_offset
 		piece.reset_position.x += x_offset

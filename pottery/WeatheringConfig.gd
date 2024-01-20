@@ -39,14 +39,14 @@ var noise:FastNoiseLite:
 	get:
 		if !noise:
 			noise = FastNoiseLite.new()
-			noise.noise_type = noise_type
+			noise.noise_type = noise_type as FastNoiseLite.NoiseType
 			noise.frequency = frequency
-			noise.fractal_type = fractal_type
+			noise.fractal_type = fractal_type as FastNoiseLite.FractalType
 			noise.fractal_lacunarity = fractal_lacunarity
 			noise.fractal_gain = fractal_gain
 			noise.fractal_octaves = fractal_octaves
-			noise.cellular_distance_function = cell_distance
-			noise.cellular_return_type = cell_return
+			noise.cellular_distance_function = cell_distance as FastNoiseLite.CellularDistanceFunction
+			noise.cellular_return_type = cell_return as FastNoiseLite.CellularReturnType
 			noise.cellular_jitter = cell_jitter
 			noise.seed = seed
 		return noise

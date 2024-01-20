@@ -11,5 +11,5 @@ func _play_button_mouseover_sound():
 	if !editable:
 		Global.play_button_mouseover_sound()
 
-func _play_button_click_sound(arg=null):
+func _play_button_click_sound(_arg=null):
 	Global.play_button_click_sound()

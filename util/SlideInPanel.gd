@@ -19,19 +19,19 @@ func reset_tween():
 	tween = create_tween()
 
 func get_end_pos()->Vector2:
-	var overhang:float
+	#var overhang:float
 	match slide_in_direction:
 		Vector2.LEFT:
-			overhang = get_viewport_rect().size.x - start_pos.x
+			#overhang = get_viewport_rect().size.x - start_pos.x
 			return Vector2(get_viewport_rect().size.x - get_rect().size.x - slide_in_edge_buffer, position.y)
 		Vector2.RIGHT:
-			overhang = get_rect().size.x + start_pos.x # assuming x is negative
+			#overhang = get_rect().size.x + start_pos.x # assuming x is negative
 			return Vector2(slide_in_edge_buffer, position.y)
 		Vector2.UP:
-			overhang = get_viewport_rect().size.y - position.y
+			#overhang = get_viewport_rect().size.y - position.y
 			return Vector2(position.x, get_viewport_rect().size.y - get_rect().size.y - slide_in_edge_buffer)
 		Vector2.DOWN:
-			overhang = get_rect().size.y + start_pos.y # assuming y is negative
+			#overhang = get_rect().size.y + start_pos.y # assuming y is negative
 			return Vector2(position.x, slide_in_edge_buffer)
 		_:
 			push_error("Unknown direction for slide in container: ", slide_in_direction)

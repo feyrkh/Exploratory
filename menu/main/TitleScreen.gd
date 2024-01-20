@@ -88,6 +88,8 @@ func _unhandled_key_input(event):
 
 func load_config():
 	var err = config_file.load(SETTINGS_PATH)
+	if err != OK and err != ERR_FILE_NOT_FOUND:
+		push_error("Error loading settings ", SETTINGS_PATH, ": ", err)
 	item_count = config_file.get_value(mode, "item_count", 1)
 	rotation_enabled = config_file.get_value(mode, "rotation_enabled", true)
 	bump_enabled = config_file.get_value(mode, "bump_enabled", true)
@@ -104,7 +106,7 @@ func save_config():
 	config_file.set_value(mode, "weathering_amt", weathering_amt)
 	config_file.save(SETTINGS_PATH)
 
-func _process(delta):
+func _process(_delta):
 	pass
 	#if tables[0].position.x < -1000:
 		#tables[0].position = Vector2(tables[0].position.x + ((tables.size()) * 1000), 0)
@@ -149,13 +151,13 @@ func _on_rotation_decrease_pressed():
 	_on_rotation_label_mouse_entered()
 
 func _on_crack_width_decrease_pressed():
-	crack_width = (crack_width - 1)
+	crack_width = (crack_width - 1) as CrackWidth
 	if crack_width < 0:
-		crack_width += CrackWidth.size()
+		crack_width = (crack_width - CrackWidth.size()) as CrackWidth
 	update_labels()
 
 func _on_crack_width_increase_pressed():
-	crack_width = (crack_width + 1) % CrackWidth.size()
+	crack_width = (crack_width + 1) % CrackWidth.size() as CrackWidth
 	update_labels()
 
 func _on_crack_amt_decrease_pressed():
@@ -280,17 +282,18 @@ func _on_continue_button_pressed():
 
 func update_item():
 	var coverup = find_child("Coverup")
-	var display_area_size = coverup.get_rect()
+	#var display_area_size = coverup.get_rect()
+	var tween
 	if coverup.modulate.a == 0:
 		print("Fading out")
-		var tween = create_tween()
+		tween = create_tween()
 		tween.tween_property(coverup, "modulate", Color(0, 0, 0, 1), 2.0).set_delay(1)
 		await tween.finished
 	for child in find_child("ItemSpawn").get_children():
 		child.queue_free()
 	transfer_prepared_item()
 
-	var tween = create_tween()
+	tween = create_tween()
 	tween.tween_property(coverup, "modulate", Color(0, 0, 0, 0.0), 2.0).set_delay(1)
 	print("Fading in")
 	prepare_next_item()

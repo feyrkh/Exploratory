@@ -7,10 +7,10 @@ var defaults:Dictionary = {}
 var keys_set:Dictionary = {}
 var section:String = "default"
 
-func _init(filename:String, defaults:Dictionary={}, section:String="default"):
+func _init(filename:String, default_settings:Dictionary={}, section_name:String="default"):
 	self.config_path = filename
-	self.defaults = defaults
-	self.section = section
+	self.defaults = default_settings
+	self.section = section_name
 	load_config()
 
 func get_config(key:String, default_value=null):
@@ -21,8 +21,12 @@ func set_config(key:String, value):
 
 func load_config():
 	var err = config_file.load(config_path)
-	for key in config_file.get_section_keys(section):
-		keys_set[key] = true
+	if err != OK and err != ERR_FILE_NOT_FOUND:
+		push_error("Failed to open config file ", config_path, ": ", err)
+	if config_file.has_section(section):
+		for key in config_file.get_section_keys(section):
+			keys_set[key] = true
+
 
 func save_config():
 	config_file.save(config_path)

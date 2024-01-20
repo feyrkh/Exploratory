@@ -9,7 +9,7 @@ var child2_idx:int = -1
 var auto_restart:bool = false
 var mode_idx:int = 0
 
-func _process(delta):
+func _process(_delta):
 	for i in 6:
 		single_process_step()
 
@@ -41,13 +41,13 @@ func single_process_step():
 			auto_restart = false
 			_reset_child_indices()
 		else:
-			var old_mode = processing_modes[mode_idx]
+			#var old_mode = processing_modes[mode_idx]
 			var new_mode_idx = mode_idx + 1
 			if new_mode_idx >= processing_modes.size():
 				#print("Finished processing, stopping")
 				stop_processing()
 				return
-			var new_mode = processing_modes[new_mode_idx]
+			#var new_mode = processing_modes[new_mode_idx]
 			#print("Switched from ", old_mode, " to ", new_mode)
 			mode_idx = new_mode_idx	
 			_reset_child_indices()

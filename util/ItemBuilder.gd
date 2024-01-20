@@ -24,7 +24,7 @@ func _cache_cleanup():
 func update_cache(item):
 	cache[item] = Time.get_ticks_msec() + 1000*60*5
 
-static func get_next_unique_id() -> int:
+func get_next_unique_id() -> int:
 	__next_unique_id += 1
 	return __next_unique_id
 
@@ -63,7 +63,7 @@ class ImageSaveData:
 	var repeat_x:int = 1
 	var repeat_y:int = 1
 	
-	func _init(placement:DecorationBase = null, weathering:WeatheringConfig = null):
+	func _init(placement:DecorationBase = null, weather:WeatheringConfig = null):
 		if placement:
 			self.item_dir = placement.item_dir
 			self.item_name = placement.item_name
@@ -71,7 +71,7 @@ class ImageSaveData:
 			self.color = placement.color
 			self.position = placement.position
 			self.size = placement.size
-			self.weathering = weathering
+			self.weathering = weather
 	
 	func to_image_merge_info() -> ImageMerger.ImageMergeInfo:
 		#var img:Image
@@ -178,7 +178,6 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 				placement_groups[str(child.group)].append(child)
 	# pick a random placement group, discard any groups that conflict with it, and repeat
 	var placements_used:Array[DecorationBase] = []
-	var groups_used = 0
 	var img_groups = {}
 	while placement_groups.size() > 0:
 		var cur_group_name = placement_groups.keys().pick_random()
@@ -194,7 +193,6 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 					placement_valid = false
 					break
 		if placement_valid:
-			groups_used += 1
 			placements_used.append_array(potential_placements)
 			for placement in potential_placements:
 				if img_groups.get(placement.img_id) == null:
@@ -248,7 +246,6 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 
 		var x_scale = placement.get_size().x / info.img.get_size().x 
 		var y_scale = placement.get_size().y / info.img.get_size().y
-		var actual_scale = Vector2(min(x_scale, y_scale), min(x_scale, y_scale))
 		info.img.resize(info.img.get_size().x * min(x_scale, y_scale), info.img.get_size().y * min(x_scale, y_scale))
 		info.modulate = img_group_colors[placement.img_id]
 		if placement.type == 'band':

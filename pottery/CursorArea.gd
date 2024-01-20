@@ -10,7 +10,7 @@ func _ready():
 func camera_zoom_changed(new_zoom:float):
 	$CollisionShape2D.shape.radius = default_radius / new_zoom
 
-func _process(delta):
+func _process(_delta):
 	global_position = get_global_mouse_position()
 
 func get_overlaps() -> Array[Node2D]:

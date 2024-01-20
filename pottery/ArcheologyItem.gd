@@ -119,7 +119,6 @@ var _gallery_mode = false
 var gallery_id:String
 
 func get_save_data(image_save_data:Dictionary, weathering_save_data:Dictionary) -> Dictionary: # Dictionary[String, ItemBuilder.ImageSaveData]
-	var result := []
 	var img_save_data = []
 	var scar_save_data = []
 	var edge_save_data = []
@@ -415,7 +414,6 @@ func handle_move_input(event):
 				drag_start_item = global_position
 				lock_rotation = true
 				safe_freeze(false)
-				var prev_top = get_parent().get_child(-1)
 				get_parent().move_child(self, -1)
 				if _gallery_mode:
 					for i in range(get_parent().get_child_count()):
@@ -522,15 +520,15 @@ func _on_mouse_shape_exited(shape_idx):
 		hover_idx = -1
 
 func highlight_visual_polygons():
-	for polygon in visual_polygons:
-		polygon.modulate = Color(1.3, 1.3, 1.3, 1.3)
+	for poly in visual_polygons:
+		poly.modulate = Color(1.3, 1.3, 1.3, 1.3)
 	center_of_mass_indicator.position = center_of_mass
 	center_of_mass_indicator.visible = !Global.lock_rotation or (rotate_start_item != null)
 	Global.item_highlighted.emit(self)
 
 func unhighlight_visual_polygons():
-	for polygon in visual_polygons:
-		polygon.modulate = Color.WHITE
+	for poly in visual_polygons:
+		poly.modulate = Color.WHITE
 	center_of_mass_indicator.visible = false
 	Global.item_unhighlighted.emit(self)
 
@@ -641,17 +639,17 @@ func create_scars_from_paths(scar_paths:Array[PackedVector2Array]):
 			pass
 			print("Skipping zero-length scar")
 		
-func _calculate_area(polygon) -> float:
-	var triangles = Geometry2D.triangulate_polygon(polygon)
+func _calculate_area(poly) -> float:
+	var triangles = Geometry2D.triangulate_polygon(poly)
 	if triangles.size() == 0:
-		polygon = Geometry2D.convex_hull(polygon)
-		triangles = Geometry2D.triangulate_polygon(polygon)
+		poly = Geometry2D.convex_hull(poly)
+		triangles = Geometry2D.triangulate_polygon(poly)
 	var twiceArea = 0
 	for i in range(0, triangles.size(), 3):
 		var t1 = triangles[i]
 		var t2 = triangles[i+1]
 		var t3 = triangles[i+2]
-		twiceArea += abs(polygon[t1].x * (polygon[t2].y - polygon[t3].y) + polygon[t2].x * (polygon[t3].y - polygon[t1].y) + polygon[t3].x * (polygon[t1].y - polygon[t2].y))
+		twiceArea += abs(poly[t1].x * (poly[t2].y - poly[t3].y) + poly[t2].x * (poly[t3].y - poly[t1].y) + poly[t3].x * (poly[t1].y - poly[t2].y))
 	return twiceArea / 2
 
 
@@ -660,19 +658,19 @@ func _find_center() -> Vector2:
 	var areas:Array[float] = []
 	var new_top_left := Vector2(999999, 999999)
 	var new_bot_right := Vector2(-999999, -999999)
-	for collision in collision_polygons:
-		var origin = collision.position
+	for col in collision_polygons:
+		var origin = col.position
 		var twiceArea:float = 0
-		var off:Vector2 = collision.polygon[0].rotated(collision.rotation) + origin
+		var off:Vector2 = col.polygon[0].rotated(col.rotation) + origin
 		var x:float = 0
 		var y:float = 0
 		var p1:Vector2
 		var p2:Vector2
 		var f
-		var j = collision.polygon.size() - 1
-		for i in range(collision.polygon.size()):
-			p1 = collision.polygon[i].rotated(collision.rotation) + origin
-			p2 = collision.polygon[j].rotated(collision.rotation) + origin
+		var j = col.polygon.size() - 1
+		for i in range(col.polygon.size()):
+			p1 = col.polygon[i].rotated(col.rotation) + origin
+			p2 = col.polygon[j].rotated(col.rotation) + origin
 			if p1.x < new_top_left.x: new_top_left.x = p1.x
 			if p1.y < new_top_left.y: new_top_left.y = p1.y
 			if p1.x > new_bot_right.x: new_bot_right.x = p1.x
@@ -763,8 +761,8 @@ func glue(other:ArcheologyItem):
 				scar.global_rotation = scar_rot
 		elif child.name == "Glue":
 			for g in child.get_children():
-				var pos = g.global_position
-				var rot = g.global_rotation
+				#var pos = g.global_position
+				#var rot = g.global_rotation
 				var global_poly = MyGeom.global_polygon(g)
 				child.remove_child(g)
 				glue_edges.add_child(g)
@@ -783,10 +781,10 @@ func glue(other:ArcheologyItem):
 
 func _global_bounding_box(node:ItemPolygon2D) -> Rect2:
 	var bbox = node.bounding_box
-	var top_left = node.to_global(node.bounding_box.position)
-	var top_right = node.to_global(node.bounding_box.position + Vector2(node.bounding_box.size.x, 0))
-	var bot_right = node.to_global(node.bounding_box.end)
-	var bot_left = node.to_global(node.bounding_box.position + Vector2(0, node.bounding_box.size.y))
+	var top_left = node.to_global(bbox.position)
+	var top_right = node.to_global(bbox.position + Vector2(bbox.size.x, 0))
+	var bot_right = node.to_global(bbox.end)
+	var bot_left = node.to_global(bbox.position + Vector2(0, bbox.size.y))
 	var x1:float = min(top_left.x, bot_right.x, top_right.x, bot_left.x)
 	var y1:float = min(top_left.y, bot_right.y, top_right.y, bot_left.y)
 	var x2:float = max(top_left.x, bot_right.x, top_right.x, bot_left.x)
@@ -803,14 +801,14 @@ func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
 	var possible_polygon_overlaps := visual_polygons.filter(func(poly): 
 		var poly_box = _global_bounding_box(poly)
 		#print("Checking whether ", poly_box, " intersects with ", affected_area, ": ", affected_area.intersects(_global_bounding_box(poly)))
-		return affected_area.intersects(_global_bounding_box(poly))
+		return affected_area.intersects(poly_box)
 	)
 	# Get list of intersection points along the edges of these polygons
 	var intersection_pts:Array[Vector2] = []
-	for polygon:ItemPolygon2D in possible_polygon_overlaps:
-		var pt1 = polygon.to_global(polygon.polygon[-1])
-		for local_pt2 in polygon.polygon:
-			var pt2 := polygon.to_global(local_pt2)
+	for poly:ItemPolygon2D in possible_polygon_overlaps:
+		var pt1 = poly.to_global(poly.polygon[-1])
+		for local_pt2 in poly.polygon:
+			var pt2 := poly.to_global(local_pt2)
 			var intersect1:float = Geometry2D.segment_intersects_circle(pt1, pt2, circle_center_global, circle_radius)
 			if intersect1 >= 0:
 				intersection_pts.append(self.to_local(pt1 + (pt2-pt1)*intersect1))
@@ -863,11 +861,11 @@ func build_glue_polygons(circle_center_global:Vector2, circle_radius:float):
 			#$Glue.add_child(new_glue)
 			#glue_hashes[glue_poly.hash()] = new_glue
 			
-func get_segment_intersecting_circle(circle_center:Vector2, circle_radius:float, polygon, polygon_offset:Vector2) -> Array[Vector2]:
+func get_segment_intersecting_circle(circle_center:Vector2, circle_radius:float, poly, polygon_offset:Vector2) -> Array[Vector2]:
 	var cur_segment:Array[Vector2] = []
-	for i in range(polygon.size()):
-		var pt1 = polygon[i - 1]
-		var pt2 = polygon[i]
+	for i in range(poly.size()):
+		var pt1 = poly[i - 1]
+		var pt2 = poly[i]
 		if Geometry2D.segment_intersects_circle(pt1, pt2, circle_center, circle_radius) != -1:
 			if cur_segment.size() == 0:
 				cur_segment.append(pt1 + polygon_offset)
@@ -896,7 +894,6 @@ func find_largest_polygon():
 	return largest_polygon
 
 func get_displacement_score():
-	var result = {}
 	var avg_displacements = 0
 	var num_polygons = 0
 	var total_area = 0
@@ -949,10 +946,10 @@ func adjust_scale(scale_change:float):
 	center = null
 	_find_center()
 
-func _adjust_polygon_scale(polygon, scale_change:float):
-	for i in range(polygon.size()):
-		polygon[i] = polygon[i] * scale_change
-	return polygon
+func _adjust_polygon_scale(poly, scale_change:float):
+	for i in range(poly.size()):
+		poly[i] = poly[i] * scale_change
+	return poly
 
 var next_clink_time = {}
 func _on_body_entered(body):

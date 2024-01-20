@@ -28,12 +28,12 @@ var glue_color:Color = Color("ffdb12"):
 		glue_material = get_glue_material(glue_color)
 		glue_color_changed.emit()
 
-func get_glue_material(glue_color:Color):
-		if !glue_materials.has(glue_color):
+func get_glue_material(c:Color):
+		if !glue_materials.has(c):
 			var new_mat:ShaderMaterial = glue_material.duplicate()
-			new_mat.set_shader_parameter("normal_color", Vector4(glue_color.r, glue_color.g, glue_color.b, glue_color.a))
-			glue_materials[glue_color] = new_mat
-		return glue_materials.get(glue_color, glue_material)
+			new_mat.set_shader_parameter("normal_color", Vector4(c.r, c.g, c.b, c.a))
+			glue_materials[c] = new_mat
+		return glue_materials.get(c, glue_material)
 	
 var glue_material:ShaderMaterial = preload("res://shader/ItemShardEdgeLine.tres")
 
@@ -42,7 +42,7 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	setting_changed.connect(_on_setting_changed)
 
-func _on_setting_changed(setting, old_val, new_val):
+func _on_setting_changed(setting, _old_val, new_val):
 	match setting:
 		"control_hints_visible": control_hints_visible = new_val
 

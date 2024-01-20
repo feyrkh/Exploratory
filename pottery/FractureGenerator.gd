@@ -124,14 +124,14 @@ static func lightning_fracture(item:ArcheologyItem, start_pt=null, start_angle:f
 
 static func trim_fracture(item:ArcheologyItem, fracture:PackedVector2Array) -> PackedVector2Array:
 	var poly = item.polygon.polygon
-	var trimmed_fracture := PackedVector2Array()
+	#var trimmed_fracture := PackedVector2Array()
 	var first_pt:int = 0
 	var last_pt:int = fracture.size() - 1
 	var cur_pt = fracture[0]
-	var cur_in_area = Geometry2D.is_point_in_polygon(cur_pt, item.polygon.polygon)
+	var cur_in_area = Geometry2D.is_point_in_polygon(cur_pt, poly)
 	for i in range(1, fracture.size() - 1):
 		var next_pt = fracture[i]
-		var next_in_area = Geometry2D.is_point_in_polygon(next_pt, item.polygon.polygon)
+		var next_in_area = Geometry2D.is_point_in_polygon(next_pt, poly)
 		if !cur_in_area and !next_in_area:
 			first_pt = i
 		else:
@@ -140,10 +140,10 @@ static func trim_fracture(item:ArcheologyItem, fracture:PackedVector2Array) -> P
 		cur_in_area = next_in_area
 	
 	cur_pt = fracture[-1]
-	cur_in_area = Geometry2D.is_point_in_polygon(cur_pt, item.polygon.polygon)
+	cur_in_area = Geometry2D.is_point_in_polygon(cur_pt, poly)
 	for i in range(2, fracture.size() - first_pt):
 		var next_pt = fracture[-i]
-		var next_in_area = Geometry2D.is_point_in_polygon(next_pt, item.polygon.polygon)
+		var next_in_area = Geometry2D.is_point_in_polygon(next_pt, poly)
 		if !cur_in_area and !next_in_area:
 			last_pt = fracture.size() - i + 1
 		else:

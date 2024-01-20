@@ -7,9 +7,9 @@ signal closed
 var image:Image
 var item
 
-func setup(img:Image, item):
+func setup(img:Image, item_to_save):
 	self.image = img
-	self.item = item
+	self.item = item_to_save
 	find_child("TextureRect").texture = ImageTexture.create_from_image(img)
 	get_tree().paused = true
 

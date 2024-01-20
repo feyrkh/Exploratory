@@ -24,6 +24,10 @@ AudioPlayerPool="*res://util/AudioPlayerPool.tscn"
 ItemBuilder="*res://util/ItemBuilder.gd"
 WeatheringMgr="*res://weathering/WeatheringMgr.gd"
 
+[debug]
+
+gdscript/warnings/shadowed_global_identifier=0
+
 [display]
 
 window/size/viewport_width=1280

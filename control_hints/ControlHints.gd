@@ -10,12 +10,12 @@ func _ready():
 	slide_toggled.connect(func(): 
 		Global.control_hints_visible = !slide_open_next)
 
-func set_hints(hint_data:Array): 
+func set_hints(new_hint_data:Array): 
 	hints_loaded = false
 	var container = find_child("HintContainer")
 	for child in container.get_children():
 		child.queue_free()
-	self.hint_data = hint_data
+	self.hint_data = new_hint_data
 	if !is_hidden():
 		load_hints()
 	first_frame_showing = true

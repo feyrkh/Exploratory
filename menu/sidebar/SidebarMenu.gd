@@ -59,7 +59,7 @@ func _on_shuffle_button_pressed():
 func _on_save_item_button_pressed():
 	save_item_button_pressed.emit()
 
-func _on_game_timer_time_attack_complete(total_seconds):
+func _on_game_timer_time_attack_complete(_total_seconds):
 	$SaveItemButton.visible = true
 	$SaveItemLabel.visible = true
 	$BackgroundGlow.update_position()

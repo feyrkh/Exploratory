@@ -74,7 +74,7 @@ func _ready():
 		)
 	settings_saver.start(5)
 
-func on_setting_change(setting, old_val, new_val):
+func on_setting_change(setting, _old_val, new_val):
 	match setting:
 		OVERALL_VOLUME_PCT: overall_volume = new_val
 		SFX_VOLUME_PCT: sfx_volume = new_val
@@ -93,7 +93,6 @@ func get_decibels_for_sfx(volume_adjustment:float=1.0)->float:
 	return get_decibels_for_volume_percentage(volume_adjustment * sfx_volume)
 
 func get_decibels_for_music(volume_adjustment:float=1.0)->float:
-	var music_pct = music_volume
 	var overall_pct = volume_adjustment * music_volume
 	return get_decibels_for_volume_percentage(overall_pct)
 
@@ -123,18 +122,18 @@ func get_first_free_player():
 	add_child(new_player)
 	return new_player
 
-func cross_fade(new_music_file, crossfade_time, new_music_saves_position=true):
+func cross_fade(new_music_file, crossfade_seconds, new_music_saves_position=true):
 	if fading:
 		swap_players()
 	musicPlayer2_file = new_music_file
 	music_positions[musicPlayer1_file] = musicPlayer1.get_playback_position()
-	fade_counter = crossfade_time
+	fade_counter = crossfade_seconds
 	musicPlayer2.stop()
 	musicPlayer2.stream = load(new_music_file)
 	musicPlayer2.volume_db = -80
 	set_next_volume(0.0)
-	fade_up_per_sec = (MAX_VOLUME - MIN_VOLUME)/crossfade_time
-	fade_down_per_sec = (expected_cur_volume - MIN_VOLUME)/crossfade_time
+	fade_up_per_sec = (MAX_VOLUME - MIN_VOLUME)/crossfade_seconds
+	fade_down_per_sec = (expected_cur_volume - MIN_VOLUME)/crossfade_seconds
 	var start_position = 0.0
 	if new_music_saves_position:
 		start_position = music_positions.get(new_music_file, 0.0)

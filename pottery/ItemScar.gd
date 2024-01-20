@@ -36,7 +36,7 @@ static func create_scar_from_path(path:PackedVector2Array) -> ItemScar:
 	return new_scene
 	
 
-func generate_scar(polygon:PackedVector2Array, start_pos:Vector2, len:float, initial_angle_radians:float, max_deviation_radians:float=PI/6, min_segment_len_percent:float=0.2, max_segment_len_percent:float=0.3):
+func generate_scar(polygon:PackedVector2Array, start_pos:Vector2, scar_len:float, initial_angle_radians:float, max_deviation_radians:float=PI/6, min_segment_len_percent:float=0.2, max_segment_len_percent:float=0.3):
 	var generated_points:Array[Vector2] = [start_pos]
 	var consumed_pct:float = 0
 	line = preload("res://pottery/ItemScarLine.tscn").instantiate()
@@ -44,7 +44,7 @@ func generate_scar(polygon:PackedVector2Array, start_pos:Vector2, len:float, ini
 	while consumed_pct < 1:
 		var new_consumed = min(randf_range(min_segment_len_percent, max_segment_len_percent), 1-consumed_pct)
 		consumed_pct += new_consumed
-		var pt:Vector2 = start_pos + Vector2.RIGHT.rotated(initial_angle_radians) * (new_consumed * len)
+		var pt:Vector2 = start_pos + Vector2.RIGHT.rotated(initial_angle_radians) * (new_consumed * scar_len)
 		generated_points.append(pt)
 		start_pos = pt
 		initial_angle_radians += randf_range(-max_deviation_radians, max_deviation_radians)

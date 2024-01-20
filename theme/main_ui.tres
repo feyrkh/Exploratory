@@ -1,8 +1,8 @@
 [gd_resource type="Theme" load_steps=4 format=3 uid="uid://bvc652bwjujtl"]
 
-[ext_resource type="StyleBox" uid="uid://dprep5up7eysn" path="res://theme/main_ui_panel.tres" id="1_mtm7e"]
 [ext_resource type="FontFile" uid="uid://31qwtk37jy7j" path="res://theme/Crackvetica.ttf" id="1_xin2s"]
 [ext_resource type="StyleBox" uid="uid://cvj8odrh2o2ir" path="res://theme/style_box_invisible.tres" id="2_e1s68"]
+[ext_resource type="StyleBox" uid="uid://dlq8oehi1cths" path="res://theme/generic_window_01.tres" id="3_m2yvx"]
 
 [resource]
 Button/font_sizes/font_size = 22
@@ -16,4 +16,4 @@ Label/font_sizes/font_size = 34
 Label/fonts/font = ExtResource("1_xin2s")
 LineEdit/font_sizes/font_size = 34
 LineEdit/fonts/font = ExtResource("1_xin2s")
-PanelContainer/styles/panel = ExtResource("1_mtm7e")
+PanelContainer/styles/panel = ExtResource("3_m2yvx")

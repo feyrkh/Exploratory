@@ -198,6 +198,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, wea
 		new_polygon.position = data[Fields.POSITION]
 		new_polygon.rotation = data[Fields.ROTATION]
 		new_polygon.polygon = data[Fields.POLYGON]
+		new_polygon.uv = new_polygon.polygon
 		var new_collision = CollisionPolygon2D.new()
 		new_collision.position = new_polygon.position
 		new_collision.rotation = new_polygon.rotation
@@ -354,7 +355,7 @@ func refresh_polygon() -> int:
 		total_edge_length += collision.polygon[i].distance_to(collision.polygon[j])
 	if _gallery_mode:
 		return 1
-	if polygon.uv == null or polygon.uv.size() == 0:
+	if polygon.uv.size() != collision.polygon.size():
 		polygon.uv = collision.polygon
 	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
@@ -928,19 +929,22 @@ func save_to_gallery():
 	Global.save_to_gallery.emit(self)
 
 func adjust_scale(scale_change:float):
-	adjusted_scale = scale_change
+	adjusted_scale = adjusted_scale*scale_change
 	for child in get_children():
 		if child is Polygon2D or child is CollisionPolygon2D:
 			child.position *= scale_change
 			child.polygon = _adjust_polygon_scale(child.polygon, scale_change)
-			if child.has("bounding_box"):
+			if "bounding_box" in child:
 				child.bounding_box = null
-			if "uv" in child:
-				child.uv = _adjust_polygon_scale(child.polygon, 1.0/adjusted_scale)
+			#if "uv" in child:
+			#	child.uv = _adjust_polygon_scale(child.polygon, 1.0/adjusted_scale)
 	for child in $Scars.get_children():
 		child.position *= scale_change
 		child.adjust_scale(scale_change)
 	for child in $ShardEdges.get_children():
+		child.position *= scale_change
+		child.adjust_scale(scale_change)
+	for child in $Glue.get_children():
 		child.position *= scale_change
 		child.adjust_scale(scale_change)
 	center = null

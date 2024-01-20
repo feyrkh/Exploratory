@@ -29,6 +29,7 @@ var cur_room_name:String = "Gallery 1"
 @onready var camera = find_child("Camera2D")
 @onready var fade_rect = find_child("FadeRect")
 @onready var control_hints:ControlHints = find_child("ControlHints")
+@onready var cursor_area:CursorArea = find_child("CursorArea")
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -82,23 +83,33 @@ func set_camera_position(new_pos:Vector2):
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:
 		if event.is_action_pressed("zoom_in", true):
-			if camera.zoom.x >= 2:
-				camera.zoom += ZOOM_INCREMENT * 2
-			camera.zoom += ZOOM_INCREMENT
-			if camera.zoom.x > 4.0:
-				camera.zoom = Vector2(4, 4)
-			Global.camera_zoom_changed.emit(camera.zoom.x)
-			adjust_camera_limits()
-			get_viewport().set_input_as_handled()
+			if Input.is_action_pressed("disable_collision"):
+				var overlaps := cursor_area.get_overlaps().filter(func(i): return i is ArcheologyItem)
+				if overlaps.size() > 0 and overlaps[0].bounding_box.size.x < 1500 and overlaps[0].bounding_box.size.y < 1500:
+					overlaps[0].adjust_scale(1.1)
+			else:
+				if camera.zoom.x >= 2:
+					camera.zoom += ZOOM_INCREMENT * 2
+				camera.zoom += ZOOM_INCREMENT
+				if camera.zoom.x > 4.0:
+					camera.zoom = Vector2(4, 4)
+				Global.camera_zoom_changed.emit(camera.zoom.x)
+				adjust_camera_limits()
+				get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("zoom_out", true):
-			if camera.zoom.x > 2:
-				camera.zoom -= ZOOM_INCREMENT * 2
-			camera.zoom -= ZOOM_INCREMENT
-			if camera.zoom.x < 0.3:
-				camera.zoom = Vector2(0.3, 0.3)
-			Global.camera_zoom_changed.emit(camera.zoom.x)
-			adjust_camera_limits()
-			get_viewport().set_input_as_handled()
+			if Input.is_action_pressed("disable_collision"):
+				var overlaps := cursor_area.get_overlaps().filter(func(i): return i is ArcheologyItem)
+				if overlaps.size() > 0 and overlaps[0].bounding_box.size.x > 100 and overlaps[0].bounding_box.size.y > 100:
+					overlaps[0].adjust_scale(0.9)
+			else:
+				if camera.zoom.x > 2:
+					camera.zoom -= ZOOM_INCREMENT * 2
+				camera.zoom -= ZOOM_INCREMENT
+				if camera.zoom.x < 0.3:
+					camera.zoom = Vector2(0.3, 0.3)
+				Global.camera_zoom_changed.emit(camera.zoom.x)
+				adjust_camera_limits()
+				get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("camera_drag"):
 			if find_child("GalleryMenu").visible:
 				find_child("GalleryMenu").visible = false
@@ -136,6 +147,7 @@ const ROOM_FIELD_SHELF_CONFIG := 3
 const ITEM_FIELD_ID := 0
 const ITEM_FIELD_POS := 1
 const ITEM_FIELD_ROT := 2
+const ITEM_FIELD_SCALE := 3
 func save_current_room():
 	if find_child("RoomLabelEdit").visible:
 		_on_room_label_edit_text_submitted(find_child("RoomLabelEdit").text)
@@ -143,7 +155,7 @@ func save_current_room():
 		gallery_rooms.append([])
 	var cur_room_items = []
 	for child in find_child("Items").get_children():
-		cur_room_items.append([child.gallery_id, child.global_position, child.global_rotation])
+		cur_room_items.append([child.gallery_id, child.global_position, child.global_rotation, child.adjusted_scale])
 	var room_name
 	if cur_background_img_idx == -1:
 		room_name = ""
@@ -233,8 +245,12 @@ func load_gallery_room(idx:int):
 	var item_list = room_data[ROOM_FIELD_ITEMS]
 	for item_data in item_list:
 		var item = await unpack_gallery_item(item_data[ITEM_FIELD_ID])
+		var orig_mask = item.collision_mask
+		item.collision_mask = 0
 		item.global_position = item_data[ITEM_FIELD_POS]
 		item.global_rotation = item_data[ITEM_FIELD_ROT]
+		item.adjust_scale(item_data[ITEM_FIELD_SCALE])
+		item.collision_mask = orig_mask
 	cur_background_img_idx = background_imgs.find(room_data[ROOM_FIELD_BG_FILE])
 	shelf_configuration = room_data[ROOM_FIELD_SHELF_CONFIG]
 	await find_child("FadeRect").fade_in(FADE_TIME*2)
@@ -255,9 +271,12 @@ func hide_gallery_menu():
 func unpack_gallery_item(item_name:String) -> Node2D:
 	var item = await GalleryMgr.unpack_from_gallery(item_name, report_error)
 	if item != null:
+		var orig_mask = item.collision_mask
+		item.collision_mask = 0
 		find_child("Items").add_child(item)
 		item.gallery_mode()
 		item.global_position = get_viewport().get_camera_2d().get_screen_center_position() - item.bounding_box.size/2
+		item.collision_mask = orig_mask
 	gallery_items_unused.erase(item_name)
 	return item
 
@@ -362,9 +381,9 @@ func update_shelf_configuration():
 		9: set_shelf_config(["C1"])
 		10: set_shelf_config([])
 
-func set_shelf_config(items:Array[String], is_visible:=true):
+func set_shelf_config(items:Array[String], make_visible:=true):
 	for item in items:
-		find_child(item).visible = is_visible
+		find_child(item).visible = make_visible
 
 
 func _on_shelf_button_pressed():

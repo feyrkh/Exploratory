@@ -36,3 +36,8 @@ func clone(new_polygon) -> ItemGlueEdge:
 	result.find_child("Polygon2D").material = $Polygon2D.material
 	result.find_child("Polygon2D").polygon = new_polygon
 	return result
+
+func adjust_scale(scale_change:float):
+	var child = polygon2d
+	for i in range(child.polygon.size()):
+		child.polygon[i] = child.polygon[i] * scale_change

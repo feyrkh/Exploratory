@@ -1,0 +1,16 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://dlq8oehi1cths"]
+
+[ext_resource type="Texture2D" uid="uid://c3mxnwtpfrvho" path="res://art/window-generic01.png" id="1_53rfo"]
+
+[resource]
+texture = ExtResource("1_53rfo")
+texture_margin_left = 30.0
+texture_margin_top = 22.0
+texture_margin_right = 31.0
+texture_margin_bottom = 39.0
+expand_margin_left = 13.0
+expand_margin_top = 8.0
+expand_margin_right = 13.0
+expand_margin_bottom = 7.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2

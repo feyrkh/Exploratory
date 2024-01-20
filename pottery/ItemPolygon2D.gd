@@ -7,7 +7,7 @@ func get_save_data(weathering_save_data:Dictionary)->Array:
 	return save_data.map(func(image_save_data): 
 		return image_save_data.get_save_data(weathering_save_data))
 
-var bounding_box:Rect2:
+var bounding_box:
 	get:
 		if bounding_box != null and bounding_box.size != Vector2.ZERO:
 			return bounding_box

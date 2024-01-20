@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cf3wlna5ki846"]
+[gd_scene load_steps=10 format=3 uid="uid://cf3wlna5ki846"]
 
 [ext_resource type="Script" path="res://menu/main/TitleScreen.gd" id="1_mpvbx"]
 [ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_7feem"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_i7rd2"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="5_euscd"]
 [ext_resource type="Script" path="res://menu/CustomMenuHSlider.gd" id="6_ba503"]
+[ext_resource type="Theme" uid="uid://c8qjml4q8nu2g" path="res://theme/sidebar_menu_theme.tres" id="7_tyis1"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kd5ff"]
 light_mode = 2
@@ -495,7 +496,6 @@ script = ExtResource("4_i7rd2")
 sfx = "none"
 
 [node name="MainMenu" type="VBoxContainer" parent="."]
-visible = false
 offset_left = 68.0
 offset_top = 192.0
 offset_right = 426.0
@@ -561,6 +561,133 @@ anchor_mode = 0
 [node name="ItemPreparation" type="Node2D" parent="."]
 position = Vector2(-1827, -453)
 
+[node name="CreditsScreen" type="Control" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 672.0
+offset_top = 112.0
+offset_right = 712.0
+offset_bottom = 152.0
+
+[node name="CreditsBackground" type="ColorRect" parent="CreditsScreen"]
+offset_left = -676.0
+offset_top = -117.0
+offset_right = 607.0
+offset_bottom = 628.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="CreditsScreen"]
+layout_mode = 0
+offset_left = -502.0
+offset_top = -49.0
+offset_right = -290.0
+offset_bottom = -1.0
+theme = ExtResource("7_tyis1")
+text = "Programming"
+
+[node name="Label2" type="Label" parent="CreditsScreen"]
+layout_mode = 0
+offset_left = -496.0
+offset_top = -8.0
+offset_right = -302.0
+offset_bottom = 40.0
+theme = ExtResource("7_tyis1")
+text = "Kevin Hobbs"
+
+[node name="Label3" type="Label" parent="CreditsScreen"]
+offset_left = -228.0
+offset_top = 64.0
+offset_right = -166.0
+offset_bottom = 112.0
+theme = ExtResource("7_tyis1")
+text = "Art"
+
+[node name="Label4" type="Label" parent="CreditsScreen"]
+offset_left = -396.0
+offset_top = 104.0
+offset_right = 33.0
+offset_bottom = 152.0
+theme = ExtResource("7_tyis1")
+text = "Jeremy Hobbs / ribbonblack"
+
+[node name="Label5" type="Label" parent="CreditsScreen"]
+offset_left = -140.0
+offset_top = 184.0
+offset_right = -34.0
+offset_bottom = 232.0
+theme = ExtResource("7_tyis1")
+text = "Music"
+
+[node name="Label6" type="Label" parent="CreditsScreen"]
+offset_left = -284.0
+offset_top = 224.0
+offset_right = 186.0
+offset_bottom = 272.0
+theme = ExtResource("7_tyis1")
+text = "Creative Commons Music"
+
+[node name="Label9" type="Label" parent="CreditsScreen"]
+offset_left = -340.0
+offset_top = 256.0
+offset_right = 208.0
+offset_bottom = 304.0
+theme = ExtResource("7_tyis1")
+text = "by Jason Shaw on Audionautix.com"
+
+[node name="Label7" type="Label" parent="CreditsScreen"]
+offset_left = -44.0
+offset_top = 328.0
+offset_right = 62.0
+offset_bottom = 376.0
+theme = ExtResource("7_tyis1")
+text = "Sound"
+
+[node name="Label8" type="Label" parent="CreditsScreen"]
+offset_left = -92.0
+offset_top = 360.0
+offset_right = 378.0
+offset_bottom = 408.0
+theme = ExtResource("7_tyis1")
+text = "Pixabay.com"
+
+[node name="Label10" type="Label" parent="CreditsScreen"]
+offset_left = 28.0
+offset_top = 456.0
+offset_right = 295.0
+offset_bottom = 504.0
+theme = ExtResource("7_tyis1")
+text = "Made with Godot"
+
+[node name="CreditsButton" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 60)
+offset_left = 1138.0
+offset_top = 656.0
+offset_right = 1271.0
+offset_bottom = 716.0
+focus_mode = 0
+theme = ExtResource("2_7feem")
+theme_override_font_sizes/font_size = 20
+text = "Credits"
+script = ExtResource("4_i7rd2")
+
+[node name="SplashScreen" type="Control" parent="."]
+visible = false
+z_index = 999
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="SplashScreen"]
+layout_mode = 0
+offset_left = -54.0
+offset_top = -68.0
+offset_right = 1361.0
+offset_bottom = 790.0
+color = Color(0.0784314, 0.0784314, 0.0784314, 1)
+
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountLabel" to="." method="_on_item_count_label_mouse_entered"]
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_decrease_pressed"]
@@ -592,8 +719,10 @@ position = Vector2(-1827, -453)
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_increase_pressed"]
 [connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringLabel" to="." method="_on_weathering_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringDecrease" to="." method="_on_weathering_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/WeatheringDecrease" to="." method="_on_weathering_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringAmount" to="." method="_on_crack_amt_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringAmount" to="." method="_on_weathering_label_mouse_entered"]
+[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringIncrease" to="." method="_on_weathering_label_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/OptionsGrid/WeatheringIncrease" to="." method="_on_weathering_increase_pressed"]
 [connection signal="mouse_entered" from="OptionsContainer/StartButton" to="." method="_on_start_button_mouse_entered"]
 [connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_start_button_pressed"]
@@ -615,3 +744,4 @@ position = Vector2(-1827, -453)
 [connection signal="pressed" from="MainMenu/GalleryButton" to="." method="_on_gallery_button_pressed"]
 [connection signal="pressed" from="MainMenu/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="MainMenu/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="CreditsButton" to="." method="_on_credits_button_pressed"]

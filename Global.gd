@@ -17,6 +17,7 @@ signal glue_color_changed()
 signal item_highlighted(item)
 signal item_unhighlighted(item)
 
+var splash_screen_shown := false
 var next_scene_settings
 var shatter_width:float = 0.5
 var rotate_with_shuffle = false

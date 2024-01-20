@@ -1,7 +1,7 @@
 extends Object
 class_name FractureGenerator
 
-const DEFAULT_DEFLECTION := 25.0
+const DEFAULT_DEFLECTION := 35.0
 
 #func edge_to_center_fracture(item:ArcheologyItem)->PackedVector2Array:
 	#var result = PackedVector2Array()
@@ -14,14 +14,14 @@ static func generate_standard_scars(item:ArcheologyItem, scar_count:int)->Array[
 	while total_scars < scar_count:
 		var chance := randf()
 		var potential_new_scars
-		if chance < 0.4:
+		if chance < 0.2:
 			print("##### Chisel fracture!")
 			potential_new_scars = FractureGenerator.chisel_fracture(item, randi_range(2, scar_count-total_scars))
-		elif chance < 0.6:
+		elif chance < 0.5:
 			print("##### Random fracture!")
 			item.random_scar()
 			total_scars += 1
-		elif chance < 0.8:
+		elif chance < 0.7:
 			if scar_count - total_scars >= 3:
 				print("##### Hammer fracture!")
 				potential_new_scars = FractureGenerator.hammer_fracture(item, randi_range(5, 11), randf_range(10, 45), randi_range(2, scar_count-total_scars-1))

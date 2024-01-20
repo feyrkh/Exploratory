@@ -29,7 +29,7 @@ const time_attack_min_settings = {
 var item_count := 1
 var rotation_enabled := true
 var bump_enabled := true
-var crack_width := CrackWidth.THIN
+var crack_width := CrackWidth.MEDIUM
 var crack_count := 8
 var weathering_amt := 0
 
@@ -51,6 +51,9 @@ const LIT_TIME := 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if !Global.splash_screen_shown:
+		var splash = find_child("SplashScreen")
+		splash.visible = true
 	subviewport.world_2d = get_world_2d()
 	#find_child("DisplayCamera").global_position = find_child("ItemSpawn").global_position
 	find_child("ContinueButton").visible = FileAccess.file_exists("user://save.dat")
@@ -61,6 +64,13 @@ func _ready():
 	update_labels()
 	await prepare_next_item(false)
 	update_item()
+	if !Global.splash_screen_shown:
+		Global.splash_screen_shown = true
+		var splash = find_child("SplashScreen")
+		splash.visible = true
+		var tween = splash.create_tween()
+		tween.tween_property(splash, "modulate", Color.TRANSPARENT, 1.0).set_delay(1.0)
+		tween.tween_property(splash, "visible", false, 0)
 	Global.enable_sound.emit()
 	#var offset = randi_range(800, 1000)
 	#for i in range(5):
@@ -244,7 +254,7 @@ func _on_bump_label_mouse_entered():
 		hover_tooltip("Fragments will be bumped out of the way by a piece you are moving\n\nTake care when fitting pieces together\n\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
 
 func _on_crack_width_label_mouse_entered():
-	hover_tooltip("Adjust the thickness of the fracture lines\n\nThinner fractures fit together more perfectly, but thicker fractures more room for adjustment\n\nFind beauty in imperfection")
+	hover_tooltip("Adjust the thickness of the fracture lines\n\nThinner fractures fit together more perfectly, but thicker fractures allow more room for adjustment\n\nFind beauty in imperfection")
 
 func _on_crack_amt_label_mouse_entered():
 	hover_tooltip("Adjust the number of fracture lines on each item")
@@ -388,7 +398,9 @@ func return_from_settings_menu():
 	hover_tooltip("")
 
 func _on_weathering_decrease_pressed():
-	weathering_amt = (weathering_amt - 1) % 5
+	weathering_amt = (weathering_amt - 1)
+	if weathering_amt < 0:
+		weathering_amt += 5
 	update_labels()
 
 func _on_weathering_increase_pressed():
@@ -469,3 +481,14 @@ func generate_weathering_examples():
 
 func _on_enabled_checkbox_toggled(toggled_on):
 	WeatheringMgr.set_random_allowed(find_child("WeatheringName").text, toggled_on)
+
+func _on_credits_button_pressed():
+	var credits = find_child("CreditsScreen")
+	if credits.modulate.a <= 0:
+		var tween = credits.create_tween()
+		tween.tween_property(credits, "modulate", Color.WHITE, 0.5)
+	elif credits.modulate.a >= 1:
+		var tween = credits.create_tween()
+		tween.tween_property(credits, "modulate", Color.TRANSPARENT, 0.5)
+		
+	

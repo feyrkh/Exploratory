@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bpmxfyq1j2wb1"]
+[gd_scene load_steps=18 format=3 uid="uid://bpmxfyq1j2wb1"]
 
 [ext_resource type="Texture2D" uid="uid://bxolhfnudaaon" path="res://art/sidebar menu/sidebar_icon_add-item.png" id="1_bximh"]
 [ext_resource type="Script" path="res://menu/sidebar/SidebarMenu.gd" id="1_ouhc1"]
@@ -12,7 +12,9 @@
 [ext_resource type="Script" path="res://menu/sidebar/ExpandLabel.gd" id="5_mpmi2"]
 [ext_resource type="Texture2D" uid="uid://swpodqfjhjfb" path="res://art/sidebar menu/sidebar_icon_shuffle.png" id="8_s0nvp"]
 [ext_resource type="Texture2D" uid="uid://xsadu4tnnstq" path="res://art/sidebar menu/sidebar_icon_save-object.png" id="9_gnf6j"]
+[ext_resource type="Texture2D" uid="uid://dgu05plxrex54" path="res://art/sidebar menu/sidebar_icon_glue.png" id="12_3b4bi"]
 [ext_resource type="Texture2D" uid="uid://kvkcjl3x51fc" path="res://art/sidebar menu/sidebar_icon_glow.png" id="13_6fqb1"]
+[ext_resource type="Texture2D" uid="uid://06msxnbgq6mi" path="res://art/sidebar menu/sidebar_icon_glue_overlay.png" id="13_854i1"]
 [ext_resource type="Texture2D" uid="uid://bsb1ipqfa1guk" path="res://art/sidebar menu/sidebar_glowing.png" id="14_7ojls"]
 [ext_resource type="Script" path="res://menu/sidebar/BackgroundGlow.gd" id="15_j52o5"]
 
@@ -133,9 +135,17 @@ offset_right = 73.0
 offset_bottom = -66.0
 pivot_offset = Vector2(30, 27)
 focus_mode = 0
-texture_normal = ExtResource("9_gnf6j")
+texture_normal = ExtResource("12_3b4bi")
 stretch_mode = 3
 script = ExtResource("2_sh7t1")
+
+[node name="GlueOverlay" type="TextureRect" parent="GlueButton"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 2.0
+offset_right = 60.0
+offset_bottom = 55.0
+texture = ExtResource("13_854i1")
 
 [node name="GlueLabel" type="Label" parent="."]
 layout_mode = 2

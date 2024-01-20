@@ -42,7 +42,7 @@ func update_buttons():
 		#Global.ClickMode.save_item: find_child("ClickModeButton").text = "Click: Gallery"
 		##Global.ClickMode.paint: find_child("ClickModeButton").text = "Click: Paint"
 		#_: find_child("ClickModeButton").text = "Click: Unknown?"
-	find_child("GlueButton").default_modulate = Global.glue_color
+	find_child("GlueOverlay").modulate = Global.glue_color
 
 func _on_add_item_button_pressed():
 	add_item_button_pressed.emit()

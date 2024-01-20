@@ -63,12 +63,13 @@ class ImageSaveData:
 	
 	func _init(placement:DecorationBase = null, weathering:WeatheringConfig = null):
 		if placement:
-			item_dir = placement.item_dir
-			item_name = placement.item_name
-			type = placement.type
-			color = placement.color
-			position = placement.position
-			size = placement.size
+			self.item_dir = placement.item_dir
+			self.item_name = placement.item_name
+			self.type = placement.type
+			self.color = placement.color
+			self.position = placement.position
+			self.size = placement.size
+			self.weathering = weathering
 	
 	func to_image_merge_info() -> ImageMerger.ImageMergeInfo:
 		#var img:Image
@@ -84,10 +85,17 @@ class ImageSaveData:
 			info.img.resize(size.x, size.y)
 		return info
 	
-	func get_save_data():
-		return [item_dir, item_name, type, color, position, size]
+	func get_save_data(weathering_data:Dictionary):
+		var weathering_id = null
+		if weathering != null:
+			if !weathering_data.has(weathering):
+				weathering_id = ItemBuilder.get_next_unique_id()
+				weathering_data[weathering] = weathering_id
+			else:
+				weathering_id = weathering_data[weathering]
+		return [item_dir, item_name, type, color, position, size, weathering_id]
 	
-	static func load_save_data(dat:Array):
+	static func load_save_data(dat:Array, weathering_data:Dictionary):
 		var result = ImageSaveData.new()
 		result.item_dir = dat[0]
 		result.item_name = dat[1]
@@ -95,6 +103,8 @@ class ImageSaveData:
 		result.color = dat[3]
 		result.position = dat[4]
 		result.size = dat[5]
+		if dat[6] != null:
+			result.weathering = WeatheringConfig.load_save_data(weathering_data.get(dat[6]))
 		return result
 
 func _ready():
@@ -125,9 +135,9 @@ func correct_collider_position(collider:CollisionPolygon2D, sprite:Sprite2D) -> 
 		retval.append(pt + adjustment)
 	return retval
 
-func build_specific_item(save_data:Array) -> Texture2D: # Array[ImageSaveData] as input
+func build_specific_item(save_data:Array, weathering:WeatheringConfig=null) -> Texture2D: # Array[ImageSaveData] as input
 	var image_details:Array = save_data.map(func(entry): return entry.to_image_merge_info())
-	return await ImageMerger.merge_images(image_details)
+	return await ImageMerger.merge_images(image_details, weathering)
 	
 
 func build_random_item(base_item_name=null, should_load_slowly=false, weathering:WeatheringConfig=null) -> ArcheologyItem:
@@ -220,7 +230,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 	save_data[0].color = base_image_details.modulate
 	save_data[0].position = base_image_details.position
 	save_data[0].size = base_image_details.img.get_size()
-
+	save_data[0].weathering = weathering
 	
 	var image_details:Array[ImageMerger.ImageMergeInfo] = [base_image_details]
 	
@@ -239,7 +249,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 		placement.item_dir = img_group_choices[placement.img_id].item_dir
 		placement.item_name = img_group_choices[placement.img_id].item_name
 		image_details.append(info)
-		var save_data_item = ImageSaveData.new(placement)
+		var save_data_item = ImageSaveData.new(placement, weathering)
 		save_data.append(save_data_item)
 	
 	var shadow = base_item_cfg.get_shadow_texture()
@@ -259,7 +269,6 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 	var combined_img := await ImageMerger.merge_images(image_details, weathering, get_tree() if should_load_slowly else null)
 	retval_img.texture = combined_img
 	retval.find_child("Polygon2D").save_data = save_data
-
 	collider_scene.queue_free()
 	print("Item complete")
 	return retval

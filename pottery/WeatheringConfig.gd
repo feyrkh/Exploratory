@@ -15,6 +15,20 @@ class_name WeatheringConfig
 @export var cell_return:int
 @export var cell_jitter:float
 @export var seed:int = 0
+
+const SAVE_FIELDS = [
+		"noise_type", "noise_floor", "noise_cutoff", "frequency", "fractal_type", "fractal_lacunarity", "fractal_gain",
+		"fractal_octaves", "cell_distance", "cell_return", "cell_jitter", "seed"
+	]
+func get_save_data() -> Array:
+	return SAVE_FIELDS.map(func(field): return self.get(field))
+
+static func load_save_data(data:Array) -> WeatheringConfig:
+	var result = WeatheringConfig.new()
+	for i in range(SAVE_FIELDS.size()):
+		result.set(SAVE_FIELDS[i], data[i])
+	return result
+
 var noise:FastNoiseLite:
 	get:
 		if !noise:
@@ -51,3 +65,5 @@ static func interpolate(low:WeatheringConfig, high:WeatheringConfig, degree:floa
 
 static func _interpolate(v1, v2, degree:float)->float:
 	return v1 + (v2-v1) * degree
+
+

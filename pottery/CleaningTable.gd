@@ -6,6 +6,7 @@ const ZOOM_INCREMENT := Vector2(0.2, 0.2)
 
 const CRACK_COUNT_SETTING := "crack_count"
 const ITEM_COUNT_SETTING := "item_count"
+const WEATHERING_AMT_SETTING := "weathering_amt"
 
 @onready var camera:Camera2D = find_child("Camera2D")
 @onready var screenshot_camera:Camera2D = find_child("ScreenshotCamera")
@@ -120,7 +121,15 @@ func _ready():
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
 func generate_one_random_item(piece_container:Node2D, item_id:int, generation_coords:Vector2):
 	await get_tree().process_frame
-	var new_item = await ItemBuilder.build_random_item(null, false)
+	var weathering_amt_setting = settings.get(WEATHERING_AMT_SETTING, 0)
+	var weathering = null
+	match weathering_amt_setting:
+		1: weathering = WeatheringMgr.get_random_option(randf_range(0.15, 0.35))
+		2: weathering = WeatheringMgr.get_random_option(randf_range(0.45, 0.65))
+		3: weathering = WeatheringMgr.get_random_option(randf_range(0.8, 1.0))
+		4: weathering = WeatheringMgr.get_random_option(randf_range(0.0, 1.0))
+	
+	var new_item = await ItemBuilder.build_random_item(null, false, weathering)
 	new_item.original_item_count = item_id
 	piece_container.add_child(new_item)
 	new_item.position = generation_coords
@@ -340,15 +349,20 @@ func _on_click_mode_pressed():
 
 func _on_save_button_pressed():
 	var image_save_data := {} # ItemBuilder.ImageSaveData -> int index
+	var weathering_save_data := {} # WeatheringConfig -> int index
 	var item_save_data = []
 	for item in $Pieces.get_children():
-		item_save_data.append(item.get_save_data(image_save_data))
+		item_save_data.append(item.get_save_data(image_save_data, weathering_save_data))
 	var save_file := FileAccess.open("user://save.dat", FileAccess.WRITE)
 	var reversed_image_save_data = {}
 	for k in image_save_data.keys():
-		reversed_image_save_data[image_save_data[k]] = k.map(func(entry): return entry.get_save_data())
+		reversed_image_save_data[image_save_data[k]] = k #k.map(func(entry): return entry.get_save_data())
+	var reversed_weathering_save_data = {}
+	for k in weathering_save_data.keys():
+		reversed_weathering_save_data[weathering_save_data[k]] = k.get_save_data()
 	save_file.store_var(Global.get_save_data())
 	save_file.store_var((reversed_image_save_data))
+	save_file.store_var(reversed_weathering_save_data)
 	save_file.store_var((item_save_data))
 	save_file.close()
 
@@ -358,13 +372,16 @@ func _on_load_button_pressed():
 	var save_file := FileAccess.open("user://save.dat", FileAccess.READ)
 	var global_data = save_file.get_var()
 	var image_save_data = save_file.get_var()
+	var weathering_save_data = save_file.get_var()
 	var rebuilt_textures = {}
+	for k in weathering_save_data.keys():
+		weathering_save_data[k] = WeatheringConfig.load_save_data(weathering_save_data[k])
 	#for k in image_save_data.keys():
 	#	image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
 	#	rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
 	var item_save_data = save_file.get_var()
 	for item_save in item_save_data:
-		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, rebuilt_textures)
+		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, weathering_save_data, rebuilt_textures)
 		$Pieces.add_child(new_item)
 	save_file.close()
 	Global.load_save_data(global_data)

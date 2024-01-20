@@ -3,6 +3,10 @@ class_name ItemPolygon2D
 
 #var bbox_poly:Polygon2D
 var save_data:Array #[ItemBuilder.ImageSaveData]
+func get_save_data(weathering_save_data:Dictionary)->Array:
+	return save_data.map(func(image_save_data): 
+		return image_save_data.get_save_data(weathering_save_data))
+
 var bounding_box:Rect2:
 	get:
 		if bounding_box != null and bounding_box.size != Vector2.ZERO:

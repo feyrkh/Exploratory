@@ -31,6 +31,7 @@ var rotation_enabled := true
 var bump_enabled := true
 var crack_width := CrackWidth.THIN
 var crack_count := 8
+var weathering_amt := 0
 
 var config_file := ConfigFile.new()
 var mode := "zen"
@@ -42,6 +43,7 @@ var next_bounding_box
 @onready var demo_start_pos = find_child("SubViewportContainer").position
 @onready var main_menu_start_pos = find_child("MainMenu").position
 @onready var option_menu_start_pos = find_child("OptionsContainer").position
+@onready var settings_menu_start_pos = find_child("SettingsContainer").position
 
 var demo_tween:Tween
 
@@ -54,6 +56,7 @@ func _ready():
 	find_child("ContinueButton").visible = FileAccess.file_exists("user://save.dat")
 	find_child("MainMenu").visible = true
 	find_child("OptionsContainer").visible = false
+	find_child("SettingsContainer").visible = false
 	load_config()
 	update_labels()
 	await prepare_next_item(false)
@@ -70,6 +73,8 @@ func _ready():
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_cancel") and find_child("OptionsContainer").visible:
 		_on_back_button_pressed()
+	elif event.is_action_pressed("ui_cancel") and find_child("SettingsContainer").visible:
+		return_from_settings_menu()
 
 func load_config():
 	var err = config_file.load(SETTINGS_PATH)
@@ -78,6 +83,7 @@ func load_config():
 	bump_enabled = config_file.get_value(mode, "bump_enabled", true)
 	crack_width = config_file.get_value(mode, "crack_width", CrackWidth.THIN)
 	crack_count = config_file.get_value(mode, "crack_count", 8)
+	weathering_amt = config_file.get_value(mode, "weathering_amt", 0)
 
 func save_config():
 	config_file.set_value(mode, "item_count", item_count)
@@ -85,6 +91,7 @@ func save_config():
 	config_file.set_value(mode, "bump_enabled", bump_enabled)
 	config_file.set_value(mode, "crack_width", crack_width)
 	config_file.set_value(mode, "crack_count", crack_count)
+	config_file.set_value(mode, "weathering_amt", weathering_amt)
 	config_file.save(SETTINGS_PATH)
 
 func _process(delta):
@@ -104,6 +111,13 @@ func update_labels():
 	find_child("BumpValue").text = "yes" if bump_enabled else "no"
 	find_child("CrackWidthAmount").text = crack_width_descs.get(crack_width, "???")
 	find_child("CrackAmtAmount").text = str(crack_count)
+	var weathering_label = find_child("WeatheringAmount")
+	match weathering_amt:
+		0: weathering_label.text = "None"
+		1: weathering_label.text = "Low"
+		2: weathering_label.text = "Medium"
+		3: weathering_label.text = "High"
+		4: weathering_label.text = "Random"
 
 func _on_item_count_decrease_pressed():
 	var amt = 1
@@ -182,12 +196,14 @@ func _on_start_button_pressed():
 			settings["mode"] = "zen"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
+			settings[CleaningTable.WEATHERING_AMT_SETTING] = weathering_amt
 			var dir = DirAccess.open("user://")
 			dir.remove("save.dat")
 		"time":
 			settings["mode"] = "time"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
+			settings[CleaningTable.WEATHERING_AMT_SETTING] = weathering_amt
 	var scene = load("res://pottery/CleaningTable.tscn")
 	Global.shatter_width = crack_widths[crack_width]
 	Global.rotate_with_shuffle = rotation_enabled
@@ -330,7 +346,6 @@ func hide_demo_view():
 	demo_tween.tween_property(find_child("OptionsContainer"), "position", option_menu_start_pos, 1.0)
 	hover_tooltip("")
 
-
 func restore_demo_view():
 	if demo_tween != null and demo_tween.is_running():
 		demo_tween.stop()
@@ -339,7 +354,115 @@ func restore_demo_view():
 	demo_tween.tween_property(find_child("SubViewportContainer"), "position", demo_start_pos, 1.0)
 	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos, 1.0)
 	demo_tween.tween_property(find_child("OptionsContainer"), "position", option_menu_start_pos + Vector2(0, 1280), 1.0)
+	demo_tween.set_parallel(false)
+	demo_tween.tween_property(find_child("OptionsContainer"), "visible", false, 0.01)
 	hover_tooltip("")
 
-func show_demo_view():
-	var tween = create_tween()
+func enter_settings_menu():
+	if demo_tween != null and demo_tween.is_running():
+		demo_tween.stop()
+	show_weathering_settings()
+	demo_tween = create_tween()
+	demo_tween.set_parallel(true)
+	demo_tween.tween_property(find_child("SubViewportContainer"), "position", Vector2(1280, 0), 1.0)
+	find_child("MainMenu").position = main_menu_start_pos
+	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos - Vector2(1280, 0), 1.0)
+	find_child("SettingsContainer").position = settings_menu_start_pos - Vector2(0, 1280)
+	find_child("SettingsContainer").visible = true
+	demo_tween.tween_property(find_child("SettingsContainer"), "position", settings_menu_start_pos, 1.0)
+	hover_tooltip("")
+
+func return_from_settings_menu():
+	if demo_tween != null and demo_tween.is_running():
+		demo_tween.stop()
+	demo_tween = create_tween()
+	demo_tween.set_parallel(true)
+	demo_tween.tween_property(find_child("SubViewportContainer"), "position", demo_start_pos, 1.0)
+	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos, 1.0)
+	demo_tween.tween_property(find_child("SettingsContainer"), "position", settings_menu_start_pos - Vector2(0, 1280), 1.0)
+	demo_tween.set_parallel(false)
+	demo_tween.tween_property(find_child("SettingsContainer"), "visible", false, 0.01)
+	hover_tooltip("")
+
+func _on_weathering_decrease_pressed():
+	weathering_amt = (weathering_amt - 1) % 5
+	update_labels()
+
+func _on_weathering_increase_pressed():
+	weathering_amt = (weathering_amt + 1) % 5
+	update_labels()
+
+func _on_weathering_label_mouse_entered():
+		hover_tooltip("Age and exposure to weather can affect decorative elements in a variety of ways.")
+
+func _on_settings_button_pressed():
+	enter_settings_menu()
+	show_audio_settings()
+
+func show_audio_settings():
+	find_child("WeatheringSettingsContainer").visible = false
+	find_child("AudioSettingsContainer").visible = true
+
+@onready var weathering_options = WeatheringMgr.get_sorted_weathering_options()
+var cur_weathering_option = 0
+func show_weathering_settings():
+	find_child("WeatheringSettingsContainer").visible = true
+	find_child("AudioSettingsContainer").visible = false
+	cur_weathering_option = 0
+	generate_weathering_examples()
+	
+
+func _on_audio_settings_pressed():
+	show_audio_settings()
+	find_child("SfxVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT)
+	find_child("MusicVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT)
+	find_child("OverallVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.OVERALL_VOLUME_PCT)
+
+func _on_weathering_settings_pressed():
+	show_weathering_settings()
+
+func _on_sfx_volume_value_changed(value):
+	Global.setting_changed.emit(AudioPlayerPool.SFX_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT), value)
+
+func _on_music_volume_value_changed(value):
+	Global.setting_changed.emit(AudioPlayerPool.MUSIC_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT), value)
+
+func _on_overall_volume_value_changed(value):
+	Global.setting_changed.emit(AudioPlayerPool.OVERALL_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.OVERALL_VOLUME_PCT), value)
+
+func _on_settings_back_pressed():
+	return_from_settings_menu()
+	save_config()
+	find_child("MainMenu").visible = true
+	Global.play_button_click_sound("menu_back")
+
+func _on_next_example_pressed():
+	cur_weathering_option = (cur_weathering_option + 1) % weathering_options.size()
+	generate_weathering_examples()
+
+func _on_prev_example_pressed():
+	cur_weathering_option = (cur_weathering_option - 1)
+	if cur_weathering_option < 0:
+		cur_weathering_option = weathering_options.size() - 1
+	generate_weathering_examples()
+
+func generate_weathering_examples():
+	var weathering_name = weathering_options[cur_weathering_option]
+	var l = WeatheringMgr.get_specific_option(weathering_name, 0.1)
+	var m = WeatheringMgr.get_specific_option(weathering_name, 0.5)
+	var h = WeatheringMgr.get_specific_option(weathering_name, 0.9)
+	find_child("WeatheringName").text = l.weathering_name
+	var li = load("res://art/item/shield_knot1.png").get_image()
+	var mi = load("res://art/item/shield_knot1.png").get_image()
+	var hi = load("res://art/item/shield_knot1.png").get_image()
+	ImageMerger.modulate_image(li, Color.WHITE, l.noise, l.noise_cutoff, null, Vector2.ZERO, l.noise_floor)
+	ImageMerger.modulate_image(mi, Color.WHITE, m.noise, m.noise_cutoff, null, Vector2.ZERO, m.noise_floor)
+	ImageMerger.modulate_image(hi, Color.WHITE, h.noise, h.noise_cutoff, null, Vector2.ZERO, h.noise_floor)
+	find_child("LowExample").texture = ImageTexture.create_from_image(li)
+	find_child("MedExample").texture = ImageTexture.create_from_image(mi)
+	find_child("HighExample").texture = ImageTexture.create_from_image(hi)
+	find_child("EnabledCheckbox").button_pressed = WeatheringMgr.get_random_allowed(find_child("WeatheringName").text)
+
+
+func _on_enabled_checkbox_toggled(toggled_on):
+	WeatheringMgr.set_random_allowed(find_child("WeatheringName").text, toggled_on)

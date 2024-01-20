@@ -8,15 +8,19 @@ static func save_to_gallery(image, item, report_error:Callable):
 	if err == OK:
 		print("Saved image to ", filename+".png")
 		var image_save_data = {}
-		var item_save_data = item.get_save_data(image_save_data)
+		var weathering_dave_data = {}
+		var item_save_data = item.get_save_data(image_save_data, weathering_dave_data)
 		var reversed_image_save_data = {}
 		var save_file := FileAccess.open_compressed(filename+".dat", FileAccess.WRITE)
 		if save_file == null:
 			report_error.call("Failed to open image save file "+filename+".dat, error="+str(FileAccess.get_open_error()))
 			return
 		for k in image_save_data.keys():
-			reversed_image_save_data[image_save_data[k]] = k.map(func(entry): return entry.get_save_data())
+			reversed_image_save_data[image_save_data[k]] = k
+		for k in weathering_dave_data.keys():
+			weathering_dave_data[weathering_dave_data[k]] = k.get_save_data()
 		save_file.store_var((reversed_image_save_data))
+		save_file.store_var((weathering_dave_data))
 		save_file.store_var((item_save_data))
 		save_file.close()
 	else:
@@ -28,8 +32,9 @@ static func unpack_from_gallery(item_name:String, report_error:Callable, texture
 		report_error.call("Failed to unpack item ", "user://gallery/"+item_name+".dat", "; error=", FileAccess.get_open_error())
 		return null
 	var reversed_image_save_data = save_file.get_var()
+	var reversed_weathering_save_data = save_file.get_var()
 	var item_save_data = save_file.get_var()
 	save_file.close()
-	var result = await ArcheologyItem.load_save_data(item_save_data, reversed_image_save_data, texture_cache)
+	var result = await ArcheologyItem.load_save_data(item_save_data, reversed_image_save_data, reversed_weathering_save_data, texture_cache)
 	result.gallery_id = item_name
 	return result

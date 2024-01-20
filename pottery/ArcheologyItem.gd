@@ -10,7 +10,7 @@ const MAX_ANGULAR_VELOCITY := 25.0
 enum Fields {
 	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
 	ORIG_ITEM_COUNT, TIME_ATTACK_SECONDS, FINAL_SCORE, BUMP_ENABLED, ROTATE_ENABLED,
-	DISPLACEMENT_SCORE,
+	DISPLACEMENT_SCORE
 }
 
 # if -1, the mouse is not hovering over this piece
@@ -118,7 +118,7 @@ var collision_polygons:Array[CollisionPolygon2D] = []:
 var _gallery_mode = false
 var gallery_id:String
 
-func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[String, ItemBuilder.ImageSaveData]
+func get_save_data(image_save_data:Dictionary, weathering_save_data:Dictionary) -> Dictionary: # Dictionary[String, ItemBuilder.ImageSaveData]
 	var result := []
 	var img_save_data = []
 	var scar_save_data = []
@@ -126,14 +126,14 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 	var glue_save_data = []
 	for child in get_children():
 		if child is ItemPolygon2D:
-			var child_image_data = child.save_data
+			var child_image_data = child.get_save_data(weathering_save_data)
 			if !image_save_data.has(child_image_data):
 				image_save_data[child_image_data] = ItemBuilder.get_next_unique_id()
 			img_save_data.append({
 				Fields.IMG_DATA: image_save_data[child_image_data],
 				Fields.POSITION: child.position,
 				Fields.ROTATION: child.rotation,
-				Fields.POLYGON: child.polygon
+				Fields.POLYGON: child.polygon,
 			})
 	for child in scars.get_children():
 		scar_save_data.append(child.get_save_data())
@@ -161,13 +161,14 @@ func get_save_data(image_save_data:Dictionary) -> Dictionary: # Dictionary[Strin
 ## rebuilt_textures = Dictionary[int (referenced from item_save[IMG_DATA]), Texture2D]
 ## image_save_data values may be either an array of ImageSaveData objects, or an inverted copy of the map
 ## 		populated by the parameter to ArcheologyItem.get_save_data()
+## weathering_save_data is an inverted copy of the map populated by the parameter to ArcheologyItem.get_save_data()
 ## rebuilt_textures may be passed as an empty dictionary to be populated if desired
-static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, rebuilt_textures:Dictionary) -> ArcheologyItem: 
+static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, weathering_save_data:Dictionary, rebuilt_textures:Dictionary) -> ArcheologyItem: 
 	for k in image_save_data.keys():
 		if image_save_data[k] != null and image_save_data[k].size() > 0 and !(image_save_data[k][0] is ItemBuilder.ImageSaveData):
-			image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v))
+			image_save_data[k] = image_save_data[k].map(func(v): return ItemBuilder.ImageSaveData.load_save_data(v, weathering_save_data))
 		if !rebuilt_textures.has(k):
-			rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
+			rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k], image_save_data[k][0].weathering)
 	var result = load("res://pottery/ArcheologyItem.tscn").instantiate()
 	var orig_poly = result.find_child("Polygon2D")
 	result.remove_child(orig_poly)
@@ -291,7 +292,8 @@ func global_collide(val:bool):
 func clone(new_polygon:Array, should_clone_slow=false):
 	## TODO: Make this handle cloning glued items
 	var new_scene = preload("res://pottery/ArcheologyItem.tscn").instantiate()
-	new_scene.find_child("Polygon2D").texture = visual_polygons[0].texture
+	var new_visual_polygon = new_scene.find_child("Polygon2D")
+	new_visual_polygon.texture = visual_polygons[0].texture
 	new_scene.original_area = original_area
 	new_scene.original_fragment_count = original_fragment_count
 	new_scene.original_item_count = original_item_count
@@ -322,7 +324,7 @@ func clone(new_polygon:Array, should_clone_slow=false):
 		var new_edge = edge.clone()
 		new_scene.shard_edges.add_child(new_edge)
 	new_scene.shattering_in_progress = shattering_in_progress
-	new_scene.find_child("Polygon2D").save_data = polygon.save_data
+	new_visual_polygon.save_data = polygon.save_data
 	#await get_tree().physics_frame
 	return new_scene
 

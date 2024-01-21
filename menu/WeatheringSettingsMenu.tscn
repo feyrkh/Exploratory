@@ -1,0 +1,79 @@
+[gd_scene load_steps=4 format=3 uid="uid://dic2u5phtt4oc"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_6xis7"]
+[ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_3nxrw"]
+[ext_resource type="Script" path="res://menu/WeatheringSettingsMenu.gd" id="2_olmm0"]
+
+[node name="WeatheringSettingsContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_6xis7")
+script = ExtResource("2_olmm0")
+metadata/_edit_vertical_guides_ = [640.0]
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 137.0
+offset_right = 1256.0
+offset_bottom = 653.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="WeatheringName" type="Label" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme = ExtResource("2_3nxrw")
+theme_override_font_sizes/font_size = 20
+text = "Weathering"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MedExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+expand_mode = 3
+
+[node name="LowExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+expand_mode = 3
+
+[node name="HighExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+expand_mode = 3
+
+[node name="EnabledCheckbox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 101.0
+offset_right = 148.0
+offset_bottom = 131.0
+text = "Enabled"
+
+[node name="PrevButton" type="Button" parent="."]
+offset_left = 511.0
+offset_top = 95.0
+offset_right = 596.0
+offset_bottom = 135.0
+text = "Previous"
+
+[node name="NextButton" type="Button" parent="."]
+offset_left = 665.0
+offset_top = 96.0
+offset_right = 750.0
+offset_bottom = 136.0
+text = "Next"

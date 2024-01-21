@@ -1,0 +1,98 @@
+[gd_scene load_steps=8 format=3 uid="uid://fc8lm8s7gr70"]
+
+[ext_resource type="Script" path="res://util/ColorPicker.gd" id="1_md0si"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0k4iu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkqwh"]
+
+[sub_resource type="Gradient" id="Gradient_yv1cd"]
+colors = PackedColorArray(0, 0, 0, 1, 1, 0.0323581, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_up6em"]
+gradient = SubResource("Gradient_yv1cd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tk6mv"]
+texture = SubResource("GradientTexture1D_up6em")
+texture_margin_bottom = 10.0
+
+[sub_resource type="Theme" id="Theme_w4f3w"]
+HSlider/styles/grabber_area = SubResource("StyleBoxEmpty_0k4iu")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxEmpty_wkqwh")
+HSlider/styles/slider = SubResource("StyleBoxTexture_tk6mv")
+
+[node name="ColorPicker" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 26.5
+offset_right = -974.0
+offset_bottom = -523.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_md0si")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Red"
+
+[node name="RedSlider" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme = SubResource("Theme_w4f3w")
+max_value = 1.0
+step = 0.001
+value = 1.0
+
+[node name="Label2" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Blue"
+
+[node name="GreenSlider" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme = SubResource("Theme_w4f3w")
+max_value = 1.0
+step = 0.001
+value = 1.0
+
+[node name="Label3" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Green"
+
+[node name="BlueSlider" type="HSlider" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme = SubResource("Theme_w4f3w")
+max_value = 1.0
+step = 0.001
+value = 1.0
+
+[node name="Label4" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Code"
+
+[node name="ColorCode" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+text = "ffffff"
+
+[node name="SaveButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Apply
+Color"
+
+[node name="ChosenColor" type="ColorRect" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="value_changed" from="GridContainer/RedSlider" to="." method="_on_red_slider_value_changed"]
+[connection signal="text_changed" from="GridContainer/ColorCode" to="." method="_on_color_code_text_changed"]

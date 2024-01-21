@@ -1,19 +1,19 @@
 [gd_resource type="Theme" load_steps=4 format=3 uid="uid://bvc652bwjujtl"]
 
-[ext_resource type="FontFile" uid="uid://31qwtk37jy7j" path="res://theme/Crackvetica.ttf" id="1_xin2s"]
+[ext_resource type="FontFile" uid="uid://6af5xb7ndfw8" path="res://theme/PT_Serif/PTSerif-Regular.ttf" id="1_f7q44"]
 [ext_resource type="StyleBox" uid="uid://cvj8odrh2o2ir" path="res://theme/style_box_invisible.tres" id="2_e1s68"]
 [ext_resource type="StyleBox" uid="uid://dlq8oehi1cths" path="res://theme/generic_window_01.tres" id="3_m2yvx"]
 
 [resource]
 Button/font_sizes/font_size = 22
-Button/fonts/font = ExtResource("1_xin2s")
+Button/fonts/font = ExtResource("1_f7q44")
 Button/styles/disabled = ExtResource("2_e1s68")
 Button/styles/focus = ExtResource("2_e1s68")
 Button/styles/hover = ExtResource("2_e1s68")
 Button/styles/normal = ExtResource("2_e1s68")
 Button/styles/pressed = ExtResource("2_e1s68")
 Label/font_sizes/font_size = 34
-Label/fonts/font = ExtResource("1_xin2s")
+Label/fonts/font = ExtResource("1_f7q44")
 LineEdit/font_sizes/font_size = 34
-LineEdit/fonts/font = ExtResource("1_xin2s")
+LineEdit/fonts/font = ExtResource("1_f7q44")
 PanelContainer/styles/panel = ExtResource("3_m2yvx")

@@ -1,0 +1,120 @@
+[gd_scene load_steps=5 format=3 uid="uid://64d1sdn6a0wh"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_koslx"]
+[ext_resource type="Script" path="res://menu/item_color_settings/ItemColorSettings.gd" id="1_mvw51"]
+[ext_resource type="PackedScene" uid="uid://fc8lm8s7gr70" path="res://util/ColorPicker.tscn" id="3_h8h7k"]
+[ext_resource type="Theme" uid="uid://cr3xalu1waxa4" path="res://theme/color_picker_theme.tres" id="4_m8ihn"]
+
+[node name="ItemColorSettingsContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 120.0
+offset_right = 40.0
+offset_bottom = 160.0
+theme = ExtResource("1_koslx")
+script = ExtResource("1_mvw51")
+metadata/_edit_vertical_guides_ = [640.0]
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 60.0
+offset_right = 1256.0
+offset_bottom = 575.0
+
+[node name="ColorRect" type="ColorRect" parent="PanelContainer"]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AvailableColors" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors"]
+layout_mode = 2
+text = "Recently Used"
+
+[node name="AvailableColorsContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+columns = 5
+
+[node name="ColorPicker" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors" instance=ExtResource("3_h8h7k")]
+layout_mode = 2
+theme = ExtResource("4_m8ihn")
+save_button_text = "Apply
+Color"
+
+[node name="ExampleItemContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExampleItem" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer/ExampleItemContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AllowedColors" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/AllowedColors"]
+layout_mode = 2
+text = "Allowed Colors"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/AllowedColors"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/AllowedColors/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+
+[node name="AllowedColorsContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/AllowedColors/ScrollContainer/MarginContainer"]
+layout_mode = 2
+columns = 5
+
+[node name="PrevButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 511.0
+offset_top = 18.0
+offset_right = 596.0
+offset_bottom = 58.0
+text = "Previous"
+
+[node name="EnabledCheckbox" type="CheckBox" parent="."]
+offset_left = 49.0
+offset_top = 24.0
+offset_right = 148.0
+offset_bottom = 54.0
+text = "Enabled"
+
+[node name="NextButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 665.0
+offset_top = 19.0
+offset_right = 750.0
+offset_bottom = 59.0
+text = "Next"
+
+[node name="ResetButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1064.0
+offset_top = 17.0
+offset_right = 1218.0
+offset_bottom = 57.0
+text = "Reset to default"
+
+[connection signal="pressed" from="PrevButton" to="." method="_on_prev_button_pressed"]
+[connection signal="toggled" from="EnabledCheckbox" to="." method="_on_enabled_checkbox_toggled"]
+[connection signal="pressed" from="NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]

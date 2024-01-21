@@ -415,83 +415,59 @@ func _on_weathering_label_mouse_entered():
 
 func _on_settings_button_pressed():
 	enter_settings_menu()
-	show_weathering_settings()
+	show_audio_settings()
 
 func show_audio_settings():
 	find_child("WeatheringSettingsContainer").visible = false
+	find_child("ItemColorSettingsContainer").visible = false
 	find_child("AudioSettingsContainer").visible = true
+	find_child("WeatheringSettings").modulate = Color.WHITE
+	find_child("ItemColorSettings").modulate = Color.WHITE
+	find_child("AudioSettings").modulate = Color.GOLD
+	find_child("AudioSettingsContainer").refresh()
 
-@onready var weathering_options = WeatheringMgr.get_sorted_weathering_options()
-var cur_weathering_option = 0
+func _on_item_color_settings_pressed():
+	show_item_color_settings()
+	
 func show_weathering_settings():
 	find_child("WeatheringSettingsContainer").visible = true
+	find_child("ItemColorSettingsContainer").visible = false
 	find_child("AudioSettingsContainer").visible = false
-	cur_weathering_option = 0
-	generate_weathering_examples()
-	
+	find_child("WeatheringSettings").modulate = Color.GOLD
+	find_child("ItemColorSettings").modulate = Color.WHITE
+	find_child("AudioSettings").modulate = Color.WHITE
+	find_child("WeatheringSettingsContainer").refresh()
+
+func show_item_color_settings():
+	find_child("WeatheringSettingsContainer").visible = false
+	find_child("ItemColorSettingsContainer").visible = true
+	find_child("AudioSettingsContainer").visible = false
+	find_child("WeatheringSettings").modulate = Color.WHITE
+	find_child("ItemColorSettings").modulate = Color.GOLD
+	find_child("AudioSettings").modulate = Color.WHITE
 
 func _on_audio_settings_pressed():
 	show_audio_settings()
-	find_child("SfxVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT)
-	find_child("MusicVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT)
-	find_child("OverallVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.OVERALL_VOLUME_PCT)
 
 func _on_weathering_settings_pressed():
 	show_weathering_settings()
 
-func _on_sfx_volume_value_changed(value):
-	Global.setting_changed.emit(AudioPlayerPool.SFX_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT), value)
-
-func _on_music_volume_value_changed(value):
-	Global.setting_changed.emit(AudioPlayerPool.MUSIC_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.MUSIC_VOLUME_PCT), value)
-
-func _on_overall_volume_value_changed(value):
-	Global.setting_changed.emit(AudioPlayerPool.OVERALL_VOLUME_PCT, AudioPlayerPool.audio_config.get_config(AudioPlayerPool.OVERALL_VOLUME_PCT), value)
-
 func _on_settings_back_pressed():
 	return_from_settings_menu()
+	ColorMgr.save()
 	save_config()
 	find_child("MainMenu").visible = true
 	Global.play_button_click_sound("menu_back")
-
-func _on_next_example_pressed():
-	cur_weathering_option = (cur_weathering_option + 1) % weathering_options.size()
-	generate_weathering_examples()
-
-func _on_prev_example_pressed():
-	cur_weathering_option = (cur_weathering_option - 1)
-	if cur_weathering_option < 0:
-		cur_weathering_option = weathering_options.size() - 1
-	generate_weathering_examples()
-
-func generate_weathering_examples():
-	var weathering_name = weathering_options[cur_weathering_option]
-	var l = WeatheringMgr.get_specific_option(weathering_name, 0.1)
-	var m = WeatheringMgr.get_specific_option(weathering_name, 0.5)
-	var h = WeatheringMgr.get_specific_option(weathering_name, 0.9)
-	find_child("WeatheringName").text = l.weathering_name
-	var li = load("res://art/item/shield_knot1.png").get_image()
-	var mi = load("res://art/item/shield_knot1.png").get_image()
-	var hi = load("res://art/item/shield_knot1.png").get_image()
-	ImageMerger.modulate_image(li, Color.WHITE, l.noise, l.noise_cutoff, null, Vector2.ZERO, l.noise_floor)
-	ImageMerger.modulate_image(mi, Color.WHITE, m.noise, m.noise_cutoff, null, Vector2.ZERO, m.noise_floor)
-	ImageMerger.modulate_image(hi, Color.WHITE, h.noise, h.noise_cutoff, null, Vector2.ZERO, h.noise_floor)
-	find_child("LowExample").texture = ImageTexture.create_from_image(li)
-	find_child("MedExample").texture = ImageTexture.create_from_image(mi)
-	find_child("HighExample").texture = ImageTexture.create_from_image(hi)
-	find_child("EnabledCheckbox").button_pressed = WeatheringMgr.get_random_allowed(find_child("WeatheringName").text)
-
-
-func _on_enabled_checkbox_toggled(toggled_on):
-	WeatheringMgr.set_random_allowed(find_child("WeatheringName").text, toggled_on)
 
 func _on_credits_button_pressed():
 	var credits = find_child("CreditsScreen")
 	if credits.modulate.a <= 0:
 		var tween = credits.create_tween()
 		tween.tween_property(credits, "modulate", Color.WHITE, 0.5)
+		find_child("CreditsButton").text = "Back"
 	elif credits.modulate.a >= 1:
 		var tween = credits.create_tween()
 		tween.tween_property(credits, "modulate", Color.TRANSPARENT, 0.5)
+		find_child("CreditsButton").text = "Credits"
 		
 	

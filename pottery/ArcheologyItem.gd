@@ -19,7 +19,7 @@ var hover_idx = -1
 var drag_start_mouse = null
 var drag_start_item = null
 var target_pos = null
-# if null, the user is not rotating this piece
+# if null, the user is not rotating ringthis piece
 var rotate_start_mouse = null
 var rotate_start_item = null
 var rotate_start_item_com_position = null

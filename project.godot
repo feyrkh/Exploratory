@@ -23,6 +23,7 @@ Global="*res://Global.gd"
 AudioPlayerPool="*res://util/AudioPlayerPool.tscn"
 ItemBuilder="*res://util/ItemBuilder.gd"
 WeatheringMgr="*res://weathering/WeatheringMgr.gd"
+ColorMgr="*res://menu/item_color_settings/ColorMgr.gd"
 
 [debug]
 

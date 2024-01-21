@@ -245,12 +245,12 @@ func load_gallery_room(idx:int):
 	var item_list = room_data[ROOM_FIELD_ITEMS]
 	for item_data in item_list:
 		var item = await unpack_gallery_item(item_data[ITEM_FIELD_ID])
-		var orig_mask = item.collision_mask
-		item.collision_mask = 0
+		#var orig_mask = item.collision_mask
+		#item.collision_mask = 0
 		item.global_position = item_data[ITEM_FIELD_POS]
 		item.global_rotation = item_data[ITEM_FIELD_ROT]
 		item.adjust_scale(item_data[ITEM_FIELD_SCALE])
-		item.collision_mask = orig_mask
+		#item.collision_mask = orig_mask
 	cur_background_img_idx = background_imgs.find(room_data[ROOM_FIELD_BG_FILE])
 	shelf_configuration = room_data[ROOM_FIELD_SHELF_CONFIG]
 	await find_child("FadeRect").fade_in(FADE_TIME*2)
@@ -271,12 +271,12 @@ func hide_gallery_menu():
 func unpack_gallery_item(item_name:String) -> Node2D:
 	var item = await GalleryMgr.unpack_from_gallery(item_name, report_error)
 	if item != null:
-		var orig_mask = item.collision_mask
-		item.collision_mask = 0
+		#var orig_mask = item.collision_mask
+		#item.collision_mask = 0
 		find_child("Items").add_child(item)
 		item.gallery_mode()
 		item.global_position = get_viewport().get_camera_2d().get_screen_center_position() - item.bounding_box.size/2
-		item.collision_mask = orig_mask
+		#item.collision_mask = orig_mask
 	gallery_items_unused.erase(item_name)
 	return item
 

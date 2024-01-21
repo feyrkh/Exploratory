@@ -1,12 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://cf3wlna5ki846"]
+[gd_scene load_steps=11 format=3 uid="uid://cf3wlna5ki846"]
 
 [ext_resource type="Script" path="res://menu/main/TitleScreen.gd" id="1_mpvbx"]
 [ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_7feem"]
 [ext_resource type="Texture2D" uid="uid://b8ahj1h8tttqg" path="res://art/light_cone.png" id="3_y0o7f"]
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_i7rd2"]
-[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="5_euscd"]
-[ext_resource type="Script" path="res://menu/CustomMenuHSlider.gd" id="6_ba503"]
-[ext_resource type="Theme" uid="uid://c8qjml4q8nu2g" path="res://theme/sidebar_menu_theme.tres" id="7_tyis1"]
+[ext_resource type="PackedScene" uid="uid://qf2da8tt76wb" path="res://menu/AudioSettingsMenu.tscn" id="5_uwmju"]
+[ext_resource type="PackedScene" uid="uid://dic2u5phtt4oc" path="res://menu/WeatheringSettingsMenu.tscn" id="6_utrjy"]
+[ext_resource type="PackedScene" uid="uid://64d1sdn6a0wh" path="res://menu/item_color_settings/ItemColorSettings.tscn" id="7_81450"]
+[ext_resource type="PackedScene" uid="uid://d3gchl4v2x7xn" path="res://menu/CreditScreen.tscn" id="8_aa721"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kd5ff"]
 light_mode = 2
@@ -15,7 +16,7 @@ light_mode = 2
 
 [node name="TitleScreen" type="Node2D"]
 script = ExtResource("1_mpvbx")
-metadata/_edit_vertical_guides_ = [450.0]
+metadata/_edit_vertical_guides_ = [640.0]
 
 [node name="SubViewportContainer" type="Control" parent="."]
 layout_mode = 3
@@ -316,10 +317,10 @@ offset_bottom = 40.0
 
 [node name="AudioSettings" type="Button" parent="SettingsContainer"]
 layout_mode = 0
-offset_left = 702.0
-offset_top = 138.0
-offset_right = 834.0
-offset_bottom = 177.0
+offset_left = 350.0
+offset_top = 34.0
+offset_right = 482.0
+offset_bottom = 84.0
 theme = ExtResource("2_7feem")
 toggle_mode = true
 button_group = SubResource("ButtonGroup_seibb")
@@ -328,166 +329,44 @@ script = ExtResource("4_i7rd2")
 
 [node name="WeatheringSettings" type="Button" parent="SettingsContainer"]
 layout_mode = 0
-offset_left = 330.0
-offset_top = 137.0
-offset_right = 600.0
-offset_bottom = 176.0
+offset_left = 754.0
+offset_top = 33.0
+offset_right = 1024.0
+offset_bottom = 83.0
 theme = ExtResource("2_7feem")
 toggle_mode = true
 button_group = SubResource("ButtonGroup_seibb")
 text = "Weathering"
 script = ExtResource("4_i7rd2")
 
-[node name="AudioSettingsContainer" type="Control" parent="SettingsContainer"]
+[node name="ItemColorSettings" type="Button" parent="SettingsContainer"]
+layout_mode = 0
+offset_left = 510.0
+offset_top = 33.0
+offset_right = 780.0
+offset_bottom = 83.0
+theme = ExtResource("2_7feem")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_seibb")
+text = "Items/Colors"
+script = ExtResource("4_i7rd2")
+
+[node name="AudioSettingsContainer" parent="SettingsContainer" instance=ExtResource("5_uwmju")]
 visible = false
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme = ExtResource("5_euscd")
 
-[node name="MarginContainer" type="MarginContainer" parent="SettingsContainer/AudioSettingsContainer"]
-layout_mode = 0
-offset_left = 256.0
-offset_top = 224.0
-offset_right = 895.0
-offset_bottom = 340.0
+[node name="WeatheringSettingsContainer" parent="SettingsContainer" instance=ExtResource("6_utrjy")]
+metadata/_edit_vertical_guides_ = [620.0]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingsContainer/AudioSettingsContainer/MarginContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="OverallLabel" type="Label" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 20
-text = "Global Volume"
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="OverallVolume" type="HSlider" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.01
-script = ExtResource("6_ba503")
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="SfxLabel" type="Label" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 20
-text = "SFX Volume"
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="SfxVolume" type="HSlider" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.01
-script = ExtResource("6_ba503")
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="MusicLabel" type="Label" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 20
-text = "Music Volume"
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="MusicVolume" type="HSlider" parent="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.01
-script = ExtResource("6_ba503")
-
-[node name="WeatheringSettingsContainer" type="Control" parent="SettingsContainer"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="WeatheringName" type="Label" parent="SettingsContainer/WeatheringSettingsContainer"]
-layout_mode = 0
-offset_left = 482.0
-offset_top = 525.0
-offset_right = 628.0
-offset_bottom = 548.0
-theme = ExtResource("2_7feem")
-theme_override_font_sizes/font_size = 20
-text = "Weathering"
-
-[node name="PrevExample" type="Button" parent="SettingsContainer/WeatheringSettingsContainer"]
-offset_left = 178.0
-offset_top = 361.0
-offset_right = 203.0
-offset_bottom = 411.0
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="MedExample" type="TextureRect" parent="SettingsContainer/WeatheringSettingsContainer"]
-layout_mode = 0
-offset_left = 512.0
-offset_top = 214.0
-offset_right = 787.0
-offset_bottom = 489.0
-expand_mode = 2
-
-[node name="LowExample" type="TextureRect" parent="SettingsContainer/WeatheringSettingsContainer"]
-layout_mode = 0
-offset_left = 213.0
-offset_top = 212.0
-offset_right = 488.0
-offset_bottom = 487.0
-expand_mode = 2
-
-[node name="HighExample" type="TextureRect" parent="SettingsContainer/WeatheringSettingsContainer"]
-layout_mode = 0
-offset_left = 810.0
-offset_top = 215.0
-offset_right = 1085.0
-offset_bottom = 490.0
-expand_mode = 2
-
-[node name="NextExample" type="Button" parent="SettingsContainer/WeatheringSettingsContainer"]
-offset_left = 1089.0
-offset_top = 358.0
-offset_right = 1114.0
-offset_bottom = 408.0
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="EnabledCheckbox" type="CheckBox" parent="SettingsContainer/WeatheringSettingsContainer"]
-layout_mode = 0
-offset_left = 688.0
-offset_top = 520.0
-offset_right = 712.0
-offset_bottom = 544.0
-text = "Enabled"
+[node name="ItemColorSettingsContainer" parent="SettingsContainer" instance=ExtResource("7_81450")]
+offset_top = 77.0
+offset_bottom = 117.0
 
 [node name="SettingsBack" type="Button" parent="SettingsContainer"]
-offset_left = 500.0
-offset_top = 594.0
-offset_right = 622.0
-offset_bottom = 633.0
+layout_mode = 0
+offset_left = 598.0
+offset_top = 656.0
+offset_right = 676.0
+offset_bottom = 706.0
 focus_mode = 0
 theme = ExtResource("2_7feem")
 text = "Back"
@@ -496,6 +375,7 @@ script = ExtResource("4_i7rd2")
 sfx = "none"
 
 [node name="MainMenu" type="VBoxContainer" parent="."]
+visible = false
 offset_left = 68.0
 offset_top = 192.0
 offset_right = 426.0
@@ -561,104 +441,8 @@ anchor_mode = 0
 [node name="ItemPreparation" type="Node2D" parent="."]
 position = Vector2(-1827, -453)
 
-[node name="CreditsScreen" type="Control" parent="."]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 3
-anchors_preset = 0
-offset_left = 672.0
-offset_top = 112.0
-offset_right = 712.0
-offset_bottom = 152.0
-
-[node name="CreditsBackground" type="ColorRect" parent="CreditsScreen"]
-offset_left = -676.0
-offset_top = -117.0
-offset_right = 607.0
-offset_bottom = 628.0
+[node name="CreditsScreen" parent="." instance=ExtResource("8_aa721")]
 mouse_filter = 2
-color = Color(0, 0, 0, 1)
-
-[node name="Label" type="Label" parent="CreditsScreen"]
-layout_mode = 0
-offset_left = -502.0
-offset_top = -49.0
-offset_right = -290.0
-offset_bottom = -1.0
-theme = ExtResource("7_tyis1")
-text = "Programming"
-
-[node name="Label2" type="Label" parent="CreditsScreen"]
-layout_mode = 0
-offset_left = -496.0
-offset_top = -8.0
-offset_right = -302.0
-offset_bottom = 40.0
-theme = ExtResource("7_tyis1")
-text = "Kevin Hobbs"
-
-[node name="Label3" type="Label" parent="CreditsScreen"]
-offset_left = -228.0
-offset_top = 64.0
-offset_right = -166.0
-offset_bottom = 112.0
-theme = ExtResource("7_tyis1")
-text = "Art"
-
-[node name="Label4" type="Label" parent="CreditsScreen"]
-offset_left = -396.0
-offset_top = 104.0
-offset_right = 33.0
-offset_bottom = 152.0
-theme = ExtResource("7_tyis1")
-text = "Jeremy Hobbs / ribbonblack"
-
-[node name="Label5" type="Label" parent="CreditsScreen"]
-offset_left = -140.0
-offset_top = 184.0
-offset_right = -34.0
-offset_bottom = 232.0
-theme = ExtResource("7_tyis1")
-text = "Music"
-
-[node name="Label6" type="Label" parent="CreditsScreen"]
-offset_left = -284.0
-offset_top = 224.0
-offset_right = 186.0
-offset_bottom = 272.0
-theme = ExtResource("7_tyis1")
-text = "Creative Commons Music"
-
-[node name="Label9" type="Label" parent="CreditsScreen"]
-offset_left = -340.0
-offset_top = 256.0
-offset_right = 208.0
-offset_bottom = 304.0
-theme = ExtResource("7_tyis1")
-text = "by Jason Shaw on Audionautix.com"
-
-[node name="Label7" type="Label" parent="CreditsScreen"]
-offset_left = -44.0
-offset_top = 328.0
-offset_right = 62.0
-offset_bottom = 376.0
-theme = ExtResource("7_tyis1")
-text = "Sound"
-
-[node name="Label8" type="Label" parent="CreditsScreen"]
-offset_left = -92.0
-offset_top = 360.0
-offset_right = 378.0
-offset_bottom = 408.0
-theme = ExtResource("7_tyis1")
-text = "Pixabay.com"
-
-[node name="Label10" type="Label" parent="CreditsScreen"]
-offset_left = 28.0
-offset_top = 456.0
-offset_right = 295.0
-offset_bottom = 504.0
-theme = ExtResource("7_tyis1")
-text = "Made with Godot"
 
 [node name="CreditsButton" type="Button" parent="."]
 custom_minimum_size = Vector2(0, 60)
@@ -730,12 +514,7 @@ color = Color(0.0784314, 0.0784314, 0.0784314, 1)
 [connection signal="pressed" from="OptionsContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="SettingsContainer/AudioSettings" to="." method="_on_audio_settings_pressed"]
 [connection signal="pressed" from="SettingsContainer/WeatheringSettings" to="." method="_on_weathering_settings_pressed"]
-[connection signal="value_changed" from="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer/OverallVolume" to="." method="_on_overall_volume_value_changed"]
-[connection signal="value_changed" from="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer3/SfxVolume" to="." method="_on_sfx_volume_value_changed"]
-[connection signal="value_changed" from="SettingsContainer/AudioSettingsContainer/MarginContainer/VBoxContainer/HBoxContainer2/MusicVolume" to="." method="_on_music_volume_value_changed"]
-[connection signal="pressed" from="SettingsContainer/WeatheringSettingsContainer/PrevExample" to="." method="_on_prev_example_pressed"]
-[connection signal="pressed" from="SettingsContainer/WeatheringSettingsContainer/NextExample" to="." method="_on_next_example_pressed"]
-[connection signal="toggled" from="SettingsContainer/WeatheringSettingsContainer/EnabledCheckbox" to="." method="_on_enabled_checkbox_toggled"]
+[connection signal="pressed" from="SettingsContainer/ItemColorSettings" to="." method="_on_item_color_settings_pressed"]
 [connection signal="mouse_entered" from="SettingsContainer/SettingsBack" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="SettingsContainer/SettingsBack" to="." method="_on_settings_back_pressed"]
 [connection signal="pressed" from="MainMenu/ContinueButton" to="." method="_on_continue_button_pressed"]

@@ -1,0 +1,111 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3gchl4v2x7xn"]
+
+[ext_resource type="Theme" uid="uid://c8qjml4q8nu2g" path="res://theme/sidebar_menu_theme.tres" id="1_elcur"]
+
+[node name="CreditsScreen" type="Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 672.0
+offset_top = 112.0
+offset_right = 712.0
+offset_bottom = 152.0
+
+[node name="CreditsBackground" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -676.0
+offset_top = -117.0
+offset_right = 607.0
+offset_bottom = 628.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = -502.0
+offset_top = -49.0
+offset_right = -290.0
+offset_bottom = -1.0
+theme = ExtResource("1_elcur")
+text = "Programming"
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = -496.0
+offset_top = -8.0
+offset_right = -302.0
+offset_bottom = 40.0
+theme = ExtResource("1_elcur")
+text = "Kevin Hobbs"
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 0
+offset_left = -228.0
+offset_top = 64.0
+offset_right = -166.0
+offset_bottom = 112.0
+theme = ExtResource("1_elcur")
+text = "Art"
+
+[node name="Label4" type="Label" parent="."]
+layout_mode = 0
+offset_left = -396.0
+offset_top = 104.0
+offset_right = 33.0
+offset_bottom = 152.0
+theme = ExtResource("1_elcur")
+text = "Jeremy Hobbs / ribbonblack"
+
+[node name="Label5" type="Label" parent="."]
+layout_mode = 0
+offset_left = -140.0
+offset_top = 184.0
+offset_right = -34.0
+offset_bottom = 232.0
+theme = ExtResource("1_elcur")
+text = "Music"
+
+[node name="Label6" type="Label" parent="."]
+layout_mode = 0
+offset_left = -284.0
+offset_top = 224.0
+offset_right = 186.0
+offset_bottom = 272.0
+theme = ExtResource("1_elcur")
+text = "Creative Commons Music"
+
+[node name="Label9" type="Label" parent="."]
+layout_mode = 0
+offset_left = -340.0
+offset_top = 256.0
+offset_right = 208.0
+offset_bottom = 304.0
+theme = ExtResource("1_elcur")
+text = "by Jason Shaw on Audionautix.com"
+
+[node name="Label7" type="Label" parent="."]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 328.0
+offset_right = 62.0
+offset_bottom = 376.0
+theme = ExtResource("1_elcur")
+text = "Sound"
+
+[node name="Label8" type="Label" parent="."]
+layout_mode = 0
+offset_left = -92.0
+offset_top = 360.0
+offset_right = 378.0
+offset_bottom = 408.0
+theme = ExtResource("1_elcur")
+text = "Pixabay.com"
+
+[node name="Label10" type="Label" parent="."]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 456.0
+offset_right = 295.0
+offset_bottom = 504.0
+theme = ExtResource("1_elcur")
+text = "Made with Godot"

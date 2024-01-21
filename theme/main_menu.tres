@@ -1,18 +1,18 @@
 [gd_resource type="Theme" load_steps=3 format=3 uid="uid://p7fc7eiwupyw"]
 
-[ext_resource type="FontFile" uid="uid://31qwtk37jy7j" path="res://theme/Crackvetica.ttf" id="1_jenaa"]
 [ext_resource type="StyleBox" uid="uid://cvj8odrh2o2ir" path="res://theme/style_box_invisible.tres" id="2_m3p8u"]
+[ext_resource type="FontFile" uid="uid://6af5xb7ndfw8" path="res://theme/PT_Serif/PTSerif-Regular.ttf" id="3_mwd58"]
 
 [resource]
 Button/colors/font_hover_color = Color(0.968627, 0.945098, 0.360784, 1)
 Button/colors/font_hover_pressed_color = Color(0.769531, 0.750838, 0.286627, 1)
 Button/font_sizes/font_size = 37
-Button/fonts/font = ExtResource("1_jenaa")
+Button/fonts/font = ExtResource("3_mwd58")
 Button/styles/disabled = ExtResource("2_m3p8u")
 Button/styles/focus = ExtResource("2_m3p8u")
 Button/styles/hover = ExtResource("2_m3p8u")
 Button/styles/normal = ExtResource("2_m3p8u")
 Button/styles/pressed = ExtResource("2_m3p8u")
 Label/font_sizes/font_size = 37
-Label/fonts/font = ExtResource("1_jenaa")
+Label/fonts/font = ExtResource("3_mwd58")
 Label/styles/normal = ExtResource("2_m3p8u")

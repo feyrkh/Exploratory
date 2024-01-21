@@ -5,9 +5,11 @@ const VALID_TYPES := ['icon', 'band', 'base']
 ## Which of the 'type' entries also require a .png file to exist alongside it
 const IMAGE_TYPES := VALID_TYPES
 
-var all_items = {}
-var base_item_names = []
-static var __next_unique_id := 0
+## Dictionary of item name (file prefix) -> ItemConfig
+var all_items:Dictionary = {} 
+var base_item_names:Array = []
+static var __next_unique_id:int = 0
+var disabled_items_config := SettingsFile.new("user://disabled_items.cfg", {})
 
 var cache := {}
 var cache_cleanup_thread := Thread.new()
@@ -28,6 +30,16 @@ func get_next_unique_id() -> int:
 	__next_unique_id += 1
 	return __next_unique_id
 
+func set_item_disabled(item_name:String, is_disabled:bool):
+	if is_disabled:
+		disabled_items_config.set_config(item_name, true)
+	else:
+		disabled_items_config.erase_config(item_name)
+	disabled_items_config.save_config()
+
+func get_item_disabled(item_name:String)->bool:
+	return disabled_items_config.get_config(item_name, false)
+
 class ItemConfig:
 	var item_name
 	var item_dir
@@ -37,7 +49,18 @@ class ItemConfig:
 	var max_scale:Vector2 = Vector2(100, 100)
 	## optional array of strings like "ffffff" - if provided, these colors will be used for random selections
 	## if not provided, will use some global settings which I haven't figured out yet
-	var colors
+	var _colors
+	
+	func get_default_colors():
+		if _colors == null or !_colors:
+			if type == "base":
+				return [Color.ANTIQUE_WHITE, Color.BROWN, Color.CORAL, Color.FIREBRICK, Color.PERU, Color.SADDLE_BROWN]
+			else:
+				return [Color.SADDLE_BROWN, Color.DARK_RED, Color.DIM_GRAY, Color.GREEN_YELLOW, Color.DARK_BLUE, Color.DARK_SLATE_BLUE, Color.MAROON]
+		return _colors.duplicate()
+	
+	func get_configured_colors():
+		return ColorMgr.get_colors_for_item(item_name)
 	
 	func get_texture() -> Texture2D:
 		return load(item_dir+item_name+".png")
@@ -122,6 +145,8 @@ func _ready():
 func filter_options(item_type:String, desired_size:Vector2) -> Array[ItemConfig]:
 	var retval:Array[ItemConfig] = []
 	for item_name in all_items:
+		if get_item_disabled(item_name):
+			continue # skip disabled items
 		var item = all_items[item_name]
 		if item.type != item_type:
 			continue
@@ -150,7 +175,10 @@ func build_specific_item(save_data:Array, weathering:WeatheringConfig=null) -> T
 
 func build_random_item(base_item_name=null, should_load_slowly=false, weathering:WeatheringConfig=null) -> ArcheologyItem:
 	if base_item_name == null:
-		base_item_name = base_item_names.pick_random()
+		var valid_base_items = base_item_names.filter(func(item): return !get_item_disabled(item))
+		if valid_base_items.size() == 0:
+			valid_base_items = base_item_names
+		base_item_name = valid_base_items.pick_random()
 	print("Building random item with ", base_item_name)
 	var base_item_cfg:ItemConfig = all_items[base_item_name]
 	var collider_scene_file = base_item_cfg.load_collider_scene()
@@ -216,19 +244,21 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 		var options:Array[ItemConfig] = filter_options(str(img_groups[img_group][0].type), smallest_rect)
 		if options.size() >= 1:
 			img_group_choices[img_group] = options.pick_random()
-			if img_group_choices[img_group].colors == null or img_group_choices[img_group].colors.size() == 0:
-				img_group_colors[img_group] = [Color.SADDLE_BROWN, Color.DARK_RED, Color.DIM_GRAY, Color.GREEN_YELLOW, Color.DARK_BLUE, Color.DARK_SLATE_BLUE, Color.MAROON].pick_random()
+			var configured_colors = img_group_choices[img_group].get_configured_colors()
+			if configured_colors == null or configured_colors.size() == 0:
+				img_group_colors[img_group] = [Color.WHITE].pick_random()
 			else:
-				img_group_colors[img_group] = img_group_choices[img_group].colors.pick_random()
-
+				img_group_colors[img_group] = configured_colors.pick_random()
+			
 	# place the images
 	var base_image_details := ImageMerger.ImageMergeInfo.new()
 	base_image_details.img = base_item_cfg.get_texture().get_image()
 	base_image_details.position = Vector2.ZERO
-	if base_item_cfg.colors == null or base_item_cfg.colors.size() == 0:
-		base_image_details.modulate = [Color.ANTIQUE_WHITE, Color.BROWN, Color.CORAL, Color.FIREBRICK, Color.PERU, Color.SADDLE_BROWN].pick_random()
+	var color_choices = base_item_cfg.get_configured_colors()
+	if color_choices == null or color_choices.size() == 0:
+		base_image_details.modulate = [Color.WHITE].pick_random()
 	else:
-		base_image_details.modulate = base_item_cfg.colors.pick_random()
+		base_image_details.modulate = base_item_cfg.get_configured_colors().pick_random()
 	var save_data:Array[ImageSaveData] = [ImageSaveData.new()]
 	save_data[0].item_dir = base_item_cfg.item_dir
 	save_data[0].item_name = base_item_cfg.item_name
@@ -241,6 +271,9 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 	var image_details:Array[ImageMerger.ImageMergeInfo] = [base_image_details]
 	
 	for placement:DecorationBase in placements_used:
+		if !img_group_choices.has(placement.img_id):
+			# not enough valid decorations will fit here, skipping
+			continue
 		var info := ImageMerger.ImageMergeInfo.new()
 		info.img = img_group_choices[placement.img_id].get_texture().get_image()
 
@@ -308,6 +341,7 @@ func process_dir(dir:DirAccess):
 				if file_name.ends_with(".cfg"):
 					read_file(dir.get_current_dir()+"/", file_name)
 			file_name = dir.get_next()
+		base_item_names.sort()
 	else:
 		print("An error occurred when trying to access the path.")
 
@@ -355,7 +389,7 @@ func read_file(dir_name, file_name):
 		item.min_scale = Vector2(item.min_scale.x, data['min_scale_y'])
 	if data.get('max_scale_y') != null:
 		item.max_scale = Vector2(item.max_scale.x, data['max_scale_y'])
-	item.colors = data.get('colors')
+	item._colors = data.get('colors')
 	match item.type:
 		'base': 
 			all_items[file_name_prefix] = item

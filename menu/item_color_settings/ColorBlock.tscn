@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfbxyt8l4v1ld"]
+
+[ext_resource type="Script" path="res://menu/item_color_settings/ColorBlock.gd" id="1_vmflo"]
+
+[node name="ColorBlock" type="ColorRect"]
+custom_minimum_size = Vector2(35, 35)
+script = ExtResource("1_vmflo")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 36.0
+offset_bottom = 36.0
+mouse_filter = 2

@@ -18,6 +18,7 @@ func get_config(key:String, default_value=null):
 
 func set_config(key:String, value):
 	config_file.set_value(section, key, value)
+	print("Set %s:%s=%s\nRetrieved value: %s" % [section, key, value, config_file.get_value(section, key)])
 
 func load_config():
 	var err = config_file.load(config_path)
@@ -27,6 +28,9 @@ func load_config():
 		for key in config_file.get_section_keys(section):
 			keys_set[key] = true
 
+func erase_config(key:String):
+	if config_file.has_section_key(section, key):
+		config_file.erase_section_key(section, key)
 
 func save_config():
 	config_file.save(config_path)

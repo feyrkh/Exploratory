@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://cr3xalu1waxa4"]
+
+[ext_resource type="FontFile" uid="uid://6af5xb7ndfw8" path="res://theme/PT_Serif/PTSerif-Regular.ttf" id="1_tk3r2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4kg31"]
+
+[resource]
+default_font = ExtResource("1_tk3r2")
+default_font_size = 12
+PanelContainer/styles/panel = SubResource("StyleBoxEmpty_4kg31")

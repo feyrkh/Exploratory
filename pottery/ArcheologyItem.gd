@@ -10,7 +10,7 @@ const MAX_ANGULAR_VELOCITY := 25.0
 enum Fields {
 	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
 	ORIG_ITEM_COUNT, TIME_ATTACK_SECONDS, FINAL_SCORE, BUMP_ENABLED, ROTATE_ENABLED,
-	DISPLACEMENT_SCORE
+	DISPLACEMENT_SCORE, SAVE_DATE, GAME_MODE
 }
 
 # if -1, the mouse is not hovering over this piece
@@ -71,6 +71,8 @@ var bump_enabled:bool
 var rotate_enabled:bool
 var final_displacement_score:float
 var final_score:int
+var save_timestamp:String
+var game_mode:String
 
 var area_pct:
 	get:
@@ -123,6 +125,7 @@ func get_save_data(image_save_data:Dictionary, weathering_save_data:Dictionary) 
 	var scar_save_data = []
 	var edge_save_data = []
 	var glue_save_data = []
+	save_timestamp = Time.get_datetime_string_from_system()
 	for child in get_children():
 		if child is ItemPolygon2D:
 			var child_image_data = child.get_save_data(weathering_save_data)
@@ -152,6 +155,8 @@ func get_save_data(image_save_data:Dictionary, weathering_save_data:Dictionary) 
 		Fields.ROTATE_ENABLED: rotate_enabled,
 		Fields.DISPLACEMENT_SCORE: final_displacement_score,
 		Fields.FINAL_SCORE: final_score,
+		Fields.SAVE_DATE: save_timestamp,
+		Fields.GAME_MODE: game_mode,
 	}
 	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "glue":glue_save_data, "me":me_data}
 
@@ -190,6 +195,8 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, wea
 	result.rotate_enabled = me_data[Fields.ROTATE_ENABLED]
 	result.final_displacement_score = me_data[Fields.DISPLACEMENT_SCORE]
 	result.final_score = me_data[Fields.FINAL_SCORE]
+	result.game_mode = me_data[Fields.GAME_MODE]
+	result.save_timestamp = me_data[Fields.SAVE_DATE]
 	for data in poly_data:
 		var new_polygon = ItemPolygon2D.new()
 		new_polygon.visibility_layer = 3 # Visible on layers 1 (normal view) and 2 (screenshot view)
@@ -313,6 +320,8 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.lock_rotation = lock_rotation
 	new_scene.scale = scale
 	new_scene.shatter_size = shatter_size
+	new_scene.save_timestamp = save_timestamp
+	new_scene.game_mode = game_mode
 	if should_clone_slow:
 		await wait_frame()
 	#for scar in scars.get_children():
@@ -926,6 +935,7 @@ func safe_freeze(val:bool):
 			set_deferred("freeze", val)
 
 func save_to_gallery():
+	save_timestamp = Time.get_date_string_from_system()
 	Global.save_to_gallery.emit(self)
 
 func adjust_scale(scale_change:float):

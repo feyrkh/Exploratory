@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://tpag1njdnwcy"]
+[gd_scene load_steps=13 format=3 uid="uid://tpag1njdnwcy"]
 
 [ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
 [ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_5ockw"]
 [ext_resource type="PackedScene" uid="uid://dr6w8rungysm1" path="res://menu/gallery/GalleryMenu.tscn" id="4_gxinv"]
 [ext_resource type="PackedScene" uid="uid://btr4madyriyi0" path="res://util/FadeRect.tscn" id="5_0t2vs"]
+[ext_resource type="PackedScene" uid="uid://n5316mle0or2" path="res://menu/gallery/GalleryNotes.tscn" id="7_4pcnk"]
 [ext_resource type="PackedScene" uid="uid://bpkmbst6b1h3" path="res://control_hints/ControlHints.tscn" id="7_yxhjm"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="9_fhm20"]
 
@@ -191,6 +192,12 @@ visible = false
 
 [node name="Camera2D" type="Camera2D" parent="UI"]
 anchor_mode = 0
+
+[node name="GalleryNotes" parent="UI" instance=ExtResource("7_4pcnk")]
+offset_left = 1265.0
+offset_top = 48.0
+offset_right = 145.0
+offset_bottom = -564.0
 
 [node name="ControlHints" parent="UI" instance=ExtResource("7_yxhjm")]
 offset_left = 1265.0

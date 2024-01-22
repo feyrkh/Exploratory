@@ -119,7 +119,7 @@ func _ready():
 
 	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
 	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
-func generate_one_random_item(piece_container:Node2D, item_id:int, generation_coords:Vector2):
+func generate_one_random_item(piece_container:Node2D, _item_id:int, generation_coords:Vector2):
 	await get_tree().process_frame
 	var weathering_amt_setting = settings.get(WEATHERING_AMT_SETTING, 0)
 	var weathering = null
@@ -130,7 +130,7 @@ func generate_one_random_item(piece_container:Node2D, item_id:int, generation_co
 		4: weathering = WeatheringMgr.get_random_option(randf_range(0.0, 1.0))
 	
 	var new_item = await ItemBuilder.build_random_item(null, false, weathering)
-	new_item.original_item_count = item_id
+	new_item.original_item_count = settings.get(ITEM_COUNT_SETTING, 1)
 	piece_container.add_child(new_item)
 	new_item.position = generation_coords
 	await get_tree().process_frame
@@ -397,6 +397,11 @@ func take_screenshot_of_piece(piece:ArcheologyItem) -> Image:
 	return result
 	
 func save_to_gallery(item:Node2D):
+	var mode = Global.game_mode
+	match mode:
+		"zen": mode = "relax"
+		"time": mode = "struggle"
+	item.game_mode = mode
 	Global.click_mode = Global.ClickMode.move
 	var img = await take_screenshot_of_piece(item)
 	var popup:SaveItemToGalleryMenu = load("res://pottery/SaveItemToGalleryMenu.tscn").instantiate()
@@ -410,14 +415,17 @@ func save_to_gallery(item:Node2D):
 	, CONNECT_ONE_SHOT)
 
 func time_attack_complete(_total_seconds:int):
-	pass
-	#Global.click_mode = Global.ClickMode.move
-	#for piece in find_child("Pieces").get_children():
-		#piece.time_attack_seconds = total_seconds
-		#piece.bump_enabled = !Global.freeze_pieces
-		#piece.rotate_enabled = Global.rotate_with_shuffle
-		#var img = await take_screenshot_of_piece(piece)
-		
+	load("res://pottery/TimeAttackCompleteMenu.tscn").instantiate()
+	var time_attack_complete_data := []
+	for piece in find_child("Pieces").get_children():
+		var img = await take_screenshot_of_piece(piece)
+		piece.time_attack_seconds = _total_seconds
+		time_attack_complete_data.append([img, piece])
+	var popup = load("res://pottery/TimeAttackCompleteMenu.tscn").instantiate()
+	popup.setup(time_attack_complete_data)
+	for i in range(time_attack_complete_data.size()):
+		popup.render_item(i)
+	popup.queue_free()
 
 func time_attack_show_scoreboard():
 	var time_attack_complete_data := []

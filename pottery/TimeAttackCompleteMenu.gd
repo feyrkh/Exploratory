@@ -13,11 +13,12 @@ var image:Image
 var item
 var cur_idx:int = 0
 
-func setup(item_arr:Array): # Array of [Image, ArcheologyItem]
-	self.item_arr = Array(item_arr)
-	for item in self.item_arr:
-		item.append(false) # 3rd field
-	get_tree().paused = true
+func setup(_item_arr:Array): # Array of [Image, ArcheologyItem]
+	self.item_arr = Array(_item_arr)
+	for _item in self.item_arr:
+		_item.append(false) # 3rd field
+	if get_tree():
+		get_tree().paused = true
 	render_item(0)
 
 func render_item(idx:int):
@@ -177,9 +178,9 @@ func _on_prev_button_pressed():
 func _on_next_button_pressed():
 	cur_idx = min(item_arr.size(), cur_idx + 1)
 	if cur_idx == item_arr.size():
-		for item in item_arr:
-			if item[SAVED_IDX]:
-				item[ITEM_IDX].queue_free()
+		for _item in item_arr:
+			if _item[SAVED_IDX]:
+				_item[ITEM_IDX].queue_free()
 		get_tree().paused = false
 		queue_free()
 	else:

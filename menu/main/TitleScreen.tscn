@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://cf3wlna5ki846"]
+[gd_scene load_steps=12 format=3 uid="uid://cf3wlna5ki846"]
 
 [ext_resource type="Script" path="res://menu/main/TitleScreen.gd" id="1_mpvbx"]
 [ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="2_7feem"]
+[ext_resource type="PackedScene" uid="uid://cglqm0sthwlmj" path="res://menu/StartGameOptionsMenu.tscn" id="3_vereb"]
 [ext_resource type="Texture2D" uid="uid://b8ahj1h8tttqg" path="res://art/light_cone.png" id="3_y0o7f"]
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_i7rd2"]
 [ext_resource type="PackedScene" uid="uid://qf2da8tt76wb" path="res://menu/AudioSettingsMenu.tscn" id="5_uwmju"]
@@ -48,7 +49,7 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="DisplayView" type="Node2D" parent="."]
-position = Vector2(504, 2000)
+position = Vector2(2576, 2000)
 
 [node name="ColorRect" type="ColorRect" parent="DisplayView"]
 z_index = -999
@@ -76,240 +77,10 @@ offset_bottom = 1351.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="OptionsContainer" type="Control" parent="."]
-visible = false
-layout_mode = 3
-anchors_preset = 0
-offset_left = 512.0
-offset_top = 684.0
-offset_right = 800.0
-offset_bottom = 684.0
-
-[node name="OptionsGrid" type="GridContainer" parent="OptionsContainer"]
-layout_mode = 2
-offset_left = -182.0
-offset_top = -619.0
-offset_right = 418.0
-offset_bottom = -353.0
-columns = 4
-metadata/_edit_lock_ = true
-
-[node name="ItemCountLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Items"
-metadata/_edit_lock_ = true
-
-[node name="ItemCountDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="ItemCountAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "1"
-horizontal_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="ItemCountIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="RotationLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Rotation"
-metadata/_edit_lock_ = true
-
-[node name="RotationDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="RotationValue" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "yes"
-horizontal_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="RotationIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="BumpLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Piece Bumping"
-metadata/_edit_lock_ = true
-
-[node name="BumpDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="BumpValue" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "yes"
-horizontal_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="BumpIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="CrackWidthLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Crack Width "
-metadata/_edit_lock_ = true
-
-[node name="CrackWidthDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="CrackWidthAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Thin"
-horizontal_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="CrackWidthIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="CrackAmtLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Crack Count "
-metadata/_edit_lock_ = true
-
-[node name="CrackAmtDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="CrackAmtAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "6"
-horizontal_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="CrackAmtIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="WeatheringLabel" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "Weathering"
-metadata/_edit_lock_ = true
-
-[node name="WeatheringDecrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "<"
-script = ExtResource("4_i7rd2")
-
-[node name="WeatheringAmount" type="Label" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 1
-theme = ExtResource("2_7feem")
-text = "None"
-horizontal_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="WeatheringIncrease" type="Button" parent="OptionsContainer/OptionsGrid"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = ">"
-script = ExtResource("4_i7rd2")
-
-[node name="StartButton" type="Button" parent="OptionsContainer"]
-layout_mode = 2
-offset_left = -104.0
-offset_top = -249.0
-offset_right = 43.0
-offset_bottom = -210.0
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "Start"
-alignment = 0
-script = ExtResource("4_i7rd2")
-
-[node name="BackButton" type="Button" parent="OptionsContainer"]
-layout_mode = 2
-offset_left = 202.0
-offset_top = -247.0
-offset_right = 324.0
-offset_bottom = -208.0
-focus_mode = 0
-theme = ExtResource("2_7feem")
-text = "Back"
-alignment = 0
-script = ExtResource("4_i7rd2")
-sfx = "none"
-
-[node name="HoverDescription" type="Label" parent="OptionsContainer"]
-layout_mode = 2
-offset_left = -511.0
-offset_top = -128.0
-offset_right = 767.0
-offset_bottom = -89.0
-theme = ExtResource("2_7feem")
-theme_override_font_sizes/font_size = 16
-horizontal_alignment = 1
+[node name="StartGameOptionsContainer" parent="." instance=ExtResource("3_vereb")]
 
 [node name="SettingsContainer" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -472,46 +243,6 @@ offset_right = 1361.0
 offset_bottom = 790.0
 color = Color(0.0784314, 0.0784314, 0.0784314, 1)
 
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountLabel" to="." method="_on_item_count_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountDecrease" to="." method="_on_item_count_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountAmount" to="." method="_on_item_count_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/ItemCountIncrease" to="." method="_on_item_count_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/ItemCountIncrease" to="." method="_on_item_count_increase_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationLabel" to="." method="_on_rotation_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationDecrease" to="." method="_on_rotation_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/RotationDecrease" to="." method="_on_rotation_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationValue" to="." method="_on_rotation_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/RotationIncrease" to="." method="_on_rotation_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/RotationIncrease" to="." method="_on_rotation_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpLabel" to="." method="_on_bump_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpDecrease" to="." method="_on_bump_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/BumpDecrease" to="." method="_on_bump_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpValue" to="." method="_on_bump_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/BumpIncrease" to="." method="_on_bump_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/BumpIncrease" to="." method="_on_bump_increase_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthLabel" to="." method="_on_crack_width_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthDecrease" to="." method="_on_crack_width_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthDecrease" to="." method="_on_crack_width_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthAmount" to="." method="_on_crack_width_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackWidthIncrease" to="." method="_on_crack_width_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackWidthIncrease" to="." method="_on_crack_width_increase_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtLabel" to="." method="_on_crack_amt_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtDecrease" to="." method="_on_crack_amt_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtDecrease" to="." method="_on_crack_amt_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtAmount" to="." method="_on_crack_amt_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/CrackAmtIncrease" to="." method="_on_crack_amt_increase_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringLabel" to="." method="_on_weathering_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringDecrease" to="." method="_on_weathering_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/WeatheringDecrease" to="." method="_on_weathering_decrease_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringAmount" to="." method="_on_weathering_label_mouse_entered"]
-[connection signal="mouse_entered" from="OptionsContainer/OptionsGrid/WeatheringIncrease" to="." method="_on_weathering_label_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/OptionsGrid/WeatheringIncrease" to="." method="_on_weathering_increase_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/StartButton" to="." method="_on_start_button_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="mouse_entered" from="OptionsContainer/BackButton" to="." method="_on_back_button_mouse_entered"]
-[connection signal="pressed" from="OptionsContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="SettingsContainer/AudioSettings" to="." method="_on_audio_settings_pressed"]
 [connection signal="pressed" from="SettingsContainer/WeatheringSettings" to="." method="_on_weathering_settings_pressed"]
 [connection signal="pressed" from="SettingsContainer/ItemColorSettings" to="." method="_on_item_color_settings_pressed"]

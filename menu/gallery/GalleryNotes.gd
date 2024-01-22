@@ -1,13 +1,14 @@
-extends SlideInPanel
+extends PanelContainer
 class_name GalleryNotes
 
 func _ready():
 	dim_notes()
 	Global.item_highlighted.connect(update_notes)
 	Global.item_unhighlighted.connect(dim_notes)
-	mouse_exited.connect(dim_notes)
 
 func update_notes(item:ArcheologyItem):
+	set_process(true)
+	visible = true
 	if item != null:
 		var show_struggle_data:bool = item.game_mode == "struggle"
 		find_child("TimeLabel").visible = show_struggle_data
@@ -20,13 +21,15 @@ func update_notes(item:ArcheologyItem):
 		find_child("Score").text = str(item.final_score)
 		modulate = Color(1, 1, 1, 1)
 
-func _on_mouse_entered():
-	modulate = Color(1, 1, 1, 1)
-	$Timer.paused = false
-
 func dim_notes(_arg=null):
-	modulate = Color(1, 1, 1, 0.5)
+	visible = false
+	set_process(false)
 
-func _gui_input(event):
-	if event.is_action_pressed("left_click"):
-		toggle_slide()
+func _process(_delta:float):
+	if !visible:
+		set_process(false)
+	var mouse_x = get_global_mouse_position().x
+	if mouse_x < 640:
+		position.x = 1280 - get_rect().size.x - 5
+	else:
+		position.x = 5

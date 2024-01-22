@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://n5316mle0or2"]
+[gd_scene load_steps=3 format=3 uid="uid://n5316mle0or2"]
 
 [ext_resource type="Script" path="res://menu/gallery/GalleryNotes.gd" id="1_hsj0q"]
-[ext_resource type="Texture2D" uid="uid://b5ij3m7w65djn" path="res://art/broken_clay.png" id="2_lv4nh"]
-[ext_resource type="Script" path="res://util/SlideInPanelHandle.gd" id="3_il5eq"]
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_itans"]
 
 [node name="GalleryNotes" type="PanelContainer"]
 anchors_preset = 15
@@ -13,69 +12,59 @@ offset_right = 118.0
 offset_bottom = -616.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("1_itans")
 script = ExtResource("1_hsj0q")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="TextureButton" type="TextureButton" parent="HBoxContainer"]
-custom_minimum_size = Vector2(15, 0)
-layout_mode = 2
-focus_mode = 0
-texture_normal = ExtResource("2_lv4nh")
-ignore_texture_size = true
-stretch_mode = 0
-script = ExtResource("3_il5eq")
-
-[node name="Label" type="Label" parent="HBoxContainer/TextureButton"]
-layout_mode = 0
-offset_left = 20.0
-offset_top = 1.0
-offset_right = 122.0
-offset_bottom = 24.0
-rotation = 1.5708
-text = "Gallery notes"
-
 [node name="NotesContainer" type="GridContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 0
 columns = 2
 
 [node name="DateLabel" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
-text = "Date"
+theme_override_font_sizes/font_size = 16
+text = "Date: "
 
 [node name="Date" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "2024-01-21"
 
 [node name="ModeLabel" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
-text = "Mode"
+theme_override_font_sizes/font_size = 16
+text = "Mode: "
 
 [node name="Mode" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "relax"
 
 [node name="TimeLabel" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
-text = "Time"
+theme_override_font_sizes/font_size = 16
+text = "Time: "
 
 [node name="Time" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "1:30"
 
 [node name="ScoreLabel" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
-text = "Score"
+theme_override_font_sizes/font_size = 16
+text = "Score: "
 
 [node name="Score" type="Label" parent="HBoxContainer/NotesContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "1000"
-
-[node name="Timer" type="Timer" parent="."]
-autostart = true
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

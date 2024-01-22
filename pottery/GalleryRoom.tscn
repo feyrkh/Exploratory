@@ -194,10 +194,10 @@ visible = false
 anchor_mode = 0
 
 [node name="GalleryNotes" parent="UI" instance=ExtResource("7_4pcnk")]
-offset_left = 1265.0
-offset_top = 48.0
-offset_right = 145.0
-offset_bottom = -564.0
+offset_left = 1063.0
+offset_top = 54.5
+offset_right = -23.0
+offset_bottom = -498.5
 
 [node name="ControlHints" parent="UI" instance=ExtResource("7_yxhjm")]
 offset_left = 1265.0

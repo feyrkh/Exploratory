@@ -36,6 +36,23 @@ var weathering_amt := 0
 
 var config_file := ConfigFile.new()
 var mode := "zen"
+var difficulty_button_group := ButtonGroup.new()
+var cur_selected_button:Button
+var hover_deselect_timer:float = 0
+
+@onready var custom_difficulty_button:Button = find_child("CustomDifficultyButton")
+@onready var difficulty_name:Label = find_child("DifficultyName")
+@onready var item_count_icon = find_child("ItemCountIcon")
+@onready var item_count_icon_amt:Label = find_child("ItemCountIconAmt")
+@onready var crack_count_icon = find_child("CrackCountIcon")
+@onready var crack_count_icon_amt:Label = find_child("CrackCountIconAmt")
+@onready var rotate_icon:TextureRect = find_child("RotateIcon")
+@onready var bump_icon:TextureRect = find_child("BumpIcon")
+@onready var weathering_icon = find_child("WeatheringIcon")
+@onready var weathering_icon_amt = find_child("WeatheringIconAmt")
+@onready var crack_size_icon = find_child("CrackSizeIcon")
+@onready var crack_size_icon_amt = find_child("CrackSizeIconAmt")
+
 
 func _ready():
 	load_config()
@@ -50,7 +67,80 @@ func _ready():
 	setup_menu_buttons("CrackWidth", _on_crack_width_decrease_pressed, _on_crack_width_increase_pressed, _on_crack_width_label_mouse_entered)
 	setup_menu_buttons("CrackAmt", _on_crack_amt_decrease_pressed, _on_crack_amt_increase_pressed, _on_crack_amt_label_mouse_entered)
 	setup_menu_buttons("Weathering", _on_weathering_decrease_pressed, _on_weathering_increase_pressed, _on_weathering_label_mouse_entered)
+	for child in find_child("DifficultyLevels").get_children():
+		if child is DifficultyMode:
+			child.button_group = difficulty_button_group
+			child.mouse_entered.connect(show_difficulty_description.bind(child.settings))
+			child.mouse_exited.connect(prepare_to_show_default_description)
+			child.pressed.connect(select_difficulty.bind(child))
+	custom_difficulty_button.button_group = difficulty_button_group
 
+func reset():
+	for child in find_child("DifficultyLevels").get_children():
+		child.button_pressed = false
+	custom_difficulty_button = null
+	find_child("StartButton").visible = false
+	show_difficulty_description(null)
+
+func _process(delta:float):
+	hover_deselect_timer -= delta
+	if hover_deselect_timer <= 0:
+		set_process(false)
+		show_default_difficulty_description()
+
+func select_difficulty(btn:Button):
+	cur_selected_button = btn
+	show_difficulty_description(btn.settings)
+	item_count = btn.settings.item_count
+	rotation_enabled = btn.settings.rotation_enabled
+	bump_enabled = btn.settings.bump_enabled
+	crack_width = btn.settings.crack_width
+	crack_count = btn.settings.crack_count
+	weathering_amt = btn.settings.weathering_amt
+
+func show_difficulty_description(settings:GameSettings):
+	set_process(false)
+	if settings == null:
+		find_child("DifficultyName").text = ""
+		find_child("DifficultyLevelDescription").text = ""
+		find_child("SettingSummary").visible = false
+	else:
+		find_child("DifficultyName").text = settings.name
+		find_child("DifficultyLevelDescription").text = settings.desc
+		find_child("SettingSummary").visible = true
+		item_count_icon_amt.text = str(settings.item_count)
+		crack_count_icon_amt.text = str(settings.crack_count)
+		match settings.crack_width:
+			0: crack_size_icon_amt.text = "x"
+			1: crack_size_icon_amt.text = "s"
+			2: crack_size_icon_amt.text = "m"
+			3: crack_size_icon_amt.text = "l"
+		match settings.weathering_amt:
+			0: weathering_icon_amt.text = "x"
+			1: weathering_icon_amt.text = "s"
+			2: weathering_icon_amt.text = "m"
+			3: weathering_icon_amt.text = "l"
+		if settings.rotation_enabled:
+			rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-on.png")
+		else:
+			rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-off.png")
+		if settings.bump_enabled:
+			bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-on.png")
+		else:
+			bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-off.png")
+
+	find_child("StartButton").visible = cur_selected_button != null
+
+func prepare_to_show_default_description():
+	set_process(true)
+	hover_deselect_timer = 0.15
+
+func show_default_difficulty_description():
+	if cur_selected_button != null:
+		show_difficulty_description(cur_selected_button.settings)
+	else:
+		show_difficulty_description(null)
+	
 func setup_menu_buttons(button_prefix:String, decrease_callback:Callable, increase_callback:Callable, hover_callback:Callable):
 	var label = find_child(button_prefix+"Label")
 	var decrease = find_child(button_prefix+"Decrease")
@@ -64,6 +154,7 @@ func setup_menu_buttons(button_prefix:String, decrease_callback:Callable, increa
 	increase.pressed.connect(increase_callback)
 
 func show_menu(new_mode):
+	reset()
 	mode = new_mode
 	load_config()
 	update_labels()
@@ -236,3 +327,4 @@ func _on_start_button_pressed():
 	Global.click_mode = Global.ClickMode.move
 	Global.next_scene_settings = settings
 	Global.change_scene(scene)
+

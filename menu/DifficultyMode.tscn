@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1shckpiny3ka"]
+
+[ext_resource type="Script" path="res://menu/DifficultyMode.gd" id="1_t2u3m"]
+
+[node name="DifficultyMode" type="Button"]
+size_flags_horizontal = 4
+toggle_mode = true
+text = "Difficulty Mode"
+script = ExtResource("1_t2u3m")

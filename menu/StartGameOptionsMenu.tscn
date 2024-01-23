@@ -1,9 +1,129 @@
-[gd_scene load_steps=5 format=3 uid="uid://cglqm0sthwlmj"]
+[gd_scene load_steps=19 format=3 uid="uid://cglqm0sthwlmj"]
 
 [ext_resource type="Theme" uid="uid://p7fc7eiwupyw" path="res://theme/main_menu.tres" id="1_7plvp"]
 [ext_resource type="Script" path="res://menu/StartGameOptionsMenu.gd" id="1_bf540"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_i43vj"]
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="2_i4fwc"]
+[ext_resource type="PackedScene" uid="uid://b1shckpiny3ka" path="res://menu/DifficultyMode.tscn" id="3_ii6p0"]
+[ext_resource type="Script" path="res://menu/GameSettings.gd" id="4_ackb8"]
+[ext_resource type="Texture2D" uid="uid://bxolhfnudaaon" path="res://art/sidebar menu/sidebar_icon_add-item.png" id="7_bhrq3"]
+[ext_resource type="Texture2D" uid="uid://dm6g261r8ykg" path="res://art/sidebar menu/sidebar_icon_rotate-off.png" id="8_cyycy"]
+[ext_resource type="Texture2D" uid="uid://dc518q0gdyy3w" path="res://art/sidebar menu/sidebar_icon_movement-off.png" id="9_1mjtf"]
+[ext_resource type="Texture2D" uid="uid://dn6j71aulrl6j" path="res://art/crack_size.png" id="9_7fqdp"]
+[ext_resource type="Texture2D" uid="uid://swpodqfjhjfb" path="res://art/sidebar menu/sidebar_icon_shuffle.png" id="10_d5v1f"]
+[ext_resource type="Texture2D" uid="uid://bvrtv88eislod" path="res://art/weathering.png" id="10_yvtfx"]
+
+[sub_resource type="Resource" id="Resource_61o5g"]
+script = ExtResource("4_ackb8")
+name = "Novice"
+item_count = 1
+rotation_enabled = false
+bump_enabled = false
+crack_width = 0
+crack_count = 4
+weathering_amt = 0
+desc = "A simple introduction to the game
+
+One item is present, with a small number of cracks
+
+Pieces will not move or rotate unless you drag them
+
+Cracks will be practically invisible, leaving little or no glue visible"
+
+[sub_resource type="Resource" id="Resource_5w6jc"]
+script = ExtResource("4_ackb8")
+name = "Apprentice"
+item_count = 1
+rotation_enabled = false
+bump_enabled = false
+crack_width = 1
+crack_count = 6
+weathering_amt = 0
+desc = "A slightly more complex task.
+
+One item is present, but it has several cracks.
+
+Pieces will not move or rotate unless you drag them.
+
+Cracks will be thin, but not invisible. 
+
+You may need to position pieces more carefully to make up for missing material."
+
+[sub_resource type="Resource" id="Resource_fiakc"]
+script = ExtResource("4_ackb8")
+name = "Artisan"
+item_count = 3
+rotation_enabled = false
+bump_enabled = true
+crack_width = 1
+crack_count = 6
+weathering_amt = 1
+desc = "A few items are present, each with several cracks. 
+
+Pieces will not rotate unless you drag them, but may be bumped out of the way.
+
+Cracks will be thin, but not invisible. 
+
+You may need to position pieces more carefully to make up for missing material.
+
+Decorations may be lightly weathered."
+
+[sub_resource type="Resource" id="Resource_agshd"]
+script = ExtResource("4_ackb8")
+name = "Virtuoso"
+item_count = 3
+rotation_enabled = false
+bump_enabled = true
+crack_width = 2
+crack_count = 8
+weathering_amt = 2
+desc = "A few items are present, each with many cracks. 
+
+Usually it will be easy to distinguish the fragments of one item from another, but sometimes they may have similar colors.
+
+Pieces will not rotate unless you drag them, but may be bumped out of the way.
+
+Cracks will be medium thickness. Be mindful of the lost material. 
+
+Decorations may be moderately weathered."
+
+[sub_resource type="Resource" id="Resource_7cf2n"]
+script = ExtResource("4_ackb8")
+name = "Master"
+item_count = 5
+rotation_enabled = true
+bump_enabled = true
+crack_width = 2
+crack_count = 10
+weathering_amt = 2
+desc = "Several items are present, each with many cracks. 
+
+Pieces can be bumped out of the way and may rotate as they are pushed. 
+
+Pieces will be randomly rotated, and must be reoriented for assembly. 
+
+Cracks will be medium thickness. Be mindful of the lost material. 
+
+Decorations may be moderately weathered."
+
+[sub_resource type="Resource" id="Resource_o1c1t"]
+script = ExtResource("4_ackb8")
+name = "Grandmaster"
+item_count = 5
+rotation_enabled = true
+bump_enabled = true
+crack_width = 3
+crack_count = 10
+weathering_amt = 3
+desc = "Several items are present, each with many cracks. 
+
+Pieces can be bumped out of the way and may rotate as they are pushed. 
+
+Pieces will be randomly rotated, and must be reoriented for assembly. 
+
+Cracks will be very thick. Be mindful of the lost material, you will need to account for it. 
+
+Decorations may be heavily weathered."
 
 [node name="StartGameOptionsMenu" type="Control"]
 layout_mode = 3
@@ -15,33 +135,240 @@ offset_bottom = 684.0
 theme = ExtResource("1_i43vj")
 script = ExtResource("1_bf540")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="BundleDifficultyPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = -507.0
+offset_top = -675.0
+offset_right = -8.0
+offset_bottom = 41.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BundleDifficultyPanel"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BundleDifficultyPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+vertical_scroll_mode = 0
+
+[node name="DifficultyLevels" type="VBoxContainer" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Difficulty1" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
+layout_mode = 2
+settings = SubResource("Resource_61o5g")
+
+[node name="Difficulty2" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
+layout_mode = 2
+settings = SubResource("Resource_5w6jc")
+
+[node name="Difficulty3" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
+layout_mode = 2
+settings = SubResource("Resource_fiakc")
+
+[node name="Difficulty4" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
+layout_mode = 2
+settings = SubResource("Resource_agshd")
+
+[node name="Difficulty5" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
+layout_mode = 2
+settings = SubResource("Resource_7cf2n")
+
+[node name="Difficulty6" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
+layout_mode = 2
+settings = SubResource("Resource_o1c1t")
+
+[node name="CustomDifficultyButton" type="Button" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels"]
+layout_mode = 2
+toggle_mode = true
+text = "Custom Difficulty"
+script = ExtResource("2_i4fwc")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BundleDifficultyPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="BundleDifficultyPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme = ExtResource("1_7plvp")
+text = "Back"
+script = ExtResource("2_i4fwc")
+sfx = "none"
+
+[node name="StartButton" type="Button" parent="BundleDifficultyPanel/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme = ExtResource("1_7plvp")
+text = "Start"
+script = ExtResource("2_i4fwc")
+
+[node name="BundleExplanationPanel" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = -8.0
 offset_top = -675.0
 offset_right = 755.0
 offset_bottom = 37.0
 
-[node name="OptionsGrid" type="GridContainer" parent="PanelContainer"]
+[node name="DifficultyLevelDescription" type="Label" parent="BundleExplanationPanel"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 23
+text = "A simple introduction to the game.
+
+Only a single item is present, with a small number of cracks.
+
+Pieces will not move or rotate unless you drag them.
+
+Cracks will be practically invisible, leaving little or no glue visible."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Control" type="Control" parent="BundleExplanationPanel"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="BundleExplanationPanel/Control"]
+anchors_preset = 0
+offset_left = 160.0
+offset_top = 112.0
+offset_right = 200.0
+offset_bottom = 152.0
+
+[node name="DifficultyName" type="Label" parent="BundleExplanationPanel/Control/Control"]
+layout_mode = 0
+offset_left = -172.0
+offset_top = -116.0
+offset_right = 547.0
+offset_bottom = -70.0
+text = "Novice
+"
+horizontal_alignment = 1
+
+[node name="SettingSummary" type="MarginContainer" parent="BundleExplanationPanel/Control/Control"]
+layout_mode = 0
+offset_left = -154.0
+offset_top = 494.0
+offset_right = 521.0
+offset_bottom = 540.0
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="BundleExplanationPanel/Control/Control/SettingSummary"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ItemCountIcon" type="TextureRect" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("7_bhrq3")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="ItemCountIconAmt" type="Label" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer"]
+layout_mode = 2
+text = "1"
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CrackCountIcon" type="TextureRect" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("10_d5v1f")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CrackCountIconAmt" type="Label" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer2"]
+layout_mode = 2
+text = "4"
+horizontal_alignment = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CrackSizeIcon" type="TextureRect" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer4"]
+layout_mode = 2
+texture = ExtResource("9_7fqdp")
+
+[node name="CrackSizeIconAmt" type="Label" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer4"]
+layout_mode = 2
+text = "X"
+horizontal_alignment = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WeatheringIcon" type="TextureRect" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("10_yvtfx")
+
+[node name="WeatheringIconAmt" type="Label" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer3"]
+layout_mode = 2
+text = "X"
+horizontal_alignment = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RotateIcon" type="TextureRect" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("8_cyycy")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer5"]
+layout_mode = 2
+text = "       "
+
+[node name="BumpIcon" type="TextureRect" parent="BundleExplanationPanel/Control/Control/SettingSummary/HBoxContainer5/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("9_1mjtf")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CustomOptionPanel" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="PanelContainer" parent="CustomOptionPanel"]
+layout_mode = 0
+offset_left = -8.0
+offset_top = -675.0
+offset_right = 762.0
+offset_bottom = 41.0
+
+[node name="OptionsGrid" type="GridContainer" parent="CustomOptionPanel/Panel"]
 layout_mode = 2
 columns = 4
 metadata/_edit_lock_ = true
 
-[node name="ItemCountLabel" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="ItemCountLabel" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_7plvp")
 text = "Items"
 metadata/_edit_lock_ = true
 
-[node name="ItemCountDecrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="ItemCountDecrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = "<"
 script = ExtResource("2_i4fwc")
 
-[node name="ItemCountAmount" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="ItemCountAmount" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -50,28 +377,28 @@ text = "1"
 horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="ItemCountIncrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="ItemCountIncrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = ">    "
 script = ExtResource("2_i4fwc")
 
-[node name="RotationLabel" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="RotationLabel" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_7plvp")
 text = "Rotation"
 metadata/_edit_lock_ = true
 
-[node name="RotationDecrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="RotationDecrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = "<"
 script = ExtResource("2_i4fwc")
 
-[node name="RotationAmount" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="RotationAmount" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -80,28 +407,28 @@ text = "yes"
 horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="RotationIncrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="RotationIncrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = ">    "
 script = ExtResource("2_i4fwc")
 
-[node name="BumpLabel" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="BumpLabel" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_7plvp")
 text = "Piece Bumping    "
 metadata/_edit_lock_ = true
 
-[node name="BumpDecrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="BumpDecrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = "<"
 script = ExtResource("2_i4fwc")
 
-[node name="BumpAmount" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="BumpAmount" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -110,28 +437,28 @@ text = "yes"
 horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="BumpIncrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="BumpIncrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = ">    "
 script = ExtResource("2_i4fwc")
 
-[node name="CrackWidthLabel" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="CrackWidthLabel" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_7plvp")
 text = "Crack Width "
 metadata/_edit_lock_ = true
 
-[node name="CrackWidthDecrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="CrackWidthDecrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = "<"
 script = ExtResource("2_i4fwc")
 
-[node name="CrackWidthAmount" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="CrackWidthAmount" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -140,28 +467,28 @@ text = "Thin"
 horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="CrackWidthIncrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="CrackWidthIncrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = ">    "
 script = ExtResource("2_i4fwc")
 
-[node name="CrackAmtLabel" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="CrackAmtLabel" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_7plvp")
 text = "Crack Count "
 metadata/_edit_lock_ = true
 
-[node name="CrackAmtDecrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="CrackAmtDecrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = "<"
 script = ExtResource("2_i4fwc")
 
-[node name="CrackAmtAmount" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="CrackAmtAmount" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -170,28 +497,28 @@ text = "6"
 horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="CrackAmtIncrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="CrackAmtIncrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = ">    "
 script = ExtResource("2_i4fwc")
 
-[node name="WeatheringLabel" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="WeatheringLabel" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_7plvp")
 text = "Weathering"
 metadata/_edit_lock_ = true
 
-[node name="WeatheringDecrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="WeatheringDecrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = "<"
 script = ExtResource("2_i4fwc")
 
-[node name="WeatheringAmount" type="Label" parent="PanelContainer/OptionsGrid"]
+[node name="WeatheringAmount" type="Label" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -200,39 +527,14 @@ text = "None"
 horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="WeatheringIncrease" type="Button" parent="PanelContainer/OptionsGrid"]
+[node name="WeatheringIncrease" type="Button" parent="CustomOptionPanel/Panel/OptionsGrid"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_7plvp")
 text = ">    "
 script = ExtResource("2_i4fwc")
 
-[node name="StartButton" type="Button" parent="."]
-layout_mode = 2
-offset_left = 415.0
-offset_top = -293.0
-offset_right = 496.0
-offset_bottom = -243.0
-focus_mode = 0
-theme = ExtResource("1_7plvp")
-text = "Start"
-alignment = 0
-script = ExtResource("2_i4fwc")
-
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 2
-offset_left = 233.0
-offset_top = -291.0
-offset_right = 311.0
-offset_bottom = -241.0
-focus_mode = 0
-theme = ExtResource("1_7plvp")
-text = "Back"
-alignment = 0
-script = ExtResource("2_i4fwc")
-sfx = "none"
-
-[node name="HoverDescription" type="Label" parent="."]
+[node name="HoverDescription" type="Label" parent="CustomOptionPanel"]
 layout_mode = 2
 offset_left = 13.0
 offset_top = -230.0
@@ -243,9 +545,9 @@ theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = -510.0
-offset_top = -675.0
-offset_right = -8.0
-offset_bottom = 37.0
+[connection signal="mouse_entered" from="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels/Difficulty1" to="." method="_on_difficulty_mouse_entered"]
+[connection signal="mouse_entered" from="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels/Difficulty2" to="." method="_on_difficulty_mouse_entered"]
+[connection signal="mouse_entered" from="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels/Difficulty3" to="." method="_on_difficulty_mouse_entered"]
+[connection signal="mouse_entered" from="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels/Difficulty4" to="." method="_on_difficulty_mouse_entered"]
+[connection signal="mouse_entered" from="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels/Difficulty5" to="." method="_on_difficulty_mouse_entered"]
+[connection signal="mouse_entered" from="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels/Difficulty6" to="." method="_on_difficulty_mouse_entered"]

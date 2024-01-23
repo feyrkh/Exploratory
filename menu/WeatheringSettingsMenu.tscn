@@ -65,6 +65,7 @@ offset_bottom = 131.0
 text = "Enabled"
 
 [node name="PrevButton" type="Button" parent="."]
+layout_mode = 0
 offset_left = 511.0
 offset_top = 95.0
 offset_right = 596.0
@@ -72,6 +73,7 @@ offset_bottom = 135.0
 text = "Previous"
 
 [node name="NextButton" type="Button" parent="."]
+layout_mode = 0
 offset_left = 665.0
 offset_top = 96.0
 offset_right = 750.0

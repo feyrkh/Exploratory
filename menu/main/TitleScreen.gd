@@ -51,6 +51,9 @@ func _unhandled_key_input(event):
 		_on_back_button_pressed()
 	elif event.is_action_pressed("ui_cancel") and find_child("SettingsContainer").visible:
 		return_from_settings_menu()
+	elif event.is_action_pressed("ui_cancel") and find_child("CreditsButton").text == "Back":
+		_on_credits_button_pressed()
+		Global.play_button_click_sound()
 
 func _on_back_button_pressed():
 	find_child("StartGameOptionsContainer").hide_menu()
@@ -58,6 +61,7 @@ func _on_back_button_pressed():
 	#find_child("StartGameOptionsContainer").visible = false
 	find_child("MainMenu").visible = true
 	Global.play_button_click_sound("menu_back")
+	find_child("CreditsButton").visible = true
 	
 func _process(_delta):
 	pass
@@ -168,6 +172,7 @@ func hide_demo_view():
 	demo_tween.tween_property(find_child("MainMenu"), "position", main_menu_start_pos - Vector2(1280, 0), 1.0)
 	find_child("StartGameOptionsContainer").position = option_menu_start_pos + Vector2(0, 1280)
 	demo_tween.tween_property(find_child("StartGameOptionsContainer"), "position", option_menu_start_pos, 1.0)
+	find_child("CreditsButton").visible = false
 
 func restore_demo_view():
 	if demo_tween != null and demo_tween.is_running():
@@ -179,6 +184,7 @@ func restore_demo_view():
 	demo_tween.tween_property(find_child("StartGameOptionsContainer"), "position", option_menu_start_pos + Vector2(0, 1280), 1.0)
 	demo_tween.set_parallel(false)
 	demo_tween.tween_property(find_child("StartGameOptionsContainer"), "visible", false, 0.01)
+	find_child("CreditsButton").visible = true
 
 func enter_settings_menu():
 	if demo_tween != null and demo_tween.is_running():
@@ -192,6 +198,7 @@ func enter_settings_menu():
 	find_child("SettingsContainer").position = settings_menu_start_pos - Vector2(0, 1280)
 	find_child("SettingsContainer").visible = true
 	demo_tween.tween_property(find_child("SettingsContainer"), "position", settings_menu_start_pos, 1.0)
+	find_child("CreditsButton").visible = false
 
 func return_from_settings_menu():
 	if demo_tween != null and demo_tween.is_running():
@@ -203,6 +210,7 @@ func return_from_settings_menu():
 	demo_tween.tween_property(find_child("SettingsContainer"), "position", settings_menu_start_pos - Vector2(0, 1280), 1.0)
 	demo_tween.set_parallel(false)
 	demo_tween.tween_property(find_child("SettingsContainer"), "visible", false, 0.01)
+	find_child("CreditsButton").visible = true
 
 func _on_settings_button_pressed():
 	enter_settings_menu()

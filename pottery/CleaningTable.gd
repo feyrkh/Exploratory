@@ -24,6 +24,7 @@ var camera_drag_camera_start = null
 var settings
 var glue_cooldown:float = 0
 var highlighted_items = {}
+var total_items
 
 
 # Called when the node enters the scene tree for the first time.
@@ -62,7 +63,7 @@ func _ready():
 		PhysicsServer2D.set_active(false)
 		update_button_text()
 		var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
-		var total_items = settings.get(ITEM_COUNT_SETTING, 1)
+		total_items = settings.get(ITEM_COUNT_SETTING, 1)
 		for i in range(total_items):
 			fade_label.text = "Item "+str(i+1)+" of "+str(total_items)+"\nShattering..."
 			await generate_one_random_item($Pieces, i, scene_center + Vector2(randf_range(-400, 400), randf_range(-400, 400)))
@@ -273,8 +274,22 @@ func do_glue_at_cursor():
 					main_piece.glue(pieces[i])
 			main_piece.call_deferred("highlight_visual_polygons")
 			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+			if pieces_container.get_child_count() <= total_items:
+				get_tree().create_timer(3).timeout.connect(show_completion_window, CONNECT_ONE_SHOT)
 		elif pieces.size() == 1:
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+
+func show_completion_window():
+	if Global.mode == "zen":
+		show_relax_completion_window()
+	else:
+		show_struggle_completion_window()
+
+func show_relax_completion_window():
+	pass
+
+func show_struggle_completion_window():
+	pass
 
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:
@@ -412,6 +427,7 @@ func save_to_gallery(item:Node2D):
 		if get_tree():
 			await get_tree().process_frame
 			_on_save_button_pressed()
+			total_items = max(0, total_items-1)
 	, CONNECT_ONE_SHOT)
 
 func time_attack_complete(_total_seconds:int):
@@ -462,6 +478,7 @@ func _physics_process(_delta:float):
 		try_place_newly_added_fragments()
 
 func _on_sidebar_menu_add_item_button_pressed():
+	total_items += 1
 	var fragment_container := Node2D.new()
 	add_child(fragment_container)
 	fragment_container.position = Vector2(15000, 15000)

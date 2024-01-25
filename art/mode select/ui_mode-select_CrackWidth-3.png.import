@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bvrtv88eislod"
-path="res://.godot/imported/weathering.png-8b2a93808e8ea76e09f9e67d9947e868.ctex"
+uid="uid://3v00fktlbvns"
+path="res://.godot/imported/ui_mode-select_CrackWidth-3.png-137e684724300f95852d8cbb199db0f9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/weathering.png"
-dest_files=["res://.godot/imported/weathering.png-8b2a93808e8ea76e09f9e67d9947e868.ctex"]
+source_file="res://art/mode select/ui_mode-select_CrackWidth-3.png"
+dest_files=["res://.godot/imported/ui_mode-select_CrackWidth-3.png-137e684724300f95852d8cbb199db0f9.ctex"]
 
 [params]
 

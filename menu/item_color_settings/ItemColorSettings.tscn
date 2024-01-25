@@ -71,6 +71,7 @@ text = "Allowed Colors"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/AllowedColors"]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
@@ -81,6 +82,7 @@ theme_override_constants/margin_top = 4
 
 [node name="AllowedColorsContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/AllowedColors/ScrollContainer/MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 columns = 5
 
 [node name="PrevButton" type="Button" parent="."]

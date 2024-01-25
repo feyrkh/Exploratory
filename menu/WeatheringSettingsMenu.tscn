@@ -35,14 +35,14 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MedExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="LowExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 expand_mode = 3
 
-[node name="LowExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="MedExample" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 6

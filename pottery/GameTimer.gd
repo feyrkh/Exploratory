@@ -10,7 +10,7 @@ var expected_pieces:int
 var time_seconds:int = 0:
 	set(val):
 		time_seconds = val
-		find_child("Label").text = get_time_text()
+		label.text = get_time_text()
 		if piece_container.get_child_count() <= expected_pieces:
 			complete_game()
 		

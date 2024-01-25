@@ -21,7 +21,6 @@ func _ready():
 		$SaveItemButton.visible = false
 		$SaveItemLabel.visible = false
 	update_buttons()
-	
 
 func update_buttons():
 	if Global.freeze_pieces:

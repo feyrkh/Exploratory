@@ -80,7 +80,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 20
-text = "SFX Volume"
+text = "Sound Volume"
 vertical_alignment = 1
 autowrap_mode = 2
 
@@ -127,14 +127,14 @@ sfx = ""
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_gotgm")
-text = "quit without saving"
+text = "Exit game"
 script = ExtResource("3_7aqp1")
 
 [node name="QuitAndSaveButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_gotgm")
-text = "Save and quit"
+text = "Save and exit"
 alignment = 2
 script = ExtResource("3_7aqp1")
 

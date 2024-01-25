@@ -40,7 +40,7 @@ var difficulty_button_group := ButtonGroup.new()
 var cur_selected_button:Button
 var hover_deselect_timer:float = 0
 
-@onready var custom_difficulty_button:Button = find_child("CustomDifficultyButton")
+@onready var custom_difficulty_button:DifficultyMode = find_child("CustomDifficultyButton")
 @onready var difficulty_name:Label = find_child("DifficultyName")
 @onready var item_count_icon = find_child("ItemCountIcon")
 @onready var item_count_icon_amt:Label = find_child("ItemCountIconAmt")
@@ -49,12 +49,14 @@ var hover_deselect_timer:float = 0
 @onready var rotate_icon:TextureRect = find_child("RotateIcon")
 @onready var bump_icon:TextureRect = find_child("BumpIcon")
 @onready var weathering_icon = find_child("WeatheringIcon")
-@onready var weathering_icon_amt = find_child("WeatheringIconAmt")
 @onready var crack_size_icon = find_child("CrackSizeIcon")
-@onready var crack_size_icon_amt = find_child("CrackSizeIconAmt")
 
+func _notification(what):
+	if what == NOTIFICATION_WM_MOUSE_EXIT:
+		hide_tooltip()
 
 func _ready():
+	custom_difficulty_button = find_child("CustomDifficultyButton")
 	load_config()
 	update_labels()
 	find_child("BackButton").pressed.connect(func(): menu_closed.emit())
@@ -70,11 +72,80 @@ func _ready():
 	for child in find_child("DifficultyLevels").get_children():
 		if child is DifficultyMode:
 			child.button_group = difficulty_button_group
-			child.mouse_entered.connect(show_difficulty_description.bind(child.settings))
 			child.mouse_exited.connect(prepare_to_show_default_description)
-			child.pressed.connect(select_difficulty.bind(child))
-	custom_difficulty_button.button_group = difficulty_button_group
+			if child != custom_difficulty_button:
+				child.mouse_entered.connect(show_difficulty_description.bind(child.settings))
+				child.pressed.connect(select_difficulty.bind(child))
+			else:
+				custom_difficulty_button.pressed.connect(select_custom_difficulty)
+				child.mouse_entered.connect(show_custom_difficulty_description)
+				
+	find_child("CustomOptionPanel").visible = false
+	find_child("BundleExplanationPanel").visible = true
+	
+	setup_tooltip("ItemCountIcon", func(): return "Number of shattered items\nMore items can be added freely in relax mode" if mode=="zen" else "Number of shattered items\nGame ends when this many fragments remain in struggle mode")
+	setup_tooltip("CrackCountIcon", func(): return "Number of cracks per item")
+	setup_tooltip("CrackSizeIcon", func(): 
+		if cur_selected_button == null: return ""
+		match cur_selected_button.settings.crack_width:
+			0: return "Hairline cracks\nPieces will fit together almost seamlessly\nVery little glue may be visible"
+			1: return "Thin cracks\nPieces will fit together easily"
+			2: return "Medium cracks\nMore material will be removed\nMore room for mistakes"
+			3: return "Thick cracks\nCareful positioning is required to avoid poor joins"
+	)
+	setup_tooltip("WeatheringIcon", func():
+		match cur_selected_button.settings.weathering_amt:
+			0: return "Pristine condition, no weathering"
+			1: return "Lightly weathered condition\nDecorations may have a more used appearance"
+			2: return "Moderately weathered condition\nDecorations may be noticeably degraded due to wear"
+			3: return "Heavily weathered condition\nDecorations may be nearly unrecognizable due to wear"
+	)
+	setup_tooltip("BumpIcon", func():
+		if cur_selected_button == null: return ""
+		var msg = "Items will not move when bumped\nUse the 'avoid collision' button to move fragments through each other" if !cur_selected_button.settings.bump_enabled else "Items will move when bumped\nUse the 'avoid collision' button to move fragments through each other"
+		if mode == "zen":
+			msg += "\nThis setting can be freely changed in relax mode"
+		return msg)
+	setup_tooltip("RotateIcon", func(): 
+		if cur_selected_button == null: return ""
+		var msg = "Items will not rotate when bumped\nItems will not require rotation to assemble" if !cur_selected_button.settings.rotation_enabled else "Items may rotate when bumped\nItems will require rotation to assemble"
+		if mode == "zen":
+			msg += "\nThis setting can be freely changed in relax mode"
+		return msg)
 
+func show_custom_difficulty_description():
+	custom_difficulty_button = find_child("CustomDifficultyButton")
+	update_labels()
+	show_difficulty_description(custom_difficulty_button.settings)
+	find_child("BundleExplanationPanel").visible = false
+	find_child("CustomOptionPanel").visible = true
+
+func setup_tooltip(child_name, msg_callback:Callable):
+		var child = find_child(child_name)
+		child.mouse_entered.connect(show_tooltip.bind(msg_callback, child))
+		child.mouse_exited.connect(hide_tooltip)
+
+func show_tooltip(msg_callback, target):
+	find_child("HoverDescription").text = ""
+	var tooltip:PanelContainer = find_child("Tooltip")
+	tooltip.visible = false
+	tooltip.find_child("TooltipLabel").hide()
+	tooltip.size = Vector2(10, 10)
+	tooltip.find_child("TooltipLabel").text = msg_callback.call()
+	tooltip.find_child("TooltipLabel").show()
+	await get_tree().process_frame
+	tooltip.visible = true
+	var tooltip_rect = tooltip.get_rect()
+	print("target size: ", target.size)
+	tooltip.global_position = target.global_position + Vector2(-tooltip_rect.size.x / 2.0, -(tooltip_rect.size.y)) + Vector2(target.get_rect().size.x/2.0, 0)
+	if tooltip.global_position.x < find_child("BundleExplanationPanel").global_position.x + 30:
+		tooltip.global_position.x = find_child("BundleExplanationPanel").global_position.x + 30
+	if get_viewport_rect().size.x < tooltip.get_rect().size.x + tooltip.global_position.x + 40:
+		tooltip.global_position.x -= (tooltip.get_rect().size.x + tooltip.global_position.x) - get_viewport_rect().size.x + 40
+
+func hide_tooltip():
+	find_child("Tooltip").visible = false
+	
 func reset():
 	for child in find_child("DifficultyLevels").get_children():
 		child.button_pressed = false
@@ -89,6 +160,8 @@ func _process(delta:float):
 		show_default_difficulty_description()
 
 func select_difficulty(btn:Button):
+	find_child("CustomOptionPanel").visible = false
+	find_child("BundleExplanationPanel").visible = true
 	cur_selected_button = btn
 	show_difficulty_description(btn.settings)
 	item_count = btn.settings.item_count
@@ -98,8 +171,18 @@ func select_difficulty(btn:Button):
 	crack_count = btn.settings.crack_count
 	weathering_amt = btn.settings.weathering_amt
 
+func select_custom_difficulty():
+	save_config()
+	find_child("CustomOptionPanel").visible = true
+	find_child("BundleExplanationPanel").visible = false
+	cur_selected_button = custom_difficulty_button
+	load_config()
+	update_labels()
+
 func show_difficulty_description(settings:GameSettings):
 	set_process(false)
+	find_child("BundleExplanationPanel").visible = true
+	find_child("CustomOptionPanel").visible = false
 	if settings == null:
 		find_child("DifficultyName").text = ""
 		find_child("DifficultyLevelDescription").text = ""
@@ -110,26 +193,38 @@ func show_difficulty_description(settings:GameSettings):
 		find_child("SettingSummary").visible = true
 		item_count_icon_amt.text = str(settings.item_count)
 		crack_count_icon_amt.text = str(settings.crack_count)
-		match settings.crack_width:
-			0: crack_size_icon_amt.text = "x"
-			1: crack_size_icon_amt.text = "s"
-			2: crack_size_icon_amt.text = "m"
-			3: crack_size_icon_amt.text = "l"
-		match settings.weathering_amt:
-			0: weathering_icon_amt.text = "x"
-			1: weathering_icon_amt.text = "s"
-			2: weathering_icon_amt.text = "m"
-			3: weathering_icon_amt.text = "l"
-		if settings.rotation_enabled:
-			rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-on.png")
-		else:
-			rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-off.png")
-		if settings.bump_enabled:
-			bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-on.png")
-		else:
-			bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-off.png")
-
+		set_crack_size_texture(crack_size_icon, settings)
+		set_weathering_texture(weathering_icon, settings)
+		set_rotation_texture(rotate_icon, settings)
+		set_bump_texture(bump_icon, settings)
 	find_child("StartButton").visible = cur_selected_button != null
+
+func set_rotation_texture(rotate_icon, settings):
+	if settings.rotation_enabled:
+		rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-on.png")
+	else:
+		rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-off.png")
+
+func set_bump_texture(bump_icon, settings):
+	if settings.bump_enabled:
+		bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-on.png")
+	else:
+		bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-off.png")
+
+func set_crack_size_texture(crack_size_icon, settings):
+	match settings.crack_width:
+		0: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-1.png")
+		1: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-2.png")
+		2: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-3.png")
+		3: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-4.png")
+
+func set_weathering_texture(weathering_icon, settings):
+	match settings.weathering_amt:
+		0: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-1.png")
+		1: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-2.png")
+		2: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-3.png")
+		3: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-4.png")
+		4: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-random.png")
 
 func prepare_to_show_default_description():
 	set_process(true)
@@ -137,7 +232,10 @@ func prepare_to_show_default_description():
 
 func show_default_difficulty_description():
 	if cur_selected_button != null:
-		show_difficulty_description(cur_selected_button.settings)
+		if cur_selected_button == custom_difficulty_button:
+			show_custom_difficulty_description()
+		else:
+			show_difficulty_description(cur_selected_button.settings)
 	else:
 		show_difficulty_description(null)
 	
@@ -186,6 +284,13 @@ func save_config():
 	config_file.save(SETTINGS_PATH)
 
 func update_labels():
+	if !custom_difficulty_button: return
+	custom_difficulty_button.settings.item_count = item_count
+	custom_difficulty_button.settings.rotation_enabled = rotation_enabled
+	custom_difficulty_button.settings.bump_enabled = bump_enabled
+	custom_difficulty_button.settings.crack_width = crack_width
+	custom_difficulty_button.settings.crack_count = crack_count
+	custom_difficulty_button.settings.weathering_amt = weathering_amt
 	find_child("ItemCountAmount").text = str(item_count)
 	find_child("RotationAmount").text = "yes" if rotation_enabled else "no"
 	find_child("BumpAmount").text = "yes" if bump_enabled else "no"
@@ -198,6 +303,16 @@ func update_labels():
 		2: weathering_label.text = "medium"
 		3: weathering_label.text = "high"
 		4: weathering_label.text = "random"
+	set_bump_texture(find_child("CustomBumpIcon"), custom_difficulty_button.settings)
+	set_rotation_texture(find_child("CustomRotationIcon"), custom_difficulty_button.settings)
+	set_weathering_texture(find_child("CustomWeatheringIcon"), custom_difficulty_button.settings)
+	set_crack_size_texture(find_child("CustomCrackSizeIcon"), custom_difficulty_button.settings)
+	item_count_icon_amt.text = str(custom_difficulty_button.settings.item_count)
+	crack_count_icon_amt.text = str(custom_difficulty_button.settings.crack_count)
+	set_crack_size_texture(crack_size_icon, custom_difficulty_button.settings)
+	set_weathering_texture(weathering_icon, custom_difficulty_button.settings)
+	set_rotation_texture(rotate_icon, custom_difficulty_button.settings)
+	set_bump_texture(bump_icon, custom_difficulty_button.settings)
 
 func _on_item_count_decrease_pressed():
 	var amt = 1
@@ -260,19 +375,19 @@ func hover_tooltip(str:String):
 	find_child("HoverDescription").text = str
 
 func _on_item_count_label_mouse_entered():
-	hover_tooltip("Change how many items are generated for you to reassemble.\n\nThe fragments will be mixed together - add more items for a greater challenge!")
+	hover_tooltip("Change how many items are generated for you to reassemble.\nThe fragments will be mixed together - add more items for a greater challenge!")
 
 func _on_rotation_label_mouse_entered():
 	if !rotation_enabled:
-		hover_tooltip("Fragments will not rotate when they collide with other pieces that you are moving\n\nWhen shuffled, fragments will always be oriented so that they will fit together without rotation\n\nAn easier, more meditative experience")
+		hover_tooltip("Fragments will not rotate when they collide with other pieces that you are moving\nWhen shuffled, fragments will always be oriented so that they will fit together without rotation\nAn easier, more meditative experience")
 	else:
-		hover_tooltip("Fragments may rotate when they collide with other pieces that you are moving\n\nWhen shuffled, fragments will be randomly oriented, and you will need to rotate to fit them together\n\nA more engaging experience")
+		hover_tooltip("Fragments may rotate when they collide with other pieces that you are moving\nWhen shuffled, fragments will be randomly oriented, and you will need to rotate to fit them together\nA more engaging experience")
 
 func _on_bump_label_mouse_entered():
 	if !bump_enabled:
-		hover_tooltip("Fragments will not move when bumped by a piece you are moving\n\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
+		hover_tooltip("Fragments will not move when bumped by a piece you are moving\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
 	else:
-		hover_tooltip("Fragments will be bumped out of the way by a piece you are moving\n\nTake care when fitting pieces together\n\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
+		hover_tooltip("Fragments will be bumped out of the way by a piece you are moving\nTake care when fitting pieces together\nHold 'shift' to temporarily disable fragment collision if you need to move one piece through another")
 
 func _on_weathering_decrease_pressed():
 	weathering_amt = (weathering_amt - 1)
@@ -285,22 +400,22 @@ func _on_weathering_increase_pressed():
 	update_labels()
 
 func _on_weathering_label_mouse_entered():
-		hover_tooltip("Age and exposure to weather can affect decorative elements in a variety of ways.")
+		hover_tooltip("\nAge and exposure to weather can affect decorative elements in a variety of ways.")
 
 func _on_crack_width_label_mouse_entered():
-	hover_tooltip("Adjust the thickness of the fracture lines\n\nThinner fractures fit together more perfectly, but thicker fractures allow more room for adjustment\n\nFind beauty in imperfection")
+	hover_tooltip("Adjust the thickness of the fracture lines\nThinner fractures fit together more perfectly, but thicker fractures allow more room for adjustment\nFind beauty in imperfection")
 
 func _on_crack_amt_label_mouse_entered():
-	hover_tooltip("Adjust the number of fracture lines on each item")
+	hover_tooltip("\nAdjust the number of fracture lines on each item")
 
 func _on_start_button_mouse_entered():
 	if mode == "zen":
-		hover_tooltip("Begin a calm and reflective meditation on imperfection\n\nNo time limit, discard fragments freely, and bring new broken items into the mix as you wish\n\nSave completed pieces to your gallery")
+		hover_tooltip("Begin a calm and reflective meditation on imperfection\nNo time limit, discard fragments freely, and bring new broken items into the mix as you wish\nSave completed pieces to your gallery")
 	else:
-		hover_tooltip("Begin a frantic rush to repair what has been broken\n\nThe timer will start when you move the first fragment\n\nSave completed pieces to your gallery, along with your score")
+		hover_tooltip("Begin a frantic rush to repair what has been broken\nThe timer will start when you move the first fragment\nSave completed pieces to your gallery, along with your score")
 
 func _on_back_button_mouse_entered():
-	hover_tooltip("Return to the main menu")
+	hover_tooltip("\nReturn to the main menu")
 
 func _on_start_button_pressed():
 	save_config()
@@ -318,7 +433,7 @@ func _on_start_button_pressed():
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
 			settings[CleaningTable.WEATHERING_AMT_SETTING] = weathering_amt
-	var scene = load("res://pottery/CleaningTable.tscn")
+	Global.game_mode = settings.get("mode", "zen")
 	Global.shatter_width = crack_widths[crack_width]
 	Global.rotate_with_shuffle = rotation_enabled
 	Global.lock_rotation = !rotation_enabled
@@ -326,5 +441,6 @@ func _on_start_button_pressed():
 	Global.collide = true
 	Global.click_mode = Global.ClickMode.move
 	Global.next_scene_settings = settings
+	var scene = load("res://pottery/CleaningTable.tscn")
 	Global.change_scene(scene)
 

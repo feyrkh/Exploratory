@@ -5,4 +5,8 @@ class_name DifficultyMode
 
 func _ready():
 	super._ready()
-	text = settings.name
+	if settings == null:
+		settings = GameSettings.new()
+		settings.name = "Custom Difficulty"
+	else:
+		text = settings.name

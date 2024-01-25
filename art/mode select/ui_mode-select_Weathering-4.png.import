@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dn6j71aulrl6j"
-path="res://.godot/imported/crack_size.png-e6c46591ffe04de1c63e218fec6378ec.ctex"
+uid="uid://flcsseskeax7"
+path="res://.godot/imported/ui_mode-select_Weathering-4.png-7b6479b61d9e0ebe27edad6307adcc35.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/crack_size.png"
-dest_files=["res://.godot/imported/crack_size.png-e6c46591ffe04de1c63e218fec6378ec.ctex"]
+source_file="res://art/mode select/ui_mode-select_Weathering-4.png"
+dest_files=["res://.godot/imported/ui_mode-select_Weathering-4.png-7b6479b61d9e0ebe27edad6307adcc35.ctex"]
 
 [params]
 

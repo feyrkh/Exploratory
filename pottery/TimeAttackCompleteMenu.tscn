@@ -24,10 +24,10 @@ color = Color(0, 0, 0, 0.67451)
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = -319.0
-offset_top = -237.0
-offset_right = 319.0
-offset_bottom = 237.0
+offset_left = -409.0
+offset_top = -304.0
+offset_right = 428.0
+offset_bottom = 318.0
 theme = ExtResource("2_75gck")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
@@ -49,151 +49,155 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScoreContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 17
+
+[node name="ScoreContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer"]
 layout_mode = 2
 columns = 3
 
-[node name="CategoryPieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryPieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Fragments"
 
-[node name="ValuePieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValuePieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "5"
 horizontal_alignment = 1
 
-[node name="ScorePieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScorePieceCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Artifacts"
 
-[node name="ValueItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "2"
 horizontal_alignment = 1
 
-[node name="ScoreItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreItemCount" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Time"
 
-[node name="ValueTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "00:00:00  "
 horizontal_alignment = 1
 
-[node name="ScoreTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreTime" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "complete"
 
-[node name="ValueComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "100%"
 horizontal_alignment = 1
 
-[node name="ScoreComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Disarray"
 
-[node name="ValueAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "100%"
 horizontal_alignment = 1
 
-[node name="ScoreAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreAccuracy" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Fracture"
 
-[node name="ValueShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "hairline"
 horizontal_alignment = 1
 
-[node name="ScoreShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreShatter" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Bump"
 
-[node name="ValueBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Yes"
 horizontal_alignment = 1
 
-[node name="ScoreBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreBump" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Rotate"
 
-[node name="ValueRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Yes"
 horizontal_alignment = 1
 
-[node name="ScoreRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreRotate" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
-[node name="CategoryTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="CategoryTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "Total"
 
-[node name="ValueTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ValueTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 
-[node name="ScoreTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/ScoreContainer"]
+[node name="ScoreTotal" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 20
 text = "-"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]

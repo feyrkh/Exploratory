@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=20 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
@@ -7,10 +7,17 @@
 [ext_resource type="Script" path="res://pottery/GameTimer.gd" id="4_2x0wy"]
 [ext_resource type="PackedScene" uid="uid://bylog41kf2707" path="res://util/ScreenCollisionBorders.tscn" id="5_friqi"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="5_tvljs"]
+[ext_resource type="Texture2D" uid="uid://b5ij3m7w65djn" path="res://art/broken_clay.png" id="6_1grsd"]
 [ext_resource type="PackedScene" uid="uid://oft4qrgukbr3" path="res://pottery/glue_panel.tscn" id="6_8boyq"]
 [ext_resource type="PackedScene" uid="uid://bpmxfyq1j2wb1" path="res://menu/sidebar/SidebarMenu.tscn" id="7_qqhi4"]
+[ext_resource type="Script" path="res://util/SlideInPanelHandle.gd" id="7_rfj80"]
+[ext_resource type="Texture2D" uid="uid://bxolhfnudaaon" path="res://art/sidebar menu/sidebar_icon_add-item.png" id="9_4g6rw"]
+[ext_resource type="Script" path="res://util/SlideInPanel.gd" id="9_7wsxx"]
 [ext_resource type="AudioStream" uid="uid://cndk0874cwds3" path="res://sfx/brush2.mp3" id="9_fkpf1"]
+[ext_resource type="Texture2D" uid="uid://xsadu4tnnstq" path="res://art/sidebar menu/sidebar_icon_save-object.png" id="10_06o3n"]
+[ext_resource type="Texture2D" uid="uid://dmp57yd141mii" path="res://art/btn_icons_PC/ESC.png" id="11_jec75"]
 [ext_resource type="PackedScene" uid="uid://bpkmbst6b1h3" path="res://control_hints/ControlHints.tscn" id="11_oks8m"]
+[ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="12_7sog0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
 radius = 15.0
@@ -19,7 +26,7 @@ radius = 15.0
 visibility_layer = 3
 script = ExtResource("1_avayf")
 camera_top_left_limit = Vector2(-400, -250)
-metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0]
+metadata/_edit_vertical_guides_ = [4383.0, 3700.0, 2055.0, 640.0]
 metadata/_edit_horizontal_guides_ = [3199.0, 1523.0]
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -70,11 +77,13 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="GameTimer" type="PanelContainer" parent="CanvasLayer" node_paths=PackedStringArray("piece_container")]
-offset_left = 278.0
-offset_right = 862.0
-offset_bottom = 25.0
+offset_left = 1089.0
+offset_top = -57.0
+offset_right = 1272.0
+offset_bottom = 15.0
 script = ExtResource("4_2x0wy")
 piece_container = NodePath("../../Pieces")
+slide_in_direction = Vector2(0, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameTimer"]
 layout_mode = 2
@@ -82,12 +91,17 @@ size_flags_vertical = 0
 
 [node name="Label" type="Label" parent="CanvasLayer/GameTimer/VBoxContainer"]
 layout_mode = 2
-text = "Timer will start when you move your first piece"
+mouse_filter = 1
+theme = ExtResource("5_tvljs")
+theme_override_font_sizes/font_size = 18
+text = "Timer will start when
+ you move a fragment"
 horizontal_alignment = 1
 
 [node name="WinLabel" type="Label" parent="CanvasLayer/GameTimer/VBoxContainer"]
 visible = false
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Timer will start when you move your first piece"
 horizontal_alignment = 1
 
@@ -96,6 +110,22 @@ visible = false
 layout_mode = 2
 theme = ExtResource("5_tvljs")
 text = "View score and save artifacts"
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GameTimer/VBoxContainer"]
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+focus_mode = 0
+texture_normal = ExtResource("6_1grsd")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("7_rfj80")
+
+[node name="Label" type="Label" parent="CanvasLayer/GameTimer/VBoxContainer/TextureButton"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = -3.0
+offset_right = 86.0
+offset_bottom = 20.0
 
 [node name="SidebarMenu" parent="CanvasLayer" instance=ExtResource("7_qqhi4")]
 offset_left = 1.0
@@ -111,6 +141,84 @@ offset_left = 1265.0
 offset_top = 438.0
 offset_right = 160.0
 offset_bottom = -93.0
+
+[node name="RelaxCompletionPanel" type="PanelContainer" parent="CanvasLayer"]
+visible = false
+offset_left = 391.0
+offset_top = -225.0
+offset_right = 888.0
+offset_bottom = 1.0
+theme = ExtResource("5_tvljs")
+script = ExtResource("9_7wsxx")
+slide_in_direction = Vector2(0, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/RelaxCompletionPanel"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 20
+text = "It looks like you have reassembled everything.
+Congratulations!
+Use     to add new items,       to save items
+ to your gallery, or             to exit."
+horizontal_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/RelaxCompletionPanel"]
+position = Vector2(110.75, 102.009)
+scale = Vector2(0.482456, 0.482456)
+texture = ExtResource("9_4g6rw")
+
+[node name="Sprite2D2" type="Sprite2D" parent="CanvasLayer/RelaxCompletionPanel"]
+position = Vector2(297.75, 101.009)
+scale = Vector2(0.482456, 0.482456)
+texture = ExtResource("10_06o3n")
+
+[node name="Sprite2D3" type="Sprite2D" parent="CanvasLayer/RelaxCompletionPanel"]
+position = Vector2(296.665, 128.987)
+scale = Vector2(0.111956, 0.111956)
+texture = ExtResource("11_jec75")
+
+[node name="RelaxPanelCloseButton" type="Button" parent="CanvasLayer/RelaxCompletionPanel"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "  Close  "
+script = ExtResource("12_7sog0")
+
+[node name="StruggleCompletionPanel" type="PanelContainer" parent="CanvasLayer"]
+offset_left = 392.0
+offset_top = -228.0
+offset_right = 889.0
+offset_bottom = 1.0
+theme = ExtResource("5_tvljs")
+script = ExtResource("9_7wsxx")
+slide_in_direction = Vector2(0, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/StruggleCompletionPanel"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 20
+text = "It looks like you have reassembled everything.
+Congratulations!
+Finish any last touch-ups, then view
+your score to save items to your gallery."
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/StruggleCompletionPanel"]
+layout_mode = 2
+
+[node name="StrugglePanelScoreButton" type="Button" parent="CanvasLayer/StruggleCompletionPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 8
+text = "  View Scores  "
+script = ExtResource("12_7sog0")
+
+[node name="StrugglePanelExitButton" type="Button" parent="CanvasLayer/StruggleCompletionPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 8
+text = "  Exit Game  "
+script = ExtResource("12_7sog0")
 
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0

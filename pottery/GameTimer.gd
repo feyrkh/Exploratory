@@ -1,4 +1,4 @@
-extends PanelContainer
+extends SlideInPanel
 
 signal time_attack_complete(total_seconds:int)
 
@@ -21,7 +21,7 @@ func setup(piece_count:int):
 
 func get_time_text():
 	var fragment_count := piece_container.get_child_count()
-	return "%s   %d/%d fragments" % [TimeUtil.format_timer(time_seconds), fragment_count, expected_pieces]
+	return "%s\n%d/%d fragments" % [TimeUtil.format_timer(time_seconds), fragment_count, expected_pieces]
 
 func _ready():
 	Global.first_click_received.connect(start_timer)
@@ -41,8 +41,13 @@ func complete_game():
 	time_attack_complete.emit(time_seconds)
 	set_process(false)
 	label.text = get_time_text()
-	var win_label = find_child("WinLabel")
-	win_label.text = "Completed! You may save items to your gallery or press escape to move on."
-	win_label.visible = true
-	var win_button = find_child("WinButton")
-	win_button.visible = true
+	#var win_label = find_child("WinLabel")
+	#win_label.text = "Completed! You may save items to your gallery or press escape to move on."
+	#win_label.visible = true
+	#var win_button = find_child("WinButton")
+	#win_button.visible = true
+
+
+func _gui_input(event):
+	if event.is_action_pressed("left_click"):
+		toggle_slide()

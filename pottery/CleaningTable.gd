@@ -37,6 +37,10 @@ func _ready():
 	Global.item_highlighted.connect(func(item): highlighted_items[item] = true)
 	Global.item_unhighlighted.connect(func(item): highlighted_items.erase(item))
 	
+	find_child("RelaxPanelCloseButton").pressed.connect(hide_relax_completion_window)
+	find_child("StrugglePanelScoreButton").pressed.connect(time_attack_show_scoreboard)
+	find_child("StrugglePanelExitButton").pressed.connect(func(): Global.change_scene("res://menu/main/TitleScreen.tscn"))
+	
 	glue_brush_audio.finished.connect(update_glue_brush_sfx)
 		
 	if settings == null:
@@ -153,6 +157,7 @@ func setup_game_mode():
 			Global.awaiting_first_click = true
 			game_timer.setup(settings[ITEM_COUNT_SETTING])
 			game_timer.time_attack_complete.connect(time_attack_complete)
+			game_timer.slide_in()
 
 func set_piece_freeze():
 	for child in $Pieces.get_children():
@@ -274,22 +279,31 @@ func do_glue_at_cursor():
 					main_piece.glue(pieces[i])
 			main_piece.call_deferred("highlight_visual_polygons")
 			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+			await get_tree().process_frame
 			if pieces_container.get_child_count() <= total_items:
 				get_tree().create_timer(3).timeout.connect(show_completion_window, CONNECT_ONE_SHOT)
 		elif pieces.size() == 1:
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 
 func show_completion_window():
-	if Global.mode == "zen":
+	if Global.game_mode == "zen":
 		show_relax_completion_window()
 	else:
 		show_struggle_completion_window()
 
 func show_relax_completion_window():
-	pass
+	find_child("RelaxCompletionPanel").visible = true
+	find_child("RelaxCompletionPanel").slide_in()
 
 func show_struggle_completion_window():
-	pass
+	find_child("StruggleCompletionPanel").visible = true
+	find_child("StruggleCompletionPanel").slide_in()
+
+func hide_relax_completion_window():
+	find_child("RelaxCompletionPanel").slide_out()
+
+func hide_struggle_completion_window():
+	find_child("StruggleCompletionPanel").slide_out()
 
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:

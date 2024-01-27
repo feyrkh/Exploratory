@@ -116,31 +116,31 @@ layout_mode = 2
 
 [node name="ReturnButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 theme = ExtResource("2_gotgm")
 text = "Back to game"
 alignment = 0
 script = ExtResource("3_7aqp1")
 sfx = ""
 
-[node name="QuitAndDiscardButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_gotgm")
-text = "Exit game"
-script = ExtResource("3_7aqp1")
-
 [node name="QuitAndSaveButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 theme = ExtResource("2_gotgm")
 text = "Save and exit"
 alignment = 2
+script = ExtResource("3_7aqp1")
+
+[node name="QuitAndDiscardButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme = ExtResource("2_gotgm")
+text = "Exit game"
 script = ExtResource("3_7aqp1")
 
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer/OverallVolume" to="." method="_on_overall_volume_value_changed"]
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer3/SfxVolume" to="." method="_on_sfx_volume_value_changed"]
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MusicVolume" to="." method="_on_music_volume_value_changed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/QuitAndDiscardButton" to="." method="_on_quit_and_discard_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/QuitAndSaveButton" to="." method="_on_quit_and_save_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/QuitAndDiscardButton" to="." method="_on_quit_and_discard_button_pressed"]

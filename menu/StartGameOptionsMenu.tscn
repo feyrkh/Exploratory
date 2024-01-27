@@ -191,6 +191,7 @@ settings = SubResource("Resource_o1c1t")
 
 [node name="CustomDifficultyButton" type="Button" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels"]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 34
 toggle_mode = true
 text = "Custom Difficulty"

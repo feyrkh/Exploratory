@@ -1,8 +1,10 @@
-[gd_resource type="Theme" load_steps=4 format=3 uid="uid://bvc652bwjujtl"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://bvc652bwjujtl"]
 
 [ext_resource type="FontFile" uid="uid://6af5xb7ndfw8" path="res://theme/PT_Serif/PTSerif-Regular.ttf" id="1_f7q44"]
 [ext_resource type="StyleBox" uid="uid://cvj8odrh2o2ir" path="res://theme/style_box_invisible.tres" id="2_e1s68"]
+[ext_resource type="StyleBox" uid="uid://clmdf3ftndttv" path="res://theme/underline_style_box_light.tres" id="3_ctkyj"]
 [ext_resource type="StyleBox" uid="uid://dlq8oehi1cths" path="res://theme/generic_window_01.tres" id="3_m2yvx"]
+[ext_resource type="StyleBox" uid="uid://btstllb2h22uf" path="res://theme/underline_style_box_dim.tres" id="4_24bh1"]
 
 [resource]
 Button/colors/font_hover_color = Color(0.94902, 0.968627, 0.490196, 1)
@@ -10,10 +12,10 @@ Button/colors/font_pressed_color = Color(1, 0.92549, 0, 1)
 Button/font_sizes/font_size = 22
 Button/fonts/font = ExtResource("1_f7q44")
 Button/styles/disabled = ExtResource("2_e1s68")
-Button/styles/focus = ExtResource("2_e1s68")
-Button/styles/hover = ExtResource("2_e1s68")
-Button/styles/normal = ExtResource("2_e1s68")
-Button/styles/pressed = ExtResource("2_e1s68")
+Button/styles/focus = ExtResource("3_ctkyj")
+Button/styles/hover = ExtResource("3_ctkyj")
+Button/styles/normal = ExtResource("4_24bh1")
+Button/styles/pressed = ExtResource("3_ctkyj")
 Label/font_sizes/font_size = 34
 Label/fonts/font = ExtResource("1_f7q44")
 LineEdit/font_sizes/font_size = 34

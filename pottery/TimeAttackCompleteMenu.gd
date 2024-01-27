@@ -17,11 +17,14 @@ func setup(_item_arr:Array): # Array of [Image, ArcheologyItem]
 	self.item_arr = Array(_item_arr)
 	for _item in self.item_arr:
 		_item.append(false) # 3rd field
-	if get_tree():
+	if is_inside_tree():
 		get_tree().paused = true
-	render_item(0)
+		render_item(0)
 
 func render_item(idx:int):
+	if item_arr.size() == 0:
+		render_empty_set()
+		return
 	var piece:ArcheologyItem = item_arr[idx][ITEM_IDX]
 	var saved = item_arr[idx][SAVED_IDX]
 	var header_label = find_child("Label")

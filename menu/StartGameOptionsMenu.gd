@@ -199,32 +199,32 @@ func show_difficulty_description(settings:GameSettings):
 		set_bump_texture(bump_icon, settings)
 	find_child("StartButton").visible = cur_selected_button != null
 
-func set_rotation_texture(rotate_icon, settings):
+func set_rotation_texture(_rotate_icon, settings):
 	if settings.rotation_enabled:
-		rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-on.png")
+		_rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-on.png")
 	else:
-		rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-off.png")
+		_rotate_icon.texture = preload("res://art/sidebar menu/sidebar_icon_rotate-off.png")
 
-func set_bump_texture(bump_icon, settings):
+func set_bump_texture(_bump_icon, settings):
 	if settings.bump_enabled:
-		bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-on.png")
+		_bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-on.png")
 	else:
-		bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-off.png")
+		_bump_icon.texture = preload("res://art/sidebar menu/sidebar_icon_movement-off.png")
 
-func set_crack_size_texture(crack_size_icon, settings):
+func set_crack_size_texture(_crack_size_icon, settings):
 	match settings.crack_width:
-		0: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-1.png")
-		1: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-2.png")
-		2: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-3.png")
-		3: crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-4.png")
+		0: _crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-1.png")
+		1: _crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-2.png")
+		2: _crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-3.png")
+		3: _crack_size_icon.texture = preload("res://art/mode select/ui_mode-select_CrackWidth-4.png")
 
-func set_weathering_texture(weathering_icon, settings):
+func set_weathering_texture(_weathering_icon, settings):
 	match settings.weathering_amt:
-		0: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-1.png")
-		1: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-2.png")
-		2: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-3.png")
-		3: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-4.png")
-		4: weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-random.png")
+		0: _weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-1.png")
+		1: _weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-2.png")
+		2: _weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-3.png")
+		3: _weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-4.png")
+		4: _weathering_icon.texture = preload("res://art/mode select/ui_mode-select_Weathering-random.png")
 
 func prepare_to_show_default_description():
 	set_process(true)

@@ -21,13 +21,22 @@ func setup(_item_arr:Array): # Array of [Image, ArcheologyItem]
 		get_tree().paused = true
 		render_item(0)
 
+func render_empty_set():
+	find_child("ItemLabel").text = "No items"
+	find_child("ScoreContainer").visible = false
+	find_child("NextButton").text = "Finished"
+	find_child("SaveButton").disabled = true
+	find_child("PrevButton").disabled = true
+
 func render_item(idx:int):
+	find_child("ItemLabel").text = "Completed piece"
+	find_child("ScoreContainer").visible = true
 	if item_arr.size() == 0:
 		render_empty_set()
 		return
 	var piece:ArcheologyItem = item_arr[idx][ITEM_IDX]
 	var saved = item_arr[idx][SAVED_IDX]
-	var header_label = find_child("Label")
+	var header_label = find_child("ItemLabel")
 	find_child("PrevButton").disabled = idx == 0
 	find_child("NextButton").text = "Finished" if (idx+1) >= item_arr.size() else "Next"
 	find_child("SaveButton").disabled = saved

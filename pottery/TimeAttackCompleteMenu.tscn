@@ -33,7 +33,7 @@ theme = ExtResource("2_75gck")
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="ItemLabel" type="Label" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Completed piece"
 horizontal_alignment = 1

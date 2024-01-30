@@ -246,7 +246,7 @@ func _unhandled_input(event):
 		Global.rotate_click_mode()
 		get_viewport().set_input_as_handled()
 	handle_camera_input(event)
-	match Global.click_mode:
+	match Global.click_mode:	
 		Global.ClickMode.move: handle_move_input(event)
 		Global.ClickMode.glue: handle_glue_input(event)
 		Global.ClickMode.save_item: handle_save_item_input(event)
@@ -394,6 +394,7 @@ func _on_save_button_pressed():
 	save_file.store_var(reversed_weathering_save_data)
 	save_file.store_var(item_save_data)
 	save_file.store_var(settings)
+	save_file.store_var(total_items)
 	save_file.close()
 
 func _on_load_button_pressed():
@@ -411,6 +412,7 @@ func _on_load_button_pressed():
 	#	rebuilt_textures[k] = await ItemBuilder.build_specific_item(image_save_data[k])
 	var item_save_data = save_file.get_var()
 	settings = save_file.get_var()
+	total_items = save_file.get_var()
 	for item_save in item_save_data:
 		var new_item = await ArcheologyItem.load_save_data(item_save, image_save_data, weathering_save_data, rebuilt_textures)
 		$Pieces.add_child(new_item)

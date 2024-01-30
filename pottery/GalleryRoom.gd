@@ -342,7 +342,7 @@ func update_control_hints():
 		["Pan camera", preload("res://art/mouse_middle.png"), preload("res://art/mouse_none.png")],
 		["Pan camera", preload("res://art/arrow_keys.png"), preload("res://art/arrow_keys.png")],
 		["Zoom camera", preload("res://art/mouse_scroll_up.png"), preload("res://art/mouse_scroll_down.png")],
-		["Pack item", preload("res://art/delete_key.png"), preload("res://art/delete_key.png")],
+		["Pack item", preload("res://art/backspace_key.png"), preload("res://art/backspace_key.png")],
 		["Exit gallery", preload("res://art/escape_key.png"), preload("res://art/escape_key.png")],
 	])
 

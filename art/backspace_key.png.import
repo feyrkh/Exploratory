@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ceknne8q44w1h"
-path="res://.godot/imported/mouse_right_wiggle_1.png-fa6acd4dfac30e0d99818ecd6d083928.ctex"
+uid="uid://kq7ft27ptq5j"
+path="res://.godot/imported/backspace_key.png-a20959227df30d03c1b1aee1cd223ed0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/mouse_right_wiggle_1.png"
-dest_files=["res://.godot/imported/mouse_right_wiggle_1.png-fa6acd4dfac30e0d99818ecd6d083928.ctex"]
+source_file="res://art/backspace_key.png"
+dest_files=["res://.godot/imported/backspace_key.png-a20959227df30d03c1b1aee1cd223ed0.ctex"]
 
 [params]
 

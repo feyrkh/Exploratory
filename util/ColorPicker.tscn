@@ -86,6 +86,7 @@ text = "ffffff"
 
 [node name="SaveButton" type="Button" parent="GridContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Apply
 Color"
 

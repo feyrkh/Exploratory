@@ -254,6 +254,10 @@ func _ready():
 	center_of_mass_indicator.polygon = MyGeom.circle_polygon(Vector2.ZERO, Global.center_of_mass_indicator_size, 16)
 	rotation_handle_indicator.polygon = MyGeom.circle_polygon(Vector2.ZERO, Global.center_of_mass_indicator_size*.75, 8)
 	apply_global_settings()
+	Global.click_mode_changed.connect(func():
+		if Global.click_mode == Global.ClickMode.move:
+			stop_dragging()
+	)
 	
 func gallery_mode():
 	_gallery_mode = true
@@ -344,7 +348,7 @@ func wait_frame():
 func refresh_polygon() -> int:
 	center = null
 	area = 0
-	if collision.polygon[0].distance_to(collision.polygon[-1]) < 0.5:
+	if collision.polygon.size() > 0 and collision.polygon[0].distance_to(collision.polygon[-1]) < 0.5:
 		# sometimes the last point ends up being identical to the first point, and that can cause problems, so delete it
 		#print("Cleaning up duplicate polygon point: ", collision.polygon[0], " vs ", collision.polygon[-1])
 		var new_polygon = Array(collision.polygon)
@@ -364,8 +368,9 @@ func refresh_polygon() -> int:
 		total_edge_length += collision.polygon[i].distance_to(collision.polygon[j])
 	if _gallery_mode:
 		return 1
-	if polygon.uv.size() != collision.polygon.size():
-		polygon.uv = collision.polygon
+	#if polygon.uv.size() != collision.polygon.size():
+		#polygon.uv = collision.polygon
+	polygon.uv = _adjust_polygon_scale(collision.polygon, 1.0/adjusted_scale)
 	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
@@ -446,13 +451,7 @@ func handle_move_input(event):
 				#print("Mouse at ", get_global_mouse_position(), ", COM at ", to_global(center_of_mass))
 				#print("Starting rotate, initial rotation=", rad_to_deg(global_rotation), ", mouse start angle=", rad_to_deg(rotate_start_mouse))
 		if drag_start_mouse != null and event.is_action_released("drag_start"):
-			drag_start_mouse = null
-			drag_start_item = null
-			target_pos = null
-			if hover_idx == -1:
-				_on_mouse_shape_exited(-1)
-			lock_rotation = Global.lock_rotation
-			safe_freeze(Global.freeze_pieces)
+			stop_dragging()
 			#print("Ending drag")
 		elif rotate_start_mouse != null and event.is_action_released("rotate_start"):
 			rotate_start_mouse = null
@@ -475,6 +474,15 @@ func handle_move_input(event):
 		print("Deleting item ", self)
 		Global.delete_archeology_item.emit(self)
 		queue_free()
+
+func stop_dragging():
+	drag_start_mouse = null
+	drag_start_item = null
+	target_pos = null
+	if hover_idx == -1:
+		_on_mouse_shape_exited(-1)
+	lock_rotation = Global.lock_rotation
+	safe_freeze(Global.freeze_pieces)
 
 func _integrate_forces(state):
 	if reset_position != null:
@@ -957,6 +965,7 @@ func adjust_scale(scale_change:float):
 	for child in $Glue.get_children():
 		child.position *= scale_change
 		child.adjust_scale(scale_change)
+	var orig_center = center
 	center = null
 	_find_center()
 

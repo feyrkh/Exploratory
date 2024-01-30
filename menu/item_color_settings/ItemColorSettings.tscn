@@ -99,6 +99,7 @@ offset_left = 49.0
 offset_top = 24.0
 offset_right = 148.0
 offset_bottom = 54.0
+focus_mode = 0
 text = "Enabled"
 
 [node name="NextButton" type="Button" parent="."]

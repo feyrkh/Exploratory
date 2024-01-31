@@ -340,9 +340,9 @@ width = 3.0
 width_curve = SubResource("Curve_qnpve")
 
 [node name="Label" type="Label" parent="Starburst"]
-offset_left = 104.0
+offset_left = 103.0
 offset_top = 110.0
-offset_right = 154.0
+offset_right = 153.0
 offset_bottom = 133.0
 text = "saved!"
 

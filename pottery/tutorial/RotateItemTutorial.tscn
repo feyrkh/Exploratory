@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://mqs1y8kat0e1"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_4dpbu"]
+[ext_resource type="Script" path="res://pottery/tutorial/RotateItemTutorial.gd" id="2_giu74"]
+[ext_resource type="Texture2D" uid="uid://7h3ms0fojcn4" path="res://art/tutorial/piece1.png" id="3_ouorl"]
+[ext_resource type="Texture2D" uid="uid://bcimx55sduedg" path="res://art/mouse_none.png" id="5_ck8mb"]
+[ext_resource type="Texture2D" uid="uid://dm6g261r8ykg" path="res://art/sidebar menu/sidebar_icon_rotate-off.png" id="5_li4v7"]
+
+[node name="RotateItemTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_4dpbu")
+script = ExtResource("2_giu74")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "To rotate pieces, right-click and
+ drag. If rotation is disabled,
+ you may not need to do this."
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+color = Color(0.403922, 0.403922, 0.403922, 1)
+
+[node name="Piece1" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(114, 125)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_ouorl")
+
+[node name="Mouse" type="Sprite2D" parent="."]
+position = Vector2(120, 72)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_ck8mb")
+centered = false
+offset = Vector2(-167, -40)
+
+[node name="MouseClickPos" type="Node2D" parent="."]
+position = Vector2(92, 97)
+
+[node name="MouseRotatePos" type="Node2D" parent="."]
+position = Vector2(124, 97)
+
+[node name="MouseRotatePos2" type="Node2D" parent="."]
+position = Vector2(68, 129)
+
+[node name="SidebarIconRotate-off" type="Sprite2D" parent="."]
+position = Vector2(212, 38)
+scale = Vector2(0.535088, 0.535088)
+texture = ExtResource("5_li4v7")

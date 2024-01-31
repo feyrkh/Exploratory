@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=3 uid="uid://c5dvlxy0rvtik"]
+
+[ext_resource type="Script" path="res://pottery/tutorial/MoveItemTutorial.gd" id="1_c7jw8"]
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_lplkw"]
+[ext_resource type="Texture2D" uid="uid://7h3ms0fojcn4" path="res://art/tutorial/piece1.png" id="3_dqx7b"]
+[ext_resource type="Texture2D" uid="uid://jiis3wfqkbh8" path="res://art/tutorial/piece2.png" id="4_87xya"]
+[ext_resource type="Texture2D" uid="uid://bcimx55sduedg" path="res://art/mouse_none.png" id="5_coqks"]
+
+[node name="MoveItemTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_lplkw")
+script = ExtResource("1_c7jw8")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "To move pieces, left-click and drag"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+color = Color(0.403922, 0.403922, 0.403922, 1)
+
+[node name="Piece1" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(10, 32)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_dqx7b")
+centered = false
+
+[node name="Piece2" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(151, 32)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_87xya")
+centered = false
+
+[node name="Mouse" type="Sprite2D" parent="."]
+position = Vector2(120, 72)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_coqks")
+centered = false
+offset = Vector2(-167, -40)
+
+[node name="MouseClickPos" type="Node2D" parent="."]
+position = Vector2(200, 48)

@@ -86,6 +86,7 @@ func load_options_menu(mode):
 	#find_child("MainMenu").visible = false
 
 func _on_gallery_button_pressed():
+	Global.game_mode = "gallery"
 	Global.change_scene("res://pottery/GalleryRoom.tscn")
 
 func _on_continue_button_pressed():

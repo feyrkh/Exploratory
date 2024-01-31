@@ -8,6 +8,7 @@ signal save_item_button_pressed()
 
 func _ready():
 	Global.glue_color_changed.connect(update_buttons)
+	Global.click_mode_changed.connect(update_click_mode)
 	visible = false
 	await get_tree().process_frame
 	visible = true
@@ -65,4 +66,13 @@ func _on_game_timer_time_attack_complete(_total_seconds):
 
 func _on_glue_button_pressed():
 	Global.toggle_glue_panel.emit()
-	
+
+func update_click_mode():
+	if Global.click_mode == Global.ClickMode.save_item:
+		$SaveItemButton.default_modulate = Color.GOLD
+	else:
+		$SaveItemButton.default_modulate = Color.WHITE
+	if Global.click_mode == Global.ClickMode.glue:
+		$GlueButton.default_modulate = Color.GOLD
+	else:
+		$GlueButton.default_modulate = Color.WHITE

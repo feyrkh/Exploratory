@@ -181,7 +181,9 @@ func set_camera_position(new_pos:Vector2):
 		new_pos.y = camera_top_left_limit.y + view_rect.size.y / 2
 	elif camera_bot_right.y > camera_bot_right_limit.y:
 		new_pos.y = camera_bot_right_limit.y - view_rect.size.y / 2
-	camera.position = new_pos
+	if !camera.position.is_equal_approx(new_pos):
+		camera.position = new_pos
+		Global.tutorial_panned_camera.emit()
 
 
 var glue_brush_streams = [ # elements are arrays [AudioStream, volume %, min_seconds]
@@ -282,8 +284,10 @@ func do_glue_at_cursor():
 			await get_tree().process_frame
 			if pieces_container.get_child_count() <= total_items:
 				get_tree().create_timer(3).timeout.connect(show_completion_window, CONNECT_ONE_SHOT)
+			Global.tutorial_glued_item.emit()
 		elif pieces.size() == 1:
 			pieces[0].build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
+			Global.tutorial_glued_item.emit()
 
 func show_completion_window():
 	if Global.game_mode == "zen":

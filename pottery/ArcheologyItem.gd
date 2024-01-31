@@ -421,18 +421,7 @@ func handle_move_input(event):
 		#print("Clicked: ", event)
 		if hover_idx >= 0:
 			if event.is_action_pressed("drag_start"):
-				if Global.awaiting_first_click:
-					Global.awaiting_first_click = false
-					Global.first_click_received.emit()
-				#print("Starting drag")
-				drag_start_mouse = get_global_mouse_position()
-				drag_start_item = global_position
-				lock_rotation = true
-				safe_freeze(false)
-				get_parent().move_child(self, -1)
-				if _gallery_mode:
-					for i in range(get_parent().get_child_count()):
-						get_parent().get_child(i).z_index = i * 5
+				start_dragging()
 				get_viewport().set_input_as_handled()
 			if event.is_action_pressed("break_item"):
 				random_scar()
@@ -461,19 +450,36 @@ func handle_move_input(event):
 				_on_mouse_shape_exited(-1)
 				center_of_mass_indicator.visible = false
 			else:
-				center_of_mass_indicator.visible = !Global.lock_rotation
+				center_of_mass_indicator.visible = !Global.lock_rotation 
 			rotation_handle_indicator.visible = false
 			lock_rotation = Global.lock_rotation
 			safe_freeze(Global.freeze_pieces)
 			#print("Stopping rotate")
 	elif drag_start_mouse != null and event is InputEventMouseMotion:
 		target_pos = get_global_mouse_position()
+		Global.tutorial_moved_item.emit(self)
 	elif rotate_start_mouse != null and event is InputEventMouseMotion:
 		target_rot = 0.1 # just something to get the _integrate_forces method started
+		Global.tutorial_rotated_item.emit(self)
 	elif hover_idx >= 0 and event.is_action_pressed("delete_item"):
-		print("Deleting item ", self)
-		Global.delete_archeology_item.emit(self)
-		queue_free()
+		if Global.game_mode == "gallery":
+			Global.delete_archeology_item.emit(self)
+			queue_free()
+
+func start_dragging():
+	if Global.awaiting_first_click:
+		Global.awaiting_first_click = false
+		Global.first_click_received.emit()
+	#print("Starting drag")
+	drag_start_mouse = get_global_mouse_position()
+	drag_start_item = global_position
+	lock_rotation = true
+	safe_freeze(false)
+	get_parent().move_child(self, -1)
+	if _gallery_mode:
+		for i in range(get_parent().get_child_count()):
+			get_parent().get_child(i).z_index = i * 5
+	Global.started_dragging_item.emit(self)
 
 func stop_dragging():
 	drag_start_mouse = null
@@ -483,6 +489,7 @@ func stop_dragging():
 		_on_mouse_shape_exited(-1)
 	lock_rotation = Global.lock_rotation
 	safe_freeze(Global.freeze_pieces)
+	Global.stopped_dragging_item.emit(self)
 
 func _integrate_forces(state):
 	if reset_position != null:
@@ -965,7 +972,6 @@ func adjust_scale(scale_change:float):
 	for child in $Glue.get_children():
 		child.position *= scale_change
 		child.adjust_scale(scale_change)
-	var orig_center = center
 	center = null
 	_find_center()
 

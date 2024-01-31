@@ -1,0 +1,75 @@
+[gd_scene load_steps=7 format=3 uid="uid://dla0vuahg11hr"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_upnda"]
+[ext_resource type="Script" path="res://pottery/tutorial/SafeMoveItemTutorial.gd" id="2_c2gfe"]
+[ext_resource type="Texture2D" uid="uid://7h3ms0fojcn4" path="res://art/tutorial/piece1.png" id="3_115u3"]
+[ext_resource type="Texture2D" uid="uid://jiis3wfqkbh8" path="res://art/tutorial/piece2.png" id="4_npsgp"]
+[ext_resource type="Texture2D" uid="uid://bcimx55sduedg" path="res://art/mouse_none.png" id="5_24ofx"]
+[ext_resource type="Texture2D" uid="uid://7lupywejxwcc" path="res://art/shift_key.png" id="6_dhc50"]
+
+[node name="SafeMoveItemTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_upnda")
+script = ExtResource("2_c2gfe")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "To move pieces without bumping into
+other pieces, hold shift and click+drag
+"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+color = Color(0.403922, 0.403922, 0.403922, 1)
+
+[node name="Piece1" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(98, 56)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_115u3")
+centered = false
+
+[node name="Piece2" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(167, 56)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_npsgp")
+centered = false
+
+[node name="Mouse" type="Sprite2D" parent="."]
+position = Vector2(200, 112)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_24ofx")
+centered = false
+offset = Vector2(-167, -40)
+
+[node name="ShiftKey" type="Sprite2D" parent="Mouse"]
+visible = false
+position = Vector2(340, 130)
+texture = ExtResource("6_dhc50")
+
+[node name="MouseClickPos" type="Node2D" parent="."]
+position = Vector2(200, 72)
+
+[node name="MouseDragPos2" type="Node2D" parent="."]
+position = Vector2(-1, 56)
+
+[node name="ClinkEffect" type="Node2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="ClinkEffect"]
+offset_left = 181.0
+offset_top = 65.0
+offset_right = 222.0
+offset_bottom = 88.0
+rotation = -0.392699
+theme_override_font_sizes/font_size = 16
+text = "clink!"
+
+[node name="Line2D" type="Line2D" parent="ClinkEffect"]
+position = Vector2(32, 152)
+points = PackedVector2Array(132, -66, 150, -74)
+width = 1.0

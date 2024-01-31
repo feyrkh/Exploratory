@@ -1,0 +1,429 @@
+[gd_scene load_steps=15 format=3 uid="uid://byxpei1n0mhig"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_tvfaj"]
+[ext_resource type="Script" path="res://pottery/tutorial/GlueTutorial.gd" id="2_5jsbw"]
+[ext_resource type="Texture2D" uid="uid://7h3ms0fojcn4" path="res://art/tutorial/piece1.png" id="3_om2nd"]
+[ext_resource type="Texture2D" uid="uid://bcimx55sduedg" path="res://art/mouse_none.png" id="4_bd7nf"]
+[ext_resource type="Texture2D" uid="uid://jiis3wfqkbh8" path="res://art/tutorial/piece2.png" id="4_scyxl"]
+[ext_resource type="Texture2D" uid="uid://bwktvxngarm1j" path="res://art/btn_icons_PC/TAB.png" id="6_51dcp"]
+[ext_resource type="Texture2D" uid="uid://dgu05plxrex54" path="res://art/sidebar menu/sidebar_icon_glue.png" id="7_rr8ak"]
+[ext_resource type="Texture2D" uid="uid://06msxnbgq6mi" path="res://art/sidebar menu/sidebar_icon_glue_overlay.png" id="8_1ru0g"]
+[ext_resource type="Texture2D" uid="uid://b55aqspb6063s" path="res://art/mouse_left.png" id="9_haf7q"]
+[ext_resource type="Script" path="res://pottery/GluePot.gd" id="10_1ou7w"]
+
+[sub_resource type="Curve" id="Curve_ucsiy"]
+_data = [Vector2(0, 0.607053), 0.0, 0.0, 0, 0, Vector2(0.481013, 1), 0.0, 0.0, 0, 0, Vector2(0.990506, 0.541562), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Animation" id="Animation_3ixhx"]
+resource_name = "glue_tutorial"
+length = 13.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SidebarIconGlue:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3.5, 10.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Color(0.341176, 0.341176, 0.341176, 1), Color(1, 1, 1, 1), Color(0.341176, 0.341176, 0.341176, 1), Color(1, 1, 1, 1), Color(0.341176, 0.341176, 0.341176, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mouse:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 4, 5, 5.5, 6.5, 7, 8, 8.5, 9.4, 10.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(64, 138), Vector2(16, 168), Vector2(16, 168), Vector2(163, 119), Vector2(163, 119), Vector2(185, 134), Vector2(185, 134), Vector2(113, 171), Vector2(113, 171), Vector2(203, 150), Vector2(225, 161)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Mouse:texture")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 1.5, 2, 2.5, 5.5, 6.5, 8, 8.5, 9.4, 10.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("4_bd7nf"), ExtResource("9_haf7q"), ExtResource("4_bd7nf"), ExtResource("9_haf7q"), ExtResource("4_bd7nf"), ExtResource("9_haf7q"), ExtResource("4_bd7nf"), ExtResource("9_haf7q"), ExtResource("4_bd7nf"), ExtResource("9_haf7q"), ExtResource("4_bd7nf")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("GlueContainer/TextureRect2/ColorRect:color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Color(1, 1, 1, 1), Color(0.356863, 0.356863, 0.356863, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("GlueContainer:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3.5, 10.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [false, true, false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("SidebarIconGlue/SidebarIconGlueOverlay:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Color(1, 0.858824, 0.0705882, 1), Color(0.486275, 0.105882, 0.113725, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Tab:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 3.5, 4, 10.9, 11.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Color(0.156863, 0.156863, 0.156863, 1), Color(1, 1, 1, 1), Color(0.156863, 0.156863, 0.156863, 1), Color(1, 1, 1, 1), Color(0.156863, 0.156863, 0.156863, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("GlueContainer/TextureRect4/ColorRect:color")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Color(0.356863, 0.356863, 0.356863, 1), Color(1, 1, 1, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Node2D/YellowGlueBlock:size")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 5.5, 6.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 5), Vector2(0, 5), Vector2(28, 36)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Node2D/RedGlueBlock:size")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 9.6, 10.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 13), Vector2(0, 13), Vector2(19, 13)]
+}
+
+[sub_resource type="Animation" id="Animation_4iv5i"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SidebarIconGlue:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.341176, 0.341176, 0.341176, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mouse:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(64, 138)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Mouse:texture")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_bd7nf")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("GlueContainer/TextureRect2/ColorRect:color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("GlueContainer:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("SidebarIconGlue/SidebarIconGlueOverlay:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 0.858824, 0.0705882, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Tab:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("GlueContainer/TextureRect4/ColorRect:color")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.356863, 0.356863, 0.356863, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Node2D/YellowGlueBlock:size")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(28, 36)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Node2D/RedGlueBlock:size")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(19, 13)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3n1cn"]
+_data = {
+"RESET": SubResource("Animation_4iv5i"),
+"glue_tutorial": SubResource("Animation_3ixhx")
+}
+
+[node name="GlueTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_tvfaj")
+script = ExtResource("2_5jsbw")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Attach pieces using glue.
+Click glue icon or use tab key.
+Select glue color, click+drag nearby
+pieces to glue. Right-click cancels."
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+color = Color(0.403922, 0.403922, 0.403922, 1)
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="RedGlueBlock" type="ColorRect" parent="Node2D"]
+offset_left = 206.0
+offset_top = 150.0
+offset_right = 225.0
+offset_bottom = 163.0
+color = Color(0.486275, 0.105882, 0.113725, 1)
+
+[node name="Black" type="ColorRect" parent="Node2D"]
+offset_left = 189.0
+offset_top = 138.0
+offset_right = 208.0
+offset_bottom = 151.0
+color = Color(0, 0, 0, 1)
+
+[node name="YellowGlueBlock" type="ColorRect" parent="Node2D"]
+offset_left = 162.0
+offset_top = 113.0
+offset_right = 190.0
+offset_bottom = 149.0
+color = Color(1, 0.858824, 0.0705882, 1)
+
+[node name="Piece1" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(187, 152.339)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_om2nd")
+
+[node name="Piece2" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(149, 105)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_scyxl")
+centered = false
+
+[node name="Tab" type="Sprite2D" parent="."]
+position = Vector2(22, 115)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("6_51dcp")
+
+[node name="SidebarIconGlue" type="Sprite2D" parent="."]
+modulate = Color(0.341176, 0.341176, 0.341176, 1)
+position = Vector2(16, 169)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_rr8ak")
+
+[node name="SidebarIconGlueOverlay" type="Sprite2D" parent="SidebarIconGlue"]
+modulate = Color(1, 0.858824, 0.0705882, 1)
+texture = ExtResource("8_1ru0g")
+
+[node name="GlueContainer" type="Node2D" parent="."]
+visible = false
+position = Vector2(8, 160)
+scale = Vector2(0.5, 0.5)
+
+[node name="TextureRect2" type="ColorRect" parent="GlueContainer"]
+offset_left = 76.0
+offset_top = 13.0
+offset_right = 110.0
+offset_bottom = 45.0
+color = Color(1, 0.858824, 0.0705882, 1)
+script = ExtResource("10_1ou7w")
+
+[node name="Line2D" type="Line2D" parent="GlueContainer/TextureRect2"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_ucsiy")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="GlueContainer/TextureRect2"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+
+[node name="TextureRect3" type="ColorRect" parent="GlueContainer"]
+offset_left = 136.0
+offset_top = 13.0
+offset_right = 170.0
+offset_bottom = 45.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("10_1ou7w")
+
+[node name="Line2D" type="Line2D" parent="GlueContainer/TextureRect3"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_ucsiy")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="GlueContainer/TextureRect3"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="TextureRect4" type="ColorRect" parent="GlueContainer"]
+offset_left = 193.0
+offset_top = 13.0
+offset_right = 227.0
+offset_bottom = 45.0
+color = Color(0.486275, 0.105882, 0.113725, 1)
+script = ExtResource("10_1ou7w")
+
+[node name="Line2D" type="Line2D" parent="GlueContainer/TextureRect4"]
+points = PackedVector2Array(28, 5, 16.4831, 15.5154, 5, 26)
+width = 2.885
+width_curve = SubResource("Curve_ucsiy")
+default_color = Color(1, 1, 1, 0.462745)
+
+[node name="ColorRect" type="ColorRect" parent="GlueContainer/TextureRect4"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -3.0
+offset_top = -4.0
+offset_right = 37.0
+offset_bottom = 36.0
+mouse_filter = 1
+color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="Mouse" type="Sprite2D" parent="."]
+position = Vector2(64, 138)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_bd7nf")
+centered = false
+offset = Vector2(-167, -40)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+deterministic = true
+libraries = {
+"": SubResource("AnimationLibrary_3n1cn")
+}

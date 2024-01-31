@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://qav1se32qco8"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_2cqck"]
+[ext_resource type="Script" path="res://pottery/tutorial/RelaxTutorialFinale.gd" id="2_bi2v4"]
+
+[node name="SaveItemTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_2cqck")
+script = ExtResource("2_bi2v4")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Please enjoy a relaxing experience"
+horizontal_alignment = 1

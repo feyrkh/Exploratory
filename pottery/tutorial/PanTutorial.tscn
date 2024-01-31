@@ -1,0 +1,111 @@
+[gd_scene load_steps=14 format=3 uid="uid://dcop8n5o6u541"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_ysoof"]
+[ext_resource type="Script" path="res://pottery/tutorial/PanTutorial.gd" id="2_7xu7u"]
+[ext_resource type="Texture2D" uid="uid://7h3ms0fojcn4" path="res://art/tutorial/piece1.png" id="3_4rstm"]
+[ext_resource type="Texture2D" uid="uid://bcimx55sduedg" path="res://art/mouse_none.png" id="4_g53tp"]
+[ext_resource type="Texture2D" uid="uid://jiis3wfqkbh8" path="res://art/tutorial/piece2.png" id="4_pa045"]
+[ext_resource type="Texture2D" uid="uid://b4kpk0eghs1pa" path="res://art/btn_icons_PC/W.png" id="5_id1y7"]
+[ext_resource type="Texture2D" uid="uid://dx1uwsw67uavp" path="res://art/btn_icons_PC/S.png" id="6_farej"]
+[ext_resource type="Texture2D" uid="uid://cuigirvjblekg" path="res://art/btn_icons_PC/RIGHT.png" id="7_pbdqf"]
+[ext_resource type="Texture2D" uid="uid://bb2g4wk30tt10" path="res://art/btn_icons_PC/UP-001.png" id="8_7flgm"]
+[ext_resource type="Texture2D" uid="uid://blkr0mv5bnxv1" path="res://art/btn_icons_PC/LEFT.png" id="9_csgh2"]
+[ext_resource type="Texture2D" uid="uid://cg53mnvln308x" path="res://art/btn_icons_PC/DOWN.png" id="10_m4eah"]
+[ext_resource type="Texture2D" uid="uid://dtwiw0pe4de52" path="res://art/btn_icons_PC/D.png" id="11_2amf1"]
+[ext_resource type="Texture2D" uid="uid://bpj5vc5dqt3i" path="res://art/btn_icons_PC/A.png" id="12_7gdft"]
+
+[node name="PanTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_ysoof")
+script = ExtResource("2_7xu7u")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "To move the camera, hold middle-click
+and move the mouse, use arrow keys
+or use WASD keys"
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+color = Color(0.403922, 0.403922, 0.403922, 1)
+
+[node name="Piece1" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(84.5, 119.444)
+scale = Vector2(0.133159, 0.133159)
+texture = ExtResource("3_4rstm")
+
+[node name="Piece2" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(59, 90)
+scale = Vector2(0.133, 0.133)
+texture = ExtResource("4_pa045")
+centered = false
+
+[node name="Mouse" type="Sprite2D" parent="."]
+position = Vector2(120, 92)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_g53tp")
+centered = false
+offset = Vector2(-167, -40)
+
+[node name="Keys" type="Node2D" parent="."]
+position = Vector2(0, 27)
+
+[node name="Up" type="Sprite2D" parent="Keys"]
+position = Vector2(223, 112)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("8_7flgm")
+
+[node name="Right" type="Sprite2D" parent="Keys"]
+position = Vector2(247, 136)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("7_pbdqf")
+
+[node name="Down" type="Sprite2D" parent="Keys"]
+position = Vector2(223, 136)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("10_m4eah")
+
+[node name="Left" type="Sprite2D" parent="Keys"]
+position = Vector2(199, 136)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("9_csgh2")
+
+[node name="W" type="Sprite2D" parent="Keys"]
+position = Vector2(223, 64)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_id1y7")
+
+[node name="S" type="Sprite2D" parent="Keys"]
+position = Vector2(223, 88)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("6_farej")
+
+[node name="D" type="Sprite2D" parent="Keys"]
+position = Vector2(247, 88)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_2amf1")
+
+[node name="A" type="Sprite2D" parent="Keys"]
+position = Vector2(199, 88.0001)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("12_7gdft")
+
+[node name="MouseMovePos1" type="Node2D" parent="."]
+position = Vector2(150, 112)
+
+[node name="MouseMovePos2" type="Node2D" parent="."]
+position = Vector2(100, 83)
+
+[node name="MockCamera" type="Node2D" parent="."]
+position = Vector2(24, 0)
+
+[node name="Line2D" type="Line2D" parent="MockCamera"]
+position = Vector2(-330, -40)
+points = PackedVector2Array(350, 128, 441, 128, 441, 193, 351, 193, 350, 128)
+width = 2.0

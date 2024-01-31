@@ -16,6 +16,13 @@ signal glue_color_changed()
 
 signal item_highlighted(item)
 signal item_unhighlighted(item)
+signal started_dragging_item(item)
+signal stopped_dragging_item(item)
+signal tutorial_moved_item(item)
+signal tutorial_rotated_item(item)
+signal tutorial_panned_camera()
+signal tutorial_glued_item()
+signal tutorial_move_option_toggled()
 
 var splash_screen_shown := false
 var next_scene_settings
@@ -59,12 +66,14 @@ var lock_rotation = true:
 		lock_rotation = val
 		rotate_with_shuffle = !val
 		get_tree().call_group("archeology", "global_lock_rotation", val)
+		tutorial_move_option_toggled.emit()
 
 var freeze_pieces = false:
 	set(val):
 		#print("Toggling piece freezing to ", val)
 		freeze_pieces = val
 		get_tree().call_group("archeology", "global_freeze_pieces", val)
+		tutorial_move_option_toggled.emit()
 
 var collide = true:
 	set(val):

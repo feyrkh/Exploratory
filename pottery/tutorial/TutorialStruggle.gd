@@ -1,14 +1,8 @@
 extends Control
 
 @export var tutorial_steps := [
-	"res://pottery/tutorial/MoveItemTutorial.tscn",
-	"res://pottery/tutorial/RotateItemTutorial.tscn",
-	"res://pottery/tutorial/SafeMoveItemTutorial.tscn",
-	"res://pottery/tutorial/ZoomTutorial.tscn",
-	"res://pottery/tutorial/PanTutorial.tscn",
-	"res://pottery/tutorial/GlueTutorial.tscn",
-	"res://pottery/tutorial/MoveOptionsTutorial.tscn",
-	"res://pottery/tutorial/SaveItemTutorial.tscn",
+	"res://pottery/tutorial/StruggleIntroTutorial.tscn",
+	"res://pottery/tutorial/StruggleIntroTutorial2.tscn",
 ]
 
 var cur_tutorial_idx := -1
@@ -17,10 +11,12 @@ var cur_tutorial:GenericTutorial
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if Global.game_mode != "zen" or Global.has_completed_relax_tutorial:
+	if Global.game_mode != "time" or Global.has_completed_struggle_tutorial:
 		visible = false
 		queue_free()
 		return
+	if Global.has_completed_relax_tutorial:
+		tutorial_steps.pop_back()
 	show_next_step()
 	find_child("NextButton").pressed.connect(next_button_pressed)
 
@@ -47,7 +43,7 @@ func cur_step_complete():
 func next_button_pressed():
 	if cur_tutorial_idx >= tutorial_steps.size() - 1:
 		queue_free()
-		Global.has_completed_relax_tutorial = true
+		Global.has_completed_struggle_tutorial = true
 	else:
 		show_next_step()
 

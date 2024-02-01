@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://menu/AudioSettingsMenu.gd" id="2_dwktw"]
 [ext_resource type="Script" path="res://menu/CustomMenuHSlider.gd" id="2_yvnsc"]
 
-[node name="AudioSettingsContainer" type="Control"]
+[node name="GeneralSettingsContainer" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -24,6 +24,11 @@ offset_bottom = 446.0
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Audio"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -87,3 +92,30 @@ size_flags_vertical = 1
 max_value = 1.0
 step = 0.01
 script = ExtResource("2_yvnsc")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Replay Tutorials?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RelaxTutorial" type="CheckBox" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_4gp58")
+theme_type_variation = &"NonUnderlinedButton"
+text = "Relax"
+
+[node name="StruggleTutorial" type="CheckBox" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NonUnderlinedButton"
+text = "Struggle"
+
+[node name="GalleryTutorial" type="CheckBox" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NonUnderlinedButton"
+text = "Gallery"

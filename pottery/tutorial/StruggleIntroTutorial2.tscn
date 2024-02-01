@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://leym7t08kol7"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_qnacy"]
+[ext_resource type="Script" path="res://pottery/tutorial/AutoCompleteTutorial.gd" id="2_xckh4"]
+
+[node name="StruggleIntroTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_qnacy")
+script = ExtResource("2_xckh4")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "It looks like you haven't played \"relax\" mode yet!
+Relax mode has a tutorial that walks you through
+the controls - please take a look if you're not sure
+how to play!"

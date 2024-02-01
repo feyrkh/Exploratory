@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://dh6odpy8fvgnm"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_culb4"]
+[ext_resource type="Script" path="res://pottery/tutorial/AutoCompleteTutorial.gd" id="2_tnjbd"]
+
+[node name="StruggleIntroTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_culb4")
+script = ExtResource("2_tnjbd")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "This is a timed puzzle mode. 
+The timer will start when you first move or rotate a piece. 
+The timer will stop when the number of glued-together pieces is equal to the 
+        number of items that were shattered.
+Score is based on:
+       -  the number of fragments an item was broken into 
+       -  how long it took to reassemble
+       -  how accurately it was reassembled
+       -  settings chosen before starting
+If you save the completed pieces to your gallery, your score will also be saved.
+"

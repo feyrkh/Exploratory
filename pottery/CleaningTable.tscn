@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dsqjk8ggv547x"]
+[gd_scene load_steps=22 format=3 uid="uid://dsqjk8ggv547x"]
 
 [ext_resource type="Script" path="res://pottery/CleaningTable.gd" id="1_avayf"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="2_018s2"]
@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://dmp57yd141mii" path="res://art/btn_icons_PC/ESC.png" id="11_jec75"]
 [ext_resource type="PackedScene" uid="uid://bpkmbst6b1h3" path="res://control_hints/ControlHints.tscn" id="11_oks8m"]
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="12_7sog0"]
+[ext_resource type="PackedScene" uid="uid://bw0lgc6wvcn2e" path="res://pottery/tutorial/TutorialStruggle.tscn" id="12_yerm6"]
 [ext_resource type="PackedScene" uid="uid://dtswf86trfc81" path="res://pottery/tutorial/TutorialRelax.tscn" id="19_amcba"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tahv2"]
@@ -148,6 +149,8 @@ offset_left = -2.0
 offset_top = 1.0
 offset_right = -2.0
 offset_bottom = 1.0
+
+[node name="TutorialStruggle" parent="CanvasLayer" instance=ExtResource("12_yerm6")]
 
 [node name="RelaxCompletionPanel" type="PanelContainer" parent="CanvasLayer"]
 visible = false

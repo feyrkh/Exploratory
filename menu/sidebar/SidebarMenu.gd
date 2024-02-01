@@ -12,7 +12,7 @@ func _ready():
 	visible = false
 	await get_tree().process_frame
 	visible = true
-	if Global.game_mode == "time":
+	if Global.game_mode == "struggle":
 		$AddItemButton.visible = false
 		$AddItemLabel.visible = false
 		$MovementButton.visible = false

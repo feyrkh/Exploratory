@@ -35,7 +35,7 @@ var crack_count := 8
 var weathering_amt := 0
 
 var config_file := ConfigFile.new()
-var mode := "zen"
+var mode := "relax"
 var difficulty_button_group := ButtonGroup.new()
 var cur_selected_button:Button
 var hover_deselect_timer:float = 0
@@ -83,7 +83,7 @@ func _ready():
 	find_child("CustomOptionPanel").visible = false
 	find_child("BundleExplanationPanel").visible = true
 	
-	setup_tooltip("ItemCountIcon", func(): return "Number of shattered items\nMore items can be added freely in relax mode" if mode=="zen" else "Number of shattered items\nGame ends when this many fragments remain in struggle mode")
+	setup_tooltip("ItemCountIcon", func(): return "Number of shattered items\nMore items can be added freely in relax mode" if mode=="relax" else "Number of shattered items\nGame ends when this many fragments remain in struggle mode")
 	setup_tooltip("CrackCountIcon", func(): return "Number of cracks per item")
 	setup_tooltip("CrackSizeIcon", func(): 
 		if cur_selected_button == null: return ""
@@ -103,13 +103,13 @@ func _ready():
 	setup_tooltip("BumpIcon", func():
 		if cur_selected_button == null: return ""
 		var msg = "Items will not move when bumped\nUse the 'avoid collision' button to move fragments through each other" if !cur_selected_button.settings.bump_enabled else "Items will move when bumped\nUse the 'avoid collision' button to move fragments through each other"
-		if mode == "zen":
+		if mode == "relax":
 			msg += "\nThis setting can be freely changed in relax mode"
 		return msg)
 	setup_tooltip("RotateIcon", func(): 
 		if cur_selected_button == null: return ""
 		var msg = "Items will not rotate when bumped\nItems will not require rotation to assemble" if !cur_selected_button.settings.rotation_enabled else "Items may rotate when bumped\nItems will require rotation to assemble"
-		if mode == "zen":
+		if mode == "relax":
 			msg += "\nThis setting can be freely changed in relax mode"
 		return msg)
 
@@ -346,8 +346,8 @@ func _on_crack_width_increase_pressed():
 func _on_crack_amt_decrease_pressed():
 	var min_allowed
 	match mode:
-		"zen": min_allowed = 0
-		"time": min_allowed = 5
+		"relax": min_allowed = 0
+		"struggle": min_allowed = 5
 	var amt = 1
 	if Input.is_key_pressed(KEY_SHIFT):
 		amt = 5
@@ -409,7 +409,7 @@ func _on_crack_amt_label_mouse_entered():
 	hover_tooltip("\nAdjust the number of fracture lines on each item")
 
 func _on_start_button_mouse_entered():
-	if mode == "zen":
+	if mode == "relax":
 		hover_tooltip("Begin a calm and reflective meditation on imperfection\nNo time limit, discard fragments freely, and bring new broken items into the mix as you wish\nSave completed pieces to your gallery")
 	else:
 		hover_tooltip("Begin a frantic rush to repair what has been broken\nThe timer will start when you move the first fragment\nSave completed pieces to your gallery, along with your score")
@@ -421,19 +421,19 @@ func _on_start_button_pressed():
 	save_config()
 	var settings = {}
 	match mode:
-		"zen":
-			settings["mode"] = "zen"
+		"relax":
+			settings["mode"] = "relax"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
 			settings[CleaningTable.WEATHERING_AMT_SETTING] = weathering_amt
 			var dir = DirAccess.open("user://")
 			dir.remove("save.dat")
-		"time":
-			settings["mode"] = "time"
+		"struggle":
+			settings["mode"] = "struggle"
 			settings[CleaningTable.CRACK_COUNT_SETTING] = crack_count
 			settings[CleaningTable.ITEM_COUNT_SETTING] = item_count
 			settings[CleaningTable.WEATHERING_AMT_SETTING] = weathering_amt
-	Global.game_mode = settings.get("mode", "zen")
+	Global.game_mode = settings.get("mode", "relax")
 	Global.shatter_width = crack_widths[crack_width]
 	Global.rotate_with_shuffle = rotation_enabled
 	Global.lock_rotation = !rotation_enabled

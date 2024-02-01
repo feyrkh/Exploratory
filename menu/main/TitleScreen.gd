@@ -75,10 +75,10 @@ func _on_exit_button_pressed():
 	get_tree().quit()
 
 func _on_zen_button_pressed():
-	load_options_menu("zen")
+	load_options_menu("relax")
 
 func _on_time_button_pressed():
-	load_options_menu("time")
+	load_options_menu("struggle")
 
 func load_options_menu(mode):
 	hide_demo_view()

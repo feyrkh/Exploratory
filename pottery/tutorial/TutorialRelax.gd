@@ -17,7 +17,7 @@ var cur_tutorial:GenericTutorial
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if Global.game_mode != "zen" or Global.has_completed_relax_tutorial:
+	if Global.game_mode != "relax" or Global.has_completed_relax_tutorial:
 		visible = false
 		queue_free()
 		return

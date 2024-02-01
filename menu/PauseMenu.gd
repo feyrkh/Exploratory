@@ -34,7 +34,7 @@ signal save_game
 signal exit_game
 
 func _ready():
-	if Global.game_mode != "zen":
+	if Global.game_mode != "relax":
 		find_child("QuitAndSaveButton").visible = false
 		find_child("QuitAndDiscardButton").text = "Quit"
 	find_child("SfxVolume").value = AudioPlayerPool.audio_config.get_config(AudioPlayerPool.SFX_VOLUME_PCT)

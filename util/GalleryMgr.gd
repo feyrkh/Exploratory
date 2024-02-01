@@ -9,8 +9,8 @@ static func save_to_gallery(image, item, report_error:Callable):
 		item.save_timestamp = Time.get_date_string_from_system()
 		var mode = Global.game_mode
 		match mode:
-			"zen": mode = "relax"
-			"time": mode = "struggle"
+			"relax": mode = "relax"
+			"struggle": mode = "struggle"
 		item.game_mode = mode
 		print("Saved image to ", filename+".png")
 		var image_save_data = {}

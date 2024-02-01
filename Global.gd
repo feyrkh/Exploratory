@@ -24,9 +24,30 @@ signal tutorial_panned_camera()
 signal tutorial_glued_item()
 signal tutorial_move_option_toggled()
 
-var has_completed_relax_tutorial := false
-var has_completed_struggle_tutorial := false
-var has_completed_gallery_tutorial := false
+var has_completed_relax_tutorial := false:
+	get:
+		return global_user_settings.get_config("has_completed_relax_tutorial", false)
+	set(val):
+		if val != global_user_settings.get_config("has_completed_relax_tutorial", false):
+			has_completed_relax_tutorial = val
+			global_user_settings.set_config("has_completed_relax_tutorial", val)
+			global_user_settings.save_config()
+var has_completed_struggle_tutorial := false:
+	get:
+		return global_user_settings.get_config("has_completed_struggle_tutorial", false)
+	set(val):
+		if val != global_user_settings.get_config("has_completed_struggle_tutorial", false):
+			has_completed_struggle_tutorial = val
+			global_user_settings.set_config("has_completed_struggle_tutorial", val)
+			global_user_settings.save_config()
+var has_completed_gallery_tutorial := false:
+	get:
+		return global_user_settings.get_config("has_completed_gallery_tutorial", false)
+	set(val):
+		if val != global_user_settings.get_config("has_completed_gallery_tutorial", false):
+			has_completed_gallery_tutorial = val
+			global_user_settings.set_config("has_completed_gallery_tutorial", val)
+			global_user_settings.save_config()
 var splash_screen_shown := false
 var next_scene_settings
 var shatter_width:float = 0.5
@@ -134,7 +155,7 @@ func load_save_data(data:Dictionary):
 	freeze_pieces = data.get("fp", freeze_pieces)
 	collide = data.get("c", collide)
 	click_mode = data.get("cm", click_mode)
-	game_mode = data.get("m", "zen")
+	game_mode = data.get("m", "relax")
 	center_of_mass_indicator_size = data.get("coms", center_of_mass_indicator_size)
 	has_completed_relax_tutorial = data.get("tut_r", has_completed_relax_tutorial)
 	has_completed_struggle_tutorial = data.get("tut_s", has_completed_struggle_tutorial)

@@ -63,7 +63,7 @@ func _ready():
 		PhysicsServer2D.set_active(true)
 		_on_load_button_pressed()
 	else:
-		Global.game_mode = settings.get("mode", "zen")
+		Global.game_mode = settings.get("mode", "relax")
 		PhysicsServer2D.set_active(false)
 		update_button_text()
 		var scene_center = (camera_bot_right_limit - camera_top_left_limit)/2 + camera_top_left_limit
@@ -148,11 +148,11 @@ func generate_one_random_item(piece_container:Node2D, _item_id:int, generation_c
 func setup_game_mode():
 	var game_timer := find_child("GameTimer")
 	match Global.game_mode:
-		"zen":
+		"relax":
 			# delete time attack stuff
 			Global.awaiting_first_click = false
 			game_timer.queue_free()
-		"time":
+		"struggle":
 			# prepare to trigger time attack stuff
 			Global.awaiting_first_click = true
 			game_timer.setup(settings[ITEM_COUNT_SETTING])
@@ -290,7 +290,7 @@ func do_glue_at_cursor():
 			Global.tutorial_glued_item.emit()
 
 func show_completion_window():
-	if Global.game_mode == "zen":
+	if Global.game_mode == "relax":
 		show_relax_completion_window()
 	else:
 		show_struggle_completion_window()
@@ -434,8 +434,8 @@ func take_screenshot_of_piece(piece:ArcheologyItem) -> Image:
 func save_to_gallery(item:Node2D):
 	var mode = Global.game_mode
 	match mode:
-		"zen": mode = "relax"
-		"time": mode = "struggle"
+		"relax": mode = "relax"
+		"struggle": mode = "struggle"
 	item.game_mode = mode
 	Global.click_mode = Global.ClickMode.move
 	var img = await take_screenshot_of_piece(item)

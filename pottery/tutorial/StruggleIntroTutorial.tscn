@@ -17,9 +17,10 @@ The timer will start when you first move or rotate a piece.
 The timer will stop when the number of glued-together pieces is equal to the 
         number of items that were shattered.
 Score is based on:
-       -  the number of fragments an item was broken into 
-       -  how long it took to reassemble
-       -  how accurately it was reassembled
+       -  number of items generated
+       -  number of fragments each item was broken into 
+       -  how long it took to reassemble all items
+       -  how accurately each item was reassembled
        -  settings chosen before starting
 If you save the completed pieces to your gallery, your score will also be saved.
 "

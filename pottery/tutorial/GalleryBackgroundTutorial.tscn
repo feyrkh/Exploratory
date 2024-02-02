@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dlbixlukc08y0"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_r80mf"]
+[ext_resource type="Script" path="res://pottery/tutorial/AutoCompleteTutorial.gd" id="2_t054s"]
+
+[node name="GalleryBackgroundTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_r80mf")
+script = ExtResource("2_t054s")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Use the \"Background\" and \"Shelves\" buttons to change
+this room's background and shelf arrangement.
+
+Use the \"Next Room\" and \"Previous Room\" buttons
+to navigate between display rooms. You can have
+as many as you need, and double-click on the
+room name to change it."
+horizontal_alignment = 1

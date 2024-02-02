@@ -338,6 +338,7 @@ func cancel_room_name_edit():
 func update_control_hints():
 	control_hints.set_hints([
 		["Move item", preload("res://art/mouse_left.png"), preload("res://art/mouse_none.png")],
+		["Resize item", preload("res://art/mouse_scroll_up.png"), preload("res://art/shift_key.png")],
 		["Rotate item", preload("res://art/mouse_right.png"), preload("res://art/mouse_none.png")],
 		["Pan camera", preload("res://art/mouse_middle.png"), preload("res://art/mouse_none.png")],
 		["Pan camera", preload("res://art/arrow_keys.png"), preload("res://art/arrow_keys.png")],

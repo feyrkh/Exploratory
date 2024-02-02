@@ -230,6 +230,12 @@ size_flags_vertical = 8
 text = "Exit Game"
 script = ExtResource("12_7sog0")
 
+[node name="CursorMode" type="Sprite2D" parent="CanvasLayer"]
+visible = false
+position = Vector2(264, 160)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("10_06o3n")
+
 [node name="CursorArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 2

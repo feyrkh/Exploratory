@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://coffwbekoexk4"]
+
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="1_okdp5"]
+[ext_resource type="Script" path="res://pottery/tutorial/GalleryUnpackItemTutorial.gd" id="2_lvipr"]
+
+[node name="GalleryUnpackItemTutorial" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_okdp5")
+script = ExtResource("2_lvipr")
+
+[node name="TextEdit" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Let's unpack one of your previously saved items.
+Use the \"Unpack Item\" button to bring up a list
+of any packed items and choose one to place it
+into your gallery. Position it however you like,
+once you leave the gallery you come back to
+admire the results of your labor!"
+horizontal_alignment = 1

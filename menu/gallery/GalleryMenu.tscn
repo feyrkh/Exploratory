@@ -29,7 +29,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 6
 text = "You have no saved artifacts
-Play in Zen or Time Attack mode
+Play in Relax or Struggle mode
 to collect more"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -43,31 +43,31 @@ layout_mode = 2
 
 [node name="PreviousButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 theme = ExtResource("1_3hicx")
 text = "Previous"
 script = ExtResource("3_ovs4m")
 
 [node name="UnpackButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 theme = ExtResource("1_3hicx")
 text = "Unpack"
 script = ExtResource("3_ovs4m")
 
 [node name="NextButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 theme = ExtResource("1_3hicx")
 text = "Next"
 script = ExtResource("3_ovs4m")
 
 [node name="CloseButton" type="Button" parent="."]
 layout_mode = 2
-offset_left = 1041.0
-offset_top = 50.0
-offset_right = 1107.0
-offset_bottom = 74.0
+offset_left = 971.0
+offset_top = 51.0
+offset_right = 1007.0
+offset_bottom = 83.0
 size_flags_horizontal = 3
 theme = ExtResource("1_3hicx")
 text = "X"

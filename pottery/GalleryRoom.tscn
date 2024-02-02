@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://tpag1njdnwcy"]
+[gd_scene load_steps=14 format=3 uid="uid://tpag1njdnwcy"]
 
 [ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
 [ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://n5316mle0or2" path="res://menu/gallery/GalleryNotes.tscn" id="7_4pcnk"]
 [ext_resource type="PackedScene" uid="uid://bpkmbst6b1h3" path="res://control_hints/ControlHints.tscn" id="7_yxhjm"]
 [ext_resource type="Script" path="res://pottery/CursorArea.gd" id="9_fhm20"]
+[ext_resource type="PackedScene" uid="uid://bgxg1nlwbdaue" path="res://pottery/tutorial/TutorialGallery.tscn" id="11_35jtb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wqvk2"]
 size = Vector2(3644, 9187)
@@ -176,7 +177,7 @@ script = ExtResource("4_5ockw")
 layout_mode = 2
 size_flags_horizontal = 7
 theme = ExtResource("2_dhsuc")
-text = "Unpack Artifact"
+text = "Unpack Item"
 script = ExtResource("4_5ockw")
 
 [node name="ExitButton" type="Button" parent="UI/PanelContainer/HBoxContainer"]
@@ -187,8 +188,16 @@ text = "Exit"
 script = ExtResource("4_5ockw")
 sfx = ""
 
+[node name="TutorialGallery" parent="UI" instance=ExtResource("11_35jtb")]
+offset_left = 2.0
+offset_top = 50.0
+offset_right = 2.0
+offset_bottom = 50.0
+
 [node name="GalleryMenu" parent="UI" instance=ExtResource("4_gxinv")]
 visible = false
+offset_top = 64.0
+offset_bottom = 64.0
 
 [node name="Camera2D" type="Camera2D" parent="UI"]
 anchor_mode = 0
@@ -201,9 +210,9 @@ offset_bottom = -498.5
 
 [node name="ControlHints" parent="UI" instance=ExtResource("7_yxhjm")]
 offset_left = 1265.0
-offset_top = 444.0
+offset_top = 412.0
 offset_right = 160.0
-offset_bottom = -87.0
+offset_bottom = -119.0
 
 [node name="FadeRect" parent="UI" instance=ExtResource("5_0t2vs")]
 visible = false

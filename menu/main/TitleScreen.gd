@@ -28,6 +28,8 @@ func _ready():
 	find_child("StartGameOptionsContainer").visible = false
 	find_child("SettingsContainer").visible = false
 	find_child("StartGameOptionsContainer").menu_closed.connect(_on_back_button_pressed)
+	find_child("GalleryButton").visible = at_least_one_gallery_item_exists()
+		
 	await prepare_next_item(false)
 	update_item()
 	if !Global.splash_screen_shown:
@@ -45,6 +47,18 @@ func _ready():
 		#add_child(new_table)
 		#new_table.position = Vector2(i * 1000 + offset, 0)
 		#tables.append(new_table)
+
+func at_least_one_gallery_item_exists():
+	var dir = DirAccess.open("user://gallery")
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if !dir.current_is_dir():
+				if file_name.ends_with(".dat"):
+					return true
+			file_name = dir.get_next()
+	return false
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_cancel") and find_child("StartGameOptionsContainer").visible:

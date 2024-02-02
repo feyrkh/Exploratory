@@ -111,9 +111,11 @@ var click_mode = ClickMode.move:
 		if val != click_mode:
 			click_mode = val
 			match click_mode:
-				ClickMode.move: Input.set_custom_mouse_cursor(null)
+				ClickMode.move: 
+					Input.set_custom_mouse_cursor(null)
 				ClickMode.glue: Input.set_custom_mouse_cursor(load("res://art/cursor/glue.png"), Input.CURSOR_ARROW, Vector2(15, 15))
-				#ClickMode.paint: Input.set_custom_mouse_cursor(load("res://art/cursor/glue.png"), Input.CURSOR_ARROW, Vector2(15, 15))
+				ClickMode.save_item:
+					Input.set_custom_mouse_cursor(null)
 				_: Input.set_custom_mouse_cursor(null)
 			click_mode_changed.emit()
 

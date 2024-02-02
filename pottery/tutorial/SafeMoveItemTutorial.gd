@@ -12,7 +12,7 @@ func _ready():
 	orig_desired_movement_time = desired_movement_time
 	play_animation()
 
-func on_moved_item(item):
+func on_moved_item(_item):
 	if !Input.is_action_pressed("disable_collision"):
 		return
 	desired_movement_time -= 1.0 / Engine.get_frames_per_second()

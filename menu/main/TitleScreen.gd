@@ -239,11 +239,11 @@ func _on_settings_button_pressed():
 func show_audio_settings():
 	find_child("WeatheringSettingsContainer").visible = false
 	find_child("ItemColorSettingsContainer").visible = false
-	find_child("AudioSettingsContainer").visible = true
+	find_child("GeneralSettingsContainer").visible = true
 	find_child("WeatheringSettings").modulate = Color.WHITE
 	find_child("ItemColorSettings").modulate = Color.WHITE
 	find_child("AudioSettings").modulate = Color.GOLD
-	find_child("AudioSettingsContainer").refresh()
+	find_child("GeneralSettingsContainer").refresh()
 
 func _on_item_color_settings_pressed():
 	show_item_color_settings()
@@ -251,7 +251,7 @@ func _on_item_color_settings_pressed():
 func show_weathering_settings():
 	find_child("WeatheringSettingsContainer").visible = true
 	find_child("ItemColorSettingsContainer").visible = false
-	find_child("AudioSettingsContainer").visible = false
+	find_child("GeneralSettingsContainer").visible = false
 	find_child("WeatheringSettings").modulate = Color.GOLD
 	find_child("ItemColorSettings").modulate = Color.WHITE
 	find_child("AudioSettings").modulate = Color.WHITE
@@ -260,7 +260,7 @@ func show_weathering_settings():
 func show_item_color_settings():
 	find_child("WeatheringSettingsContainer").visible = false
 	find_child("ItemColorSettingsContainer").visible = true
-	find_child("AudioSettingsContainer").visible = false
+	find_child("GeneralSettingsContainer").visible = false
 	find_child("WeatheringSettings").modulate = Color.WHITE
 	find_child("ItemColorSettings").modulate = Color.GOLD
 	find_child("AudioSettings").modulate = Color.WHITE

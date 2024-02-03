@@ -7,6 +7,7 @@ func _ready():
 	find_child("RelaxTutorial").toggled.connect(func(val): Global.has_completed_relax_tutorial = !val)
 	find_child("StruggleTutorial").toggled.connect(func(val): Global.has_completed_struggle_tutorial = !val)
 	find_child("GalleryTutorial").toggled.connect(func(val):  Global.has_completed_gallery_tutorial = !val)
+	find_child("SlowInitialZoom").toggled.connect(func(val):  Global.slow_initial_zoom = val)
 	refresh()
 
 func _on_sfx_volume_value_changed(value):
@@ -25,3 +26,4 @@ func refresh():
 	find_child("RelaxTutorial").button_pressed = !Global.has_completed_relax_tutorial
 	find_child("StruggleTutorial").button_pressed = !Global.has_completed_struggle_tutorial
 	find_child("GalleryTutorial").button_pressed = !Global.has_completed_gallery_tutorial
+	find_child("SlowInitialZoom").button_pressed = Global.slow_initial_zoom

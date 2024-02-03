@@ -119,3 +119,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"NonUnderlinedButton"
 text = "Gallery"
+
+[node name="General" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "General"
+horizontal_alignment = 1
+
+[node name="SlowInitialZoom" type="CheckBox" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_4gp58")
+theme_type_variation = &"NonUnderlinedButton"
+text = "Slow initial zoom?"

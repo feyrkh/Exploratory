@@ -24,30 +24,36 @@ signal tutorial_panned_camera()
 signal tutorial_glued_item()
 signal tutorial_move_option_toggled()
 
+func set_global_setting(setting_name, val):
+	if val != global_user_settings.get_config(setting_name, false):
+		global_user_settings.set_config(setting_name, val)
+		global_user_settings.save_config()
+
+func get_global_setting(setting_name, default_val):
+	return global_user_settings.get_config(setting_name, default_val)
+
 var has_completed_relax_tutorial := false:
 	get:
 		return global_user_settings.get_config("has_completed_relax_tutorial", false)
 	set(val):
-		if val != global_user_settings.get_config("has_completed_relax_tutorial", false):
-			has_completed_relax_tutorial = val
-			global_user_settings.set_config("has_completed_relax_tutorial", val)
-			global_user_settings.save_config()
+		set_global_setting("has_completed_relax_tutorial", val)
 var has_completed_struggle_tutorial := false:
 	get:
 		return global_user_settings.get_config("has_completed_struggle_tutorial", false)
 	set(val):
-		if val != global_user_settings.get_config("has_completed_struggle_tutorial", false):
-			has_completed_struggle_tutorial = val
-			global_user_settings.set_config("has_completed_struggle_tutorial", val)
-			global_user_settings.save_config()
+		set_global_setting("has_completed_struggle_tutorial", val)
 var has_completed_gallery_tutorial := false:
 	get:
 		return global_user_settings.get_config("has_completed_gallery_tutorial", false)
 	set(val):
-		if val != global_user_settings.get_config("has_completed_gallery_tutorial", false):
-			has_completed_gallery_tutorial = val
-			global_user_settings.set_config("has_completed_gallery_tutorial", val)
-			global_user_settings.save_config()
+		set_global_setting("has_completed_gallery_tutorial", val)
+
+var slow_initial_zoom:bool = true:
+	get:
+		return global_user_settings.get_config("slow_initial_zoom", false)
+	set(val):
+		set_global_setting("slow_initial_zoom", val)
+
 var splash_screen_shown := false
 var next_scene_settings
 var shatter_width:float = 0.5

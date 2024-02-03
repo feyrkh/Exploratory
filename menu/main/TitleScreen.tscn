@@ -122,7 +122,7 @@ button_group = SubResource("ButtonGroup_seibb")
 text = "Items/Colors"
 script = ExtResource("4_i7rd2")
 
-[node name="AudioSettingsContainer" parent="SettingsContainer" instance=ExtResource("5_uwmju")]
+[node name="GeneralSettingsContainer" parent="SettingsContainer" instance=ExtResource("5_uwmju")]
 
 [node name="WeatheringSettingsContainer" parent="SettingsContainer" instance=ExtResource("6_utrjy")]
 visible = false

@@ -79,8 +79,9 @@ func _ready():
 		await get_tree().process_frame
 		shuffle_items()
 	setup_game_mode()
-	intro_zoom_tween = create_tween()
-	intro_zoom_tween.tween_property($Camera2D, "zoom_target", Vector2(0.8, 0.8), 8).set_ease(Tween.EASE_OUT)
+	if Global.slow_initial_zoom:
+		intro_zoom_tween = create_tween()
+		intro_zoom_tween.tween_property($Camera2D, "zoom_target", Vector2(0.8, 0.8), 8).set_ease(Tween.EASE_OUT)
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
 	tween.tween_callback(fade_rect.queue_free)

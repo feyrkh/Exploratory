@@ -18,6 +18,9 @@ const LIT_TIME := 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	find_child("VersionLabel").text = ProjectSettings.get_setting("application/config/version")
+	if OS.has_feature("web"):
+		find_child("ExitButton").visible = false
 	if !Global.splash_screen_shown:
 		var splash = find_child("SplashScreen")
 		splash.visible = true
@@ -28,7 +31,7 @@ func _ready():
 	find_child("StartGameOptionsContainer").visible = false
 	find_child("SettingsContainer").visible = false
 	find_child("StartGameOptionsContainer").menu_closed.connect(_on_back_button_pressed)
-	find_child("GalleryButton").visible = at_least_one_gallery_item_exists()
+	find_child("GalleryButton").disabled = !at_least_one_gallery_item_exists()
 		
 	await prepare_next_item(false)
 	update_item()
@@ -145,10 +148,12 @@ func prepare_next_item(load_slowly=true):
 	#for j in range(randi_range(5, 12)):
 	#	item.random_scar()
 	if load_slowly: await(get_tree().process_frame)
+	if !item or !is_instance_valid(item):
+		return
 	await item.try_shatter(randf_range(1, 2.5), load_slowly)
 	if load_slowly: await(get_tree().process_frame)
 	for i in find_child("ItemPreparation").get_children():
-		if is_instance_valid(i) and i is ArcheologyItem:
+		if i != null and is_instance_valid(i) and i is ArcheologyItem:
 			#i.build_glue_polygons(i.global_position, 99999999)
 			if load_slowly: await(get_tree().process_frame)
 

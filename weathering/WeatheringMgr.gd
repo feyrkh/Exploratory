@@ -1,7 +1,9 @@
 extends Node
 
 const ALLOWED_RANDOM := "allowed_random"
-
+const STATIC_WEATHERING_OPTIONS = [
+	"cracked", "crystallized", "dissolve", "eldritch", "faded", "None", "parched", "pixellate", "sand-blasted",
+]
 var weather_low := {}
 var weather_high := {}
 var weather_settings := SettingsFile.new("user://weathering.cfg", {
@@ -30,6 +32,8 @@ func get_random_option(intensity:float) -> WeatheringConfig:
 	return get_specific_option(opts.pick_random(), intensity)
 
 func load_weathering_options():
+	for opt in STATIC_WEATHERING_OPTIONS:
+		load_weathering_option(opt)
 	var dir = DirAccess.open("res://weathering")
 	if dir:
 		dir.list_dir_begin()
@@ -44,7 +48,7 @@ func load_weathering_options():
 func load_weathering_option(option_name:String):
 	var low_filename = "res://weathering/%s-low.tres" % option_name
 	var high_filename = "res://weathering/%s-high.tres" % option_name
-	if FileAccess.file_exists(low_filename) and FileAccess.file_exists(high_filename):
+	if OS.has_feature("web") or (FileAccess.file_exists(low_filename) and FileAccess.file_exists(high_filename)):
 		var low_opt = ResourceLoader.load(low_filename)
 		weather_low[low_opt.weathering_name] = low_opt
 		weather_high[low_opt.weathering_name] = ResourceLoader.load(high_filename)

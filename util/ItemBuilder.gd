@@ -327,10 +327,24 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 func reload_definitions():
 	all_items = {}
 	base_item_names = []
+	load_known_files()
 	var dir := DirAccess.open("res://art/item")
 	process_dir(dir)
 	dir = DirAccess.open("user://mods/items")
 	process_dir(dir)
+
+func load_known_files():
+	var known_files = [
+		"item_knife.cfg",
+		"knot_band1.cfg",
+		"pot_gray.cfg",
+		"shield_knot1.cfg",
+		"tablet3.cfg",
+		"teapot2.cfg",
+		"tree.cfg",
+	]
+	for f in known_files:
+		read_file("res://art/item/", f)
 
 func process_dir(dir:DirAccess):
 	if dir:
@@ -393,7 +407,8 @@ func read_file(dir_name, file_name):
 	match item.type:
 		'base': 
 			all_items[file_name_prefix] = item
-			base_item_names.append(item.item_name)
+			if base_item_names.find(item.item_name) < 0:
+				base_item_names.append(item.item_name)
 		'band': all_items[file_name_prefix] = item
 		'icon': all_items[file_name_prefix] = item
 		_: push_error("Didn't know where to save this kind of file: ", item.type)

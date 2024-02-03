@@ -228,6 +228,18 @@ theme_override_font_sizes/font_size = 20
 text = "Credits"
 script = ExtResource("4_i7rd2")
 
+[node name="VersionLabel" type="Label" parent="."]
+modulate = Color(0.356863, 0.356863, 0.356863, 1)
+custom_minimum_size = Vector2(0, 60)
+offset_left = 4.0
+offset_top = 657.0
+offset_right = 205.0
+offset_bottom = 717.0
+theme = ExtResource("2_7feem")
+theme_override_font_sizes/font_size = 20
+text = "v???"
+vertical_alignment = 2
+
 [node name="SplashScreen" type="Control" parent="."]
 visible = false
 z_index = 999

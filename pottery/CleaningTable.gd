@@ -26,6 +26,8 @@ var glue_cooldown:float = 0
 var highlighted_items = {}
 var total_items
 
+var intro_zoom_tween:Tween
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -77,53 +79,16 @@ func _ready():
 		await get_tree().process_frame
 		shuffle_items()
 	setup_game_mode()
+	intro_zoom_tween = create_tween()
+	intro_zoom_tween.tween_property($Camera2D, "zoom_target", Vector2(0.8, 0.8), 8).set_ease(Tween.EASE_OUT)
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate", Color(fade_rect.modulate.r, fade_rect.modulate.g, fade_rect.modulate.b, 0.0), 1.0)
 	tween.tween_callback(fade_rect.queue_free)
 	await tween.finished
 	await get_tree().physics_frame
 	set_piece_freeze()
-#	var new_item = await ItemBuilder.build_random_item()
-#	new_item.name = "Pot3"
-#	$Pieces.add_child(new_item)
-#	new_item.position = Vector2(350,150)
-	#var pot1:ArcheologyItem = find_child("Pot1")
-	#var poly := pot1.collision.polygon
-	#for i in range(30):
-		#poly.remove_at(0)
-	#pot1.collision.polygon = poly
-	#pot1.refresh_polygon()
-	#poly[5] = (pot1.center)
-	#pot1.refresh_polygon()
-#
-	#var pot2:ArcheologyItem = find_child("Pot2")
-	#poly = pot2.collision.polygon
-	#for i in range(30):
-		#poly.remove_at(poly.size()-1)
-	#poly.append(pot2.center)
-	#pot2.collision.polygon = poly
-	#pot2.refresh_polygon()
 	
-#	var pot3:ArcheologyItem = new_item
-	#var pot_area = pot3.area
-	#pot1.mass = pot3.mass * pot1.area / pot3.area
-	#pot2.mass = pot3.mass * pot2.area / pot3.area
-#	for i in range(4):
-		#pot1.random_scar()
-		#pot2.random_scar()
-#		pot3.random_scar()
-	
-	#var square = find_child("Square")
-	#square.specific_scar(Vector2(100, 151), Vector2(160, 150), 0, 0.5, 0.5) # from left
-	#square.specific_scar(Vector2(151, 100), Vector2(150, 160), 0, 0.5, 0.5) # from top
-	#square.specific_scar(Vector2(200, 151), Vector2(140, 150), 0, 0.5, 0.5) # from right
-	#square.specific_scar(Vector2(151, 200), Vector2(150, 140), 0, 0.5, 0.5) # from bottom
-	#square.specific_scar(Vector2(100, 101), Vector2(160, 160), 0, 0.5, 0.5) # from top-left
-	#square.specific_scar(Vector2(100, 199), Vector2(160, 140), 0, 0.5, 0.5) # from bottom-left
 
-
-	#square.specific_scar(Vector2(151, 200), Vector2(150, 40), 0, 0.5, 0.5) # from bottom, long
-	#square.specific_scar(Vector2(100, 151), Vector2(260, 150), 0, 0.5, 0.5) # from left, long
 func generate_one_random_item(piece_container:Node2D, _item_id:int, generation_coords:Vector2):
 	await get_tree().process_frame
 	var weathering_amt_setting = settings.get(WEATHERING_AMT_SETTING, 0)
@@ -215,6 +180,7 @@ func _process(_delta):
 	else:
 		var movement = Input.get_vector("left", "right", "up", "down")
 		if movement != Vector2.ZERO:
+			stop_zoom_tween()
 			var view_rect = camera.get_viewport_rect()
 			view_rect.position += camera.get_screen_center_position()
 			set_camera_position(camera.position + movement * CAMERA_MOVE_SPEED / camera.zoom.x)
@@ -309,31 +275,39 @@ func hide_relax_completion_window():
 func hide_struggle_completion_window():
 	find_child("StruggleCompletionPanel").slide_out()
 
+func stop_zoom_tween():
+	if intro_zoom_tween != null:
+		intro_zoom_tween.stop()
+		intro_zoom_tween = null
+
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:
 		if event.is_action_pressed("zoom_in", true):
-			if camera.zoom.x > 3:
-				camera.zoom += ZOOM_INCREMENT * 2
-			if camera.zoom.x >= 2:
-				camera.zoom += ZOOM_INCREMENT * 2
-			camera.zoom += ZOOM_INCREMENT
-			if camera.zoom.x > 4.0:
-				camera.zoom = Vector2(4, 4)
-			Global.camera_zoom_changed.emit(camera.zoom.x)
+			stop_zoom_tween()
+			if camera.zoom_target.x > 3:
+				camera.zoom_target += ZOOM_INCREMENT * 2
+			if camera.zoom_target.x >= 2:
+				camera.zoom_target += ZOOM_INCREMENT * 2
+			camera.zoom_target += ZOOM_INCREMENT
+			if camera.zoom_target.x > 4.0:
+				camera.zoom_target = Vector2(4, 4)
+			Global.camera_zoom_changed.emit(camera.zoom_target.x)
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("zoom_out", true):
-			if camera.zoom.x > 3:
-				camera.zoom -= ZOOM_INCREMENT * 2
-			if camera.zoom.x > 2:
-				camera.zoom -= ZOOM_INCREMENT * 2
-			camera.zoom -= ZOOM_INCREMENT
-			if camera.zoom.x < 0.3:
-				camera.zoom = Vector2(0.3, 0.3)
-			Global.camera_zoom_changed.emit(camera.zoom.x)
+			stop_zoom_tween()
+			if camera.zoom_target.x > 3:
+				camera.zoom_target -= ZOOM_INCREMENT * 2
+			if camera.zoom_target.x > 2:
+				camera.zoom_target -= ZOOM_INCREMENT * 2
+			camera.zoom_target -= ZOOM_INCREMENT
+			if camera.zoom_target.x < 0.3:
+				camera.zoom_target = Vector2(0.3, 0.3)
+			Global.camera_zoom_changed.emit(camera.zoom_target.x)
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("camera_drag"):
+			stop_zoom_tween()
 			camera_drag_mouse_start = get_viewport().get_mouse_position()
 			camera_drag_camera_start = camera.position
 			get_viewport().set_input_as_handled()

@@ -10,4 +10,6 @@ del /S /Q ..\web_export\Keshiki\*
 powershell Compress-Archive ..\web_export\Keshiki\ ..\web_export\Keshiki\index.zip
 ..\butler push ..\web_export\Keshiki\index.zip kevinhobbs/keshiki:web --userversion %id%
 
+git tag %id% head
+git push
 set /p "done=Finished uploading"

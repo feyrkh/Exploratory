@@ -50,7 +50,7 @@ var has_completed_gallery_tutorial := false:
 
 var slow_initial_zoom:bool = true:
 	get:
-		return global_user_settings.get_config("slow_initial_zoom", false)
+		return global_user_settings.get_config("slow_initial_zoom", true)
 	set(val):
 		set_global_setting("slow_initial_zoom", val)
 
@@ -119,7 +119,8 @@ var click_mode = ClickMode.move:
 			match click_mode:
 				ClickMode.move: 
 					Input.set_custom_mouse_cursor(null)
-				ClickMode.glue: Input.set_custom_mouse_cursor(load("res://art/cursor/glue.png"), Input.CURSOR_ARROW, Vector2(15, 15))
+				ClickMode.glue: 
+					Input.set_custom_mouse_cursor(load("res://art/cursor/glue.png"), Input.CURSOR_ARROW, Vector2(15, 15))
 				ClickMode.save_item:
 					Input.set_custom_mouse_cursor(null)
 				_: Input.set_custom_mouse_cursor(null)

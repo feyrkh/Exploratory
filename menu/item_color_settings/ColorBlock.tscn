@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cfbxyt8l4v1ld"]
+[gd_scene load_steps=3 format=3 uid="uid://cfbxyt8l4v1ld"]
 
 [ext_resource type="Script" path="res://menu/item_color_settings/ColorBlock.gd" id="1_vmflo"]
+[ext_resource type="Theme" uid="uid://damrf2nwvx71w" path="res://menu/item_color_settings/plain_text.tres" id="2_oojd7"]
 
 [node name="ColorBlock" type="ColorRect"]
 custom_minimum_size = Vector2(35, 35)
@@ -14,3 +15,16 @@ offset_top = -1.0
 offset_right = 36.0
 offset_bottom = 36.0
 mouse_filter = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 36.0
+offset_bottom = 36.0
+theme = ExtResource("2_oojd7")
+theme_override_colors/font_color = Color(0.823529, 0.823529, 0.823529, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 32

@@ -9,3 +9,6 @@ func _ready():
 func _on_gui_input(event:InputEvent):
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		clicked.emit()
+
+func set_label(str):
+	$Label.text = str

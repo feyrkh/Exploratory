@@ -55,8 +55,14 @@ func render_allowed_color(c:Color):
 	var block = preload("res://menu/item_color_settings/ColorBlock.tscn").instantiate()
 	block.color = c
 	allowed_colors_container.add_child(block)
-	block.mouse_entered.connect(show_color.bind(c))
-	block.mouse_exited.connect(show_default_color)
+	block.mouse_entered.connect(func():
+		show_color(c)
+		block.set_label("x")
+	)
+	block.mouse_exited.connect(func():
+		show_default_color()
+		block.set_label("")
+	)
 	block.clicked.connect(remove_allowed_color.bind(c))
 
 func render_recently_used_colors():
@@ -72,8 +78,14 @@ func render_recently_used_color(c:Color):
 	block.color = c
 	available_colors_container.add_child(block)
 	available_colors_container.move_child(block, 0)
-	block.mouse_entered.connect(show_color.bind(c))
-	block.mouse_exited.connect(show_default_color)
+	block.mouse_entered.connect(func():
+		show_color(c)
+		block.set_label("+")
+	)
+	block.mouse_exited.connect(func():
+		show_default_color()
+		block.set_label("")
+	)
 	block.clicked.connect(add_allowed_color.bind(c))
 	while available_colors_container.get_child_count() > MAX_RECENTLY_USED:
 		available_colors_container.get_child(-1).queue_free()

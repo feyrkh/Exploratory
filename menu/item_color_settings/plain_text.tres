@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://damrf2nwvx71w"]
+
+[ext_resource type="FontFile" uid="uid://bqpdt8jc1yuv2" path="res://theme/OpenSans-SemiBold.ttf" id="1_lw1yn"]
+
+[resource]
+Label/fonts/font = ExtResource("1_lw1yn")

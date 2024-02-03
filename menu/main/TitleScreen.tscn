@@ -81,6 +81,7 @@ color = Color(0, 0, 0, 1)
 visible = false
 
 [node name="SettingsContainer" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -147,7 +148,6 @@ script = ExtResource("4_i7rd2")
 sfx = "none"
 
 [node name="MainMenu" type="VBoxContainer" parent="."]
-visible = false
 offset_left = 68.0
 offset_top = 192.0
 offset_right = 426.0

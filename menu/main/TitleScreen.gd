@@ -18,7 +18,7 @@ const LIT_TIME := 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	find_child("VersionLabel").text = ProjectSettings.get_setting("application/config/version")
+	find_child("VersionLabel").text = ProjectSettings.get_setting("application/config/version") + " ("+ Steam.getPersonaName() + ")"
 	if OS.has_feature("web"):
 		find_child("ExitButton").visible = false
 	if !Global.splash_screen_shown:

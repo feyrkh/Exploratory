@@ -25,9 +25,11 @@ AudioPlayerPool="*res://util/AudioPlayerPool.tscn"
 ItemBuilder="*res://util/ItemBuilder.gd"
 WeatheringMgr="*res://weathering/WeatheringMgr.gd"
 ColorMgr="*res://menu/item_color_settings/ColorMgr.gd"
+SteamMgr="*res://util/SteamMgr.gd"
 
 [debug]
 
+file_logging/enable_file_logging=true
 gdscript/warnings/shadowed_global_identifier=0
 
 [display]

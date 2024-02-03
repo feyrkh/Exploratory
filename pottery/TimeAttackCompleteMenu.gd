@@ -136,25 +136,23 @@ func calc_shatter_score(v:float) -> float:
 func calc_displacement_score(v:float) -> float:
 	if v < 0.1: 
 		return 1.0
-	if v < 1:
+	if v < 0.25: 
 		return 0.9
-	if v < 5:
+	if v < 0.5: 
 		return 0.8
-	if v < 15:
-		return 0.7
-	if v < 30:
+	if v < 1:
 		return 0.6
-	if v < 50:
+	if v < 5:
 		return 0.5
-	if v < 75:
+	if v < 15:
 		return 0.4
-	if v < 100:
+	if v < 20:
 		return 0.3
-	if v < 150:
+	if v < 30:
 		return 0.2
-	if v < 250:
+	if v < 40:
 		return 0.1
-	return 0
+	return 0.01
 
 #func _unhandled_input(event):
 	#if event.is_action_pressed("ui_cancel"):

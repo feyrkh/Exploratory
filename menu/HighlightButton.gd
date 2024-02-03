@@ -1,4 +1,5 @@
 extends CustomMenuTextureButton
+class_name HighlightButton
 
 const HOVER_COLOR := Color.WHITE
 const NON_HOVER_COLOR := Color(1, 1, 1, 0.6)
@@ -16,7 +17,7 @@ var default_modulate = Color.WHITE:
 func _ready():
 	super._ready()
 	focus_mode = Control.FOCUS_NONE
-	glow_sprite = get_parent().find_child("GlowSprite")
+	glow_sprite = get_parent().get_parent().find_child("GlowSprite")
 	modulate = NON_HOVER_COLOR * default_modulate
 	self.mouse_entered.connect(on_hover)
 	self.mouse_exited.connect(on_non_hover)

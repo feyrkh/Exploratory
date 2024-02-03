@@ -26,158 +26,120 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ouhc1")
+metadata/_edit_horizontal_guides_ = [-57.0]
 
-[node name="AddItemButton" type="TextureButton" parent="."]
+[node name="BackgroundGlow" type="Sprite2D" parent="." node_paths=PackedStringArray("target_container")]
+position = Vector2(0, -435)
+scale = Vector2(1, 1.17204)
+texture = ExtResource("14_7ojls")
+centered = false
+script = ExtResource("15_j52o5")
+target_container = NodePath("../ButtonContainer")
+
+[node name="ButtonContainer" type="GridContainer" parent="."]
+layout_mode = 0
+offset_top = -352.0
+offset_right = 330.0
+offset_bottom = 1.0
+columns = 2
+
+[node name="AddItemButton" type="TextureButton" parent="ButtonContainer"]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
-offset_left = 6.0
-offset_top = -364.0
-offset_right = 73.0
-offset_bottom = -316.0
-pivot_offset = Vector2(27, 27.5)
 texture_normal = ExtResource("1_bximh")
 ignore_texture_size = true
 script = ExtResource("2_sh7t1")
 
-[node name="AddItemLabel" type="Label" parent="."]
+[node name="AddItemLabel" type="Label" parent="ButtonContainer"]
 material = ExtResource("3_87nh5")
 clip_contents = true
 layout_mode = 2
-offset_left = 74.0
-offset_top = -364.0
-offset_right = 333.0
-offset_bottom = -316.0
 theme = ExtResource("2_t10ru")
 text = "Add Item"
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
-[node name="MovementButton" type="TextureButton" parent="."]
+[node name="ShuffleButton" type="TextureButton" parent="ButtonContainer"]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
-offset_left = 6.0
-offset_top = -312.0
-offset_right = 73.0
-offset_bottom = -254.0
-pivot_offset = Vector2(29.5, 27)
+texture_normal = ExtResource("8_s0nvp")
+script = ExtResource("2_sh7t1")
+
+[node name="ShuffleLabel" type="Label" parent="ButtonContainer"]
+layout_mode = 2
+theme = ExtResource("2_t10ru")
+text = "Shuffle Pieces
+"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="GlueButton" type="TextureButton" parent="ButtonContainer"]
+modulate = Color(1, 1, 1, 0.6)
+custom_minimum_size = Vector2(67, 0)
+layout_mode = 2
+focus_mode = 0
+texture_normal = ExtResource("12_3b4bi")
+stretch_mode = 3
+script = ExtResource("2_sh7t1")
+
+[node name="GlueOverlay" type="TextureRect" parent="ButtonContainer/GlueButton"]
+layout_mode = 0
+offset_left = 7.0
+offset_right = 60.0
+offset_bottom = 53.0
+texture = ExtResource("13_854i1")
+metadata/_edit_lock_ = true
+
+[node name="GlueLabel" type="Label" parent="ButtonContainer"]
+layout_mode = 2
+theme = ExtResource("2_t10ru")
+text = "Join Pieces"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
+[node name="MovementButton" type="TextureButton" parent="ButtonContainer"]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
 toggle_mode = true
 texture_normal = ExtResource("3_bgwxi")
 texture_pressed = ExtResource("4_bg0md")
 script = ExtResource("2_sh7t1")
 
-[node name="MovementLabel" type="Label" parent="."]
+[node name="MovementLabel" type="Label" parent="ButtonContainer"]
 layout_mode = 2
-offset_left = 74.0
-offset_top = -307.0
-offset_right = 333.0
-offset_bottom = -259.0
 theme = ExtResource("2_t10ru")
 text = "Piece Movement"
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
-[node name="RotateButton" type="TextureButton" parent="."]
+[node name="RotateButton" type="TextureButton" parent="ButtonContainer"]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
-offset_left = 6.0
-offset_top = -250.0
-offset_right = 73.0
-offset_bottom = -192.0
-pivot_offset = Vector2(29, 27.5)
 toggle_mode = true
 texture_normal = ExtResource("5_ithpd")
 texture_pressed = ExtResource("4_eddwg")
 script = ExtResource("2_sh7t1")
 
-[node name="RotateLabel" type="Label" parent="."]
+[node name="RotateLabel" type="Label" parent="ButtonContainer"]
 layout_mode = 2
-offset_left = 74.0
-offset_top = -245.0
-offset_right = 333.0
-offset_bottom = -197.0
 theme = ExtResource("2_t10ru")
 text = "Piece Rotation
 "
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
-[node name="SaveItemButton" type="TextureButton" parent="."]
+[node name="SaveItemButton" type="TextureButton" parent="ButtonContainer"]
 modulate = Color(1, 1, 1, 0.6)
 custom_minimum_size = Vector2(67, 0)
 layout_mode = 2
-offset_left = 6.0
-offset_top = -187.0
-offset_right = 73.0
-offset_bottom = -129.0
-pivot_offset = Vector2(30, 27)
 texture_normal = ExtResource("9_gnf6j")
 stretch_mode = 3
 script = ExtResource("2_sh7t1")
 
-[node name="SaveItemLabel" type="Label" parent="."]
+[node name="SaveItemLabel" type="Label" parent="ButtonContainer"]
 layout_mode = 2
-offset_left = 74.0
-offset_top = -182.0
-offset_right = 333.0
-offset_bottom = -134.0
 theme = ExtResource("2_t10ru")
 text = "Save Item"
-vertical_alignment = 1
-script = ExtResource("5_mpmi2")
-
-[node name="GlueButton" type="TextureButton" parent="."]
-modulate = Color(1, 1, 1, 0.6)
-custom_minimum_size = Vector2(67, 0)
-layout_mode = 2
-offset_left = 6.0
-offset_top = -124.0
-offset_right = 73.0
-offset_bottom = -66.0
-pivot_offset = Vector2(30, 27)
-focus_mode = 0
-texture_normal = ExtResource("12_3b4bi")
-stretch_mode = 3
-script = ExtResource("2_sh7t1")
-
-[node name="GlueOverlay" type="TextureRect" parent="GlueButton"]
-layout_mode = 0
-offset_left = 7.0
-offset_top = 2.0
-offset_right = 60.0
-offset_bottom = 55.0
-texture = ExtResource("13_854i1")
-
-[node name="GlueLabel" type="Label" parent="."]
-layout_mode = 2
-offset_left = 74.0
-offset_top = -119.0
-offset_right = 333.0
-offset_bottom = -71.0
-theme = ExtResource("2_t10ru")
-text = "Join Pieces"
-vertical_alignment = 1
-script = ExtResource("5_mpmi2")
-
-[node name="ShuffleButton" type="TextureButton" parent="."]
-modulate = Color(1, 1, 1, 0.6)
-layout_mode = 2
-offset_left = 6.0
-offset_top = -64.0
-offset_right = 73.0
-offset_bottom = -6.0
-pivot_offset = Vector2(28, 28.5)
-texture_normal = ExtResource("8_s0nvp")
-script = ExtResource("2_sh7t1")
-
-[node name="ShuffleLabel" type="Label" parent="."]
-layout_mode = 2
-offset_left = 74.0
-offset_top = -59.0
-offset_right = 333.0
-offset_bottom = -11.0
-theme = ExtResource("2_t10ru")
-text = "Shuffle Pieces
-"
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
@@ -187,17 +149,9 @@ z_index = -1
 scale = Vector2(1.1, 1.1)
 texture = ExtResource("13_6fqb1")
 
-[node name="BackgroundGlow" type="Sprite2D" parent="."]
-z_index = -1
-position = Vector2(0, -435)
-scale = Vector2(1, 1.17204)
-texture = ExtResource("14_7ojls")
-centered = false
-script = ExtResource("15_j52o5")
-
-[connection signal="pressed" from="AddItemButton" to="." method="_on_add_item_button_pressed"]
-[connection signal="toggled" from="MovementButton" to="." method="_on_movement_button_toggled"]
-[connection signal="toggled" from="RotateButton" to="." method="_on_rotate_button_toggled"]
-[connection signal="pressed" from="SaveItemButton" to="." method="_on_save_item_button_pressed"]
-[connection signal="pressed" from="GlueButton" to="." method="_on_glue_button_pressed"]
-[connection signal="pressed" from="ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="ButtonContainer/AddItemButton" to="." method="_on_add_item_button_pressed"]
+[connection signal="pressed" from="ButtonContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="ButtonContainer/GlueButton" to="." method="_on_glue_button_pressed"]
+[connection signal="toggled" from="ButtonContainer/MovementButton" to="." method="_on_movement_button_toggled"]
+[connection signal="toggled" from="ButtonContainer/RotateButton" to="." method="_on_rotate_button_toggled"]
+[connection signal="pressed" from="ButtonContainer/SaveItemButton" to="." method="_on_save_item_button_pressed"]

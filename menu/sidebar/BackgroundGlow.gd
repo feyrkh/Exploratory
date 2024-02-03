@@ -8,6 +8,7 @@ var fade_tween:Tween
 
 var first_button:TextureButton
 var last_button:TextureButton
+@export var target_container:Node
 
 func _ready():
 	await get_tree().process_frame
@@ -16,7 +17,7 @@ func _ready():
 	
 func update_position():
 	first_button = null
-	for child in get_parent().get_children():
+	for child in target_container.get_children():
 		if child.visible and child is TextureButton:
 			if first_button == null: first_button = child
 			last_button = child
@@ -24,8 +25,8 @@ func update_position():
 				child.mouse_entered.connect(self.show_glow)
 			if !child.mouse_exited.is_connected(self.hide_glow):
 				child.mouse_exited.connect(self.hide_glow)
-	position = first_button.get_rect().position - Vector2(0, 60)
-	position.x = 0
+	global_position = first_button.global_position - Vector2(0, 60)
+	global_position.x = 0
 	visible = false
 	set_process(false)
 

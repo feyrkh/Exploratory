@@ -13,15 +13,26 @@ func _ready():
 	await get_tree().process_frame
 	visible = true
 	if Global.game_mode == "struggle":
-		$AddItemButton.visible = false
-		$AddItemLabel.visible = false
-		$MovementButton.visible = false
-		$MovementLabel.visible = false
-		$RotateButton.visible = false
-		$RotateLabel.visible = false
-		$SaveItemButton.visible = false
-		$SaveItemLabel.visible = false
+		find_child("AddItemButton").visible = false
+		find_child("AddItemLabel").visible = false
+		find_child("MovementButton").visible = false
+		find_child("MovementLabel").visible = false
+		find_child("RotateButton").visible = false
+		find_child("RotateLabel").visible = false
+		find_child("SaveItemButton").visible = false
+		find_child("SaveItemLabel").visible = false
 	update_buttons()
+	update_container_position()
+
+func update_container_position():
+	await get_tree().process_frame
+	var space_needed = 0
+	for child in find_child("ButtonContainer").get_children():
+		if !child.visible or !(child is HighlightButton):
+			continue
+		space_needed += child.get_rect().size.y + 4
+	
+	find_child("ButtonContainer").position.y = -space_needed - 2
 
 func update_buttons():
 	if Global.freeze_pieces:
@@ -60,19 +71,21 @@ func _on_save_item_button_pressed():
 	save_item_button_pressed.emit()
 
 func _on_game_timer_time_attack_complete(_total_seconds):
-	$SaveItemButton.visible = true
-	$SaveItemLabel.visible = true
-	$BackgroundGlow.update_position()
+	find_child("SaveItemButton").visible = true
+	find_child("SaveItemLabel").visible = true
+	update_container_position()
+	await get_tree().process_frame
+	find_child("BackgroundGlow").update_position()
 
 func _on_glue_button_pressed():
 	Global.toggle_glue_panel.emit()
 
 func update_click_mode():
 	if Global.click_mode == Global.ClickMode.save_item:
-		$SaveItemButton.default_modulate = Color.GOLD
+		find_child("SaveItemButton").default_modulate = Color.GOLD
 	else:
-		$SaveItemButton.default_modulate = Color.WHITE
+		find_child("SaveItemButton").default_modulate = Color.WHITE
 	if Global.click_mode == Global.ClickMode.glue:
-		$GlueButton.default_modulate = Color.GOLD
+		find_child("GlueButton").default_modulate = Color.GOLD
 	else:
-		$GlueButton.default_modulate = Color.WHITE
+		find_child("GlueButton").default_modulate = Color.WHITE

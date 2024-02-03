@@ -6,12 +6,12 @@ git add project.godot
 git commit -m "Releasing %id%"
 git push
 del /S /Q ..\web_export\Keshiki\*
-..\GodotSteam-451.exe --headless --quit --export Web ..\web_export\Keshiki\index.html
+..\GodotSteam-451.exe --headless --quit --export-release Web ..\web_export\Keshiki\index.html
 powershell Compress-Archive ..\web_export\Keshiki\ ..\web_export\Keshiki\index.zip
 ..\butler push ..\web_export\Keshiki\index.zip kevinhobbs/keshiki:web --userversion %id%
 
 del /S /Q ..\web_export\Keshiki\*
-..\GodotSteam-451.exe --headless --quit --export Windows ..\web_export\Keshiki\Keshiki.exe
+..\GodotSteam-451.exe --headless --quit --export-release Windows ..\web_export\Keshiki\Keshiki.exe
 powershell Compress-Archive ..\web_export\Keshiki\ ..\web_export\Keshiki\Keshiki.zip
 ..\butler push ..\web_export\Keshiki\Keshiki.zip kevinhobbs/keshiki:windows --userversion %id%
 

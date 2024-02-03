@@ -12,3 +12,4 @@ func _on_gui_input(event:InputEvent):
 
 func set_label(str):
 	$Label.text = str
+ 

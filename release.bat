@@ -1,3 +1,4 @@
+git status --porcelain |findstr . && echo Commit your changes before releasing && exit /B
 grep 'config/version' project.godot
 set /p "id=Enter version number: "
 sed -i -b -E 's/config\/version=.+$/config\/version="%id%"/' project.godot

@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyj528oquy4cs"]
+
+[ext_resource type="Texture2D" uid="uid://bvkovbo53l6rh" path="res://art/item/item_cup.png" id="1_p3qmj"]
+[ext_resource type="Script" path="res://util/DecorationBase.gd" id="2_hbapn"]
+
+[node name="Item" type="StaticBody2D"]
+metadata/_edit_lock_ = true
+metadata/_edit_vertical_guides_ = [-57.0, 0.0, 492.0, 549.0, 247.0]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(193, 1, 307, 0, 422, 8, 484, 20, 492, 27, 491, 75, 486, 107, 476, 144, 461, 183, 430, 232, 396, 269, 349, 305, 341, 310, 319, 382, 304, 390, 299, 415, 295, 424, 286, 430, 277, 435, 272, 444, 268, 471, 268, 526, 273, 567, 281, 593, 287, 605, 295, 617, 317, 623, 335, 630, 337, 634, 337, 641, 346, 647, 363, 657, 387, 668, 391, 672, 392, 682, 384, 691, 372, 698, 357, 704, 320, 711, 275, 715, 208, 715, 176, 712, 146, 707, 119, 698, 102, 686, 101, 681, 100, 671, 113, 664, 125, 659, 154, 643, 154, 635, 157, 630, 173, 623, 195, 619, 206, 606, 212, 591, 218, 573, 224, 528, 224, 473, 221, 449, 217, 436, 204, 429, 197, 422, 193, 416, 188, 391, 174, 381, 150, 310, 121, 291, 95, 268, 65, 234, 44, 204, 23, 162, 11, 125, 4, 92, 2, 68, 1, 27, 7, 22, 23, 15, 81, 6, 131, 4)
+metadata/_edit_lock_ = true
+
+[node name="DecorationBase2" type="ColorRect" parent="."]
+offset_left = 16.0
+offset_top = 82.0
+offset_right = 522.0
+offset_bottom = 207.0
+script = ExtResource("2_hbapn")
+type = "band"
+
+[node name="DecorationBase3" type="ColorRect" parent="."]
+offset_left = -57.0
+offset_top = 74.0
+offset_right = 104.0
+offset_bottom = 246.0
+color = Color(1, 0.317647, 0.262745, 1)
+script = ExtResource("2_hbapn")
+group = "1"
+img_id = "1"
+
+[node name="DecorationBase4" type="ColorRect" parent="."]
+offset_left = 385.0
+offset_top = 74.0
+offset_right = 546.0
+offset_bottom = 246.0
+color = Color(1, 0.317647, 0.262745, 1)
+script = ExtResource("2_hbapn")
+group = "1"
+img_id = "1"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_p3qmj")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="DecorationBase" type="ColorRect" parent="."]
+offset_left = 134.0
+offset_top = 82.0
+offset_right = 376.0
+offset_bottom = 254.0
+script = ExtResource("2_hbapn")
+
+[node name="DecorationBase5" type="ColorRect" parent="."]
+offset_left = 167.0
+offset_top = 98.0
+offset_right = 328.0
+offset_bottom = 270.0
+color = Color(1, 0.317647, 0.262745, 1)
+script = ExtResource("2_hbapn")
+group = "1"
+img_id = "1"

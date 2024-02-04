@@ -1,6 +1,6 @@
 extends Node2D
 
-
+const SHIMMER_MOVE_SPEED := 40
 #var tables = []
 
 var next_bounding_box
@@ -13,6 +13,11 @@ var next_bounding_box
 @onready var settings_menu_start_pos = find_child("SettingsContainer").position
 
 var demo_tween:Tween
+var next_item_shape
+var shimmer_offset := 0.0
+var shimmer_offset_dir := 1
+var cur_backdrop
+var next_backdrop
 
 const LIT_TIME := 10
 
@@ -35,6 +40,11 @@ func _ready():
 		
 	await prepare_next_item(false)
 	update_item()
+	await get_tree().process_frame
+	var first_child = find_child("ItemSpawn").get_child(0)
+	var backdrop = create_display_backdrop(next_item_shape)
+	cur_backdrop = backdrop
+	first_child.add_child(backdrop)
 	if !Global.splash_screen_shown:
 		Global.splash_screen_shown = true
 		var splash = find_child("SplashScreen")
@@ -81,7 +91,9 @@ func _on_back_button_pressed():
 	find_child("CreditsButton").visible = true
 	
 func _process(_delta):
-	pass
+	shimmer_offset += _delta / SHIMMER_MOVE_SPEED * sign(shimmer_offset_dir)
+	if cur_backdrop and is_instance_valid(cur_backdrop):
+		cur_backdrop.material.set_shader_parameter("offset", shimmer_offset)
 	#if tables[0].position.x < -1000:
 		#tables[0].position = Vector2(tables[0].position.x + ((tables.size()) * 1000), 0)
 		##tables.append(new_table)
@@ -132,6 +144,16 @@ func update_item():
 	await timer.timeout
 	call_deferred("update_item")
 
+func create_display_backdrop(polygon_points):
+	var backdrop = Polygon2D.new()
+	backdrop.color = [Color("ccb00e"), Color("adb300"), Color("db0b00"), Color.BLACK, Color("1d9e00")].pick_random()
+	backdrop.material = preload("res://shader/GoldShimmerMaterial.tres").duplicate()
+	backdrop.material.set_shader_parameter("normal_color", backdrop.color)
+	backdrop.polygon = polygon_points
+	backdrop.show_behind_parent = true
+	next_backdrop = backdrop
+	return backdrop
+
 func prepare_next_item(load_slowly=true):
 	var weathering_type = null
 	if randf() < 0.7:
@@ -139,9 +161,11 @@ func prepare_next_item(load_slowly=true):
 	var item := await ItemBuilder.build_random_item(null, load_slowly, weathering_type)
 	item.is_display = true
 	find_child("ItemPreparation").add_child(item)
+	next_item_shape = item.polygon.polygon
 	item.global_rotation = 0
 	next_bounding_box = item.bounding_box
 	item.position = -(item.bounding_box.size / 2 + item.bounding_box.position)
+	var backdrop = create_display_backdrop(item.polygon.polygon)
 	
 	var cracks := FractureGenerator.generate_standard_scars(item, randi_range(5, 12))
 	item.create_scars_from_paths(cracks)
@@ -150,14 +174,19 @@ func prepare_next_item(load_slowly=true):
 	if load_slowly: await(get_tree().process_frame)
 	if !item or !is_instance_valid(item):
 		return
-	await item.try_shatter(randf_range(1, 2.5), load_slowly)
+	await item.try_shatter(randf_range(1.0, 1.8), load_slowly)
 	if load_slowly: await(get_tree().process_frame)
 	for i in find_child("ItemPreparation").get_children():
 		if i != null and is_instance_valid(i) and i is ArcheologyItem:
 			#i.build_glue_polygons(i.global_position, 99999999)
 			if load_slowly: await(get_tree().process_frame)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	find_child("ItemPreparation").get_child(0).add_child(backdrop)	
 
 func transfer_prepared_item():
+	cur_backdrop = next_backdrop
 	var spawn = find_child("ItemSpawn")
 	spawn.global_position = spawn_start
 	var prep = find_child("ItemPreparation")
@@ -178,6 +207,7 @@ func transfer_prepared_item():
 	if randf() < 0.5: offset.x = -offset.x
 	if randf() < 0.5: offset.y = -offset.y
 	find_child("DisplayCamera").global_position = spawn_start# - Vector2(415, 0)
+	shimmer_offset_dir = -1 if randf() < 0.5 else 1
 	#var camera_tween = create_tween()
 	#spawn.global_position = spawn_start - offset
 	#camera_tween.tween_property(spawn, "global_position", spawn_start + offset, LIT_TIME + 6)

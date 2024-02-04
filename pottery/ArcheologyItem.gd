@@ -6,6 +6,7 @@ const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
 const MAX_LINEAR_VELOCITY := 5000.0
 const MAX_ANGULAR_VELOCITY := 25.0
+const FLASH_COLOR = Color(3, 3, 3, 1.0) #Color(1.0*5, 0.9*5, 0.05*5, 1.0)
 
 enum Fields {
 	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
@@ -74,6 +75,7 @@ var final_displacement_score:float
 var final_score:int
 var save_timestamp:String
 var game_mode:String
+var flash_tween:Tween
 
 var area_pct:
 	get:
@@ -208,7 +210,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, wea
 		new_polygon.position = data[Fields.POSITION]
 		new_polygon.rotation = data[Fields.ROTATION]
 		new_polygon.polygon = data[Fields.POLYGON]
-		new_polygon.uv = _adjust_polygon_scale(new_polygon.polygon, 1.0/result.adjusted_scale)
+		new_polygon.uv = ArcheologyItem._adjust_polygon_scale(new_polygon.polygon, 1.0/result.adjusted_scale)
 		var new_collision = CollisionPolygon2D.new()
 		new_collision.position = new_polygon.position
 		new_collision.rotation = new_polygon.rotation
@@ -374,9 +376,9 @@ func refresh_polygon() -> int:
 		return 1
 	#if polygon.uv.size() != collision.polygon.size():
 		#polygon.uv = collision.polygon
-	print("About to refresh polygon uv to scale ", adjusted_scale, ": ", polygon.uv)
-	polygon.uv = _adjust_polygon_scale(collision.polygon, 1.0/adjusted_scale)
-	print("After: ", polygon.uv)
+	#print("About to refresh polygon uv to scale ", adjusted_scale, ": ", polygon.uv)
+	polygon.uv = ArcheologyItem._adjust_polygon_scale(collision.polygon, 1.0/adjusted_scale)
+	#print("After: ", polygon.uv)
 	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
@@ -965,11 +967,11 @@ func adjust_scale(scale_change:float):
 	for child in get_children():
 		if child is Polygon2D or child is CollisionPolygon2D:
 			child.position *= scale_change
-			child.polygon = _adjust_polygon_scale(child.polygon, scale_change)
+			child.polygon = ArcheologyItem._adjust_polygon_scale(child.polygon, scale_change)
 			if "bounding_box" in child:
 				child.bounding_box = null
 			#if "uv" in child:
-			#	child.uv = _adjust_polygon_scale(child.polygon, 1.0/adjusted_scale)
+			#	child.uv = ArcheologyItem._adjust_polygon_scale(child.polygon, 1.0/adjusted_scale)
 	for child in $Scars.get_children():
 		child.position *= scale_change
 		child.adjust_scale(scale_change)
@@ -1011,3 +1013,10 @@ func _on_body_exited(body):
 	#print(body, " and ", self, " separating at ", Time.get_ticks_msec())
 	next_clink_time[body] = Time.get_ticks_msec() + 300
 	body.next_clink_time[self] = Time.get_ticks_msec() + 300
+
+func glue_flash():
+	if flash_tween != null and flash_tween.is_running():
+		flash_tween.stop()
+	flash_tween = create_tween()
+	flash_tween.tween_property(self, "modulate", FLASH_COLOR, 0.1)
+	flash_tween.tween_property(self, "modulate", Color.WHITE, 0.2)

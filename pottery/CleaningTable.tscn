@@ -190,6 +190,7 @@ scale = Vector2(0.111956, 0.111956)
 texture = ExtResource("11_jec75")
 
 [node name="RelaxPanelCloseButton" type="Button" parent="CanvasLayer/RelaxCompletionPanel"]
+modulate = Color(1, 0.858824, 0.0705882, 1)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8

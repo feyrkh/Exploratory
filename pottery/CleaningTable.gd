@@ -245,10 +245,12 @@ func do_glue_at_cursor():
 		var pieces = cursor_area.get_overlaps()
 		if pieces.size() > 1:
 			var main_piece = pieces[0]
+			main_piece.glue_flash()
 			for i in range(1, pieces.size()):
 				# only glue items together if they haven't already taken part in a completed time attack game
 				if !main_piece.time_attack_seconds and !pieces[i].time_attack_seconds:
 					main_piece.glue(pieces[i])
+					main_piece.glue_flash()
 			main_piece.call_deferred("highlight_visual_polygons")
 			main_piece.build_glue_polygons(get_global_mouse_position(), cursor_area.find_child("CollisionShape2D").shape.radius)
 			await get_tree().process_frame

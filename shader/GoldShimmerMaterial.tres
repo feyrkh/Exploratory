@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://lyd43288siwn"]
+
+[ext_resource type="Shader" path="res://shader/gold_shimmer.gdshader" id="1_ofbxy"]
+
+[resource]
+shader = ExtResource("1_ofbxy")
+shader_parameter/normal_color = Vector4(1, 0.843137, 0, 1)
+shader_parameter/shine_color = Vector4(1, 1, 1, 1)
+shader_parameter/offset = 0.0

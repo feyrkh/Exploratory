@@ -1,0 +1,1 @@
+The links point out to game elements that need art

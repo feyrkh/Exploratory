@@ -199,7 +199,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, wea
 	result.final_score = me_data[Fields.FINAL_SCORE]
 	result.game_mode = me_data[Fields.GAME_MODE]
 	result.save_timestamp = me_data[Fields.SAVE_DATE]
-	result.adjusted_scale = me_data[Fields.ADJUSTED_SCALE]
+	result.adjusted_scale = me_data.get(Fields.ADJUSTED_SCALE, 1.0)
 	for data in poly_data:
 		var new_polygon = ItemPolygon2D.new()
 		new_polygon.visibility_layer = 3 # Visible on layers 1 (normal view) and 2 (screenshot view)

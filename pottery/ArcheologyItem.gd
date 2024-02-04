@@ -10,7 +10,7 @@ const MAX_ANGULAR_VELOCITY := 25.0
 enum Fields {
 	IMG_DATA, POSITION, ROTATION, POLYGON, ORIG_AREA, SHATTER_SIZE, ORIG_PIECE_COUNT, 
 	ORIG_ITEM_COUNT, TIME_ATTACK_SECONDS, FINAL_SCORE, BUMP_ENABLED, ROTATE_ENABLED,
-	DISPLACEMENT_SCORE, SAVE_DATE, GAME_MODE
+	DISPLACEMENT_SCORE, SAVE_DATE, GAME_MODE, ADJUSTED_SCALE
 }
 
 # if -1, the mouse is not hovering over this piece
@@ -29,6 +29,7 @@ var reset_rotation = null
 var bounding_box:Rect2
 var loading:bool = false
 var adjusted_scale := 1.0
+var gallery_scale := 1.0
 ## This item is being used for display only and can't be interacted with
 var is_display:bool = false:
 	set(val):
@@ -157,6 +158,7 @@ func get_save_data(image_save_data:Dictionary, weathering_save_data:Dictionary) 
 		Fields.FINAL_SCORE: final_score,
 		Fields.SAVE_DATE: save_timestamp,
 		Fields.GAME_MODE: game_mode,
+		Fields.ADJUSTED_SCALE: adjusted_scale,
 	}
 	return {"img":img_save_data, "scar":scar_save_data, "edge":edge_save_data, "glue":glue_save_data, "me":me_data}
 
@@ -197,6 +199,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, wea
 	result.final_score = me_data[Fields.FINAL_SCORE]
 	result.game_mode = me_data[Fields.GAME_MODE]
 	result.save_timestamp = me_data[Fields.SAVE_DATE]
+	result.adjusted_scale = me_data[Fields.ADJUSTED_SCALE]
 	for data in poly_data:
 		var new_polygon = ItemPolygon2D.new()
 		new_polygon.visibility_layer = 3 # Visible on layers 1 (normal view) and 2 (screenshot view)
@@ -205,7 +208,7 @@ static func load_save_data(item_save:Dictionary, image_save_data:Dictionary, wea
 		new_polygon.position = data[Fields.POSITION]
 		new_polygon.rotation = data[Fields.ROTATION]
 		new_polygon.polygon = data[Fields.POLYGON]
-		new_polygon.uv = new_polygon.polygon
+		new_polygon.uv = _adjust_polygon_scale(new_polygon.polygon, 1.0/result.adjusted_scale)
 		var new_collision = CollisionPolygon2D.new()
 		new_collision.position = new_polygon.position
 		new_collision.rotation = new_polygon.rotation
@@ -326,6 +329,7 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.shatter_size = shatter_size
 	new_scene.save_timestamp = save_timestamp
 	new_scene.game_mode = game_mode
+	new_scene.adjusted_scale = adjusted_scale
 	if should_clone_slow:
 		await wait_frame()
 	#for scar in scars.get_children():
@@ -370,7 +374,9 @@ func refresh_polygon() -> int:
 		return 1
 	#if polygon.uv.size() != collision.polygon.size():
 		#polygon.uv = collision.polygon
+	print("About to refresh polygon uv to scale ", adjusted_scale, ": ", polygon.uv)
 	polygon.uv = _adjust_polygon_scale(collision.polygon, 1.0/adjusted_scale)
+	print("After: ", polygon.uv)
 	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
@@ -955,6 +961,7 @@ func save_to_gallery():
 
 func adjust_scale(scale_change:float):
 	adjusted_scale = adjusted_scale*scale_change
+	print("Adjusting scale to ", adjusted_scale)
 	for child in get_children():
 		if child is Polygon2D or child is CollisionPolygon2D:
 			child.position *= scale_change
@@ -975,7 +982,7 @@ func adjust_scale(scale_change:float):
 	center = null
 	_find_center()
 
-func _adjust_polygon_scale(poly, scale_change:float):
+static func _adjust_polygon_scale(poly, scale_change:float):
 	for i in range(poly.size()):
 		poly[i] = poly[i] * scale_change
 	return poly

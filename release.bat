@@ -10,11 +10,6 @@ del /S /Q ..\web_export\Keshiki\*
 powershell Compress-Archive ..\web_export\Keshiki\ ..\web_export\Keshiki\index.zip
 ..\butler push ..\web_export\Keshiki\index.zip kevinhobbs/keshiki:web --userversion %id%
 
-del /S /Q ..\web_export\Keshiki\*
-..\GodotSteam-451.exe --headless --quit --export-release Windows ..\web_export\Keshiki\Keshiki.exe
-powershell Compress-Archive ..\web_export\Keshiki\ ..\web_export\Keshiki\Keshiki.zip
-..\butler push ..\web_export\Keshiki\Keshiki.zip kevinhobbs/keshiki:windows --userversion %id%
-
 git tag %id% head
 git push
 set /p "done=Finished uploading"

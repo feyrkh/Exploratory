@@ -105,10 +105,13 @@ func generate_one_random_item(piece_container:Node2D, _item_id:int, generation_c
 	piece_container.add_child(new_item)
 	new_item.position = generation_coords
 	await get_tree().process_frame
+	var orig_uv = new_item.polygon.uv
+	new_item.adjust_scale(randf_range(0.5, 1.5))
 	var cracks := FractureGenerator.generate_standard_scars(new_item, settings.get(CRACK_COUNT_SETTING, 8))
 	new_item.create_scars_from_paths(cracks)
 	#for j in range(settings.get(CRACK_COUNT_SETTING, 8)):
 	#	new_item.random_scar()
+	new_item.polygon.uv = orig_uv
 	await new_item.try_shatter(Global.shatter_width, true)
 			
 func setup_game_mode():

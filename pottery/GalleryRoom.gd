@@ -86,6 +86,7 @@ func handle_camera_input(event:InputEvent):
 			if Input.is_action_pressed("disable_collision"):
 				var overlaps := cursor_area.get_overlaps().filter(func(i): return i is ArcheologyItem)
 				if overlaps.size() > 0 and overlaps[0].bounding_box.size.x < 1500 and overlaps[0].bounding_box.size.y < 1500:
+					overlaps[0].gallery_scale *= 1.1
 					overlaps[0].adjust_scale(1.1)
 			else:
 				if camera.zoom.x >= 2:
@@ -100,6 +101,7 @@ func handle_camera_input(event:InputEvent):
 			if Input.is_action_pressed("disable_collision"):
 				var overlaps := cursor_area.get_overlaps().filter(func(i): return i is ArcheologyItem)
 				if overlaps.size() > 0 and overlaps[0].bounding_box.size.x > 100 and overlaps[0].bounding_box.size.y > 100:
+					overlaps[0].gallery_scale *= 0.9
 					overlaps[0].adjust_scale(0.9)
 			else:
 				if camera.zoom.x > 2:
@@ -155,7 +157,7 @@ func save_current_room():
 		gallery_rooms.append([])
 	var cur_room_items = []
 	for child in find_child("Items").get_children():
-		cur_room_items.append([child.gallery_id, child.global_position, child.global_rotation, child.adjusted_scale])
+		cur_room_items.append([child.gallery_id, child.global_position, child.global_rotation, child.gallery_scale])
 	var room_name
 	if cur_background_img_idx == -1:
 		room_name = ""
@@ -249,7 +251,8 @@ func load_gallery_room(idx:int):
 		#item.collision_mask = 0
 		item.global_position = item_data[ITEM_FIELD_POS]
 		item.global_rotation = item_data[ITEM_FIELD_ROT]
-		item.adjust_scale(item_data[ITEM_FIELD_SCALE])
+		item.gallery_scale = item_data[ITEM_FIELD_SCALE]
+		item.adjust_scale(item.gallery_scale)
 		#item.collision_mask = orig_mask
 	cur_background_img_idx = background_imgs.find(room_data[ROOM_FIELD_BG_FILE])
 	shelf_configuration = room_data[ROOM_FIELD_SHELF_CONFIG]

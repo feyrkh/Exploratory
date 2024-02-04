@@ -181,9 +181,9 @@ func prepare_next_item(load_slowly=true):
 			#i.build_glue_polygons(i.global_position, 99999999)
 			if load_slowly: await(get_tree().process_frame)
 	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-	find_child("ItemPreparation").get_child(0).add_child(backdrop)	
+	while find_child("ItemPreparation").get_child_count() == 0:
+		await get_tree().process_frame
+	find_child("ItemPreparation").get_child(0).add_child(backdrop)
 
 func transfer_prepared_item():
 	cur_backdrop = next_backdrop

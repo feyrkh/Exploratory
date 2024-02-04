@@ -44,22 +44,6 @@ offset_right = 330.0
 offset_bottom = 1.0
 columns = 2
 
-[node name="AddItemButton" type="TextureButton" parent="ButtonContainer"]
-modulate = Color(1, 1, 1, 0.6)
-layout_mode = 2
-texture_normal = ExtResource("1_bximh")
-ignore_texture_size = true
-script = ExtResource("2_sh7t1")
-
-[node name="AddItemLabel" type="Label" parent="ButtonContainer"]
-material = ExtResource("3_87nh5")
-clip_contents = true
-layout_mode = 2
-theme = ExtResource("2_t10ru")
-text = "Add Item"
-vertical_alignment = 1
-script = ExtResource("5_mpmi2")
-
 [node name="ShuffleButton" type="TextureButton" parent="ButtonContainer"]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
@@ -129,6 +113,22 @@ text = "Piece Rotation
 vertical_alignment = 1
 script = ExtResource("5_mpmi2")
 
+[node name="AddItemButton" type="TextureButton" parent="ButtonContainer"]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+texture_normal = ExtResource("1_bximh")
+ignore_texture_size = true
+script = ExtResource("2_sh7t1")
+
+[node name="AddItemLabel" type="Label" parent="ButtonContainer"]
+material = ExtResource("3_87nh5")
+clip_contents = true
+layout_mode = 2
+theme = ExtResource("2_t10ru")
+text = "Add Item"
+vertical_alignment = 1
+script = ExtResource("5_mpmi2")
+
 [node name="SaveItemButton" type="TextureButton" parent="ButtonContainer"]
 modulate = Color(1, 1, 1, 0.6)
 custom_minimum_size = Vector2(67, 0)
@@ -150,9 +150,9 @@ z_index = -1
 scale = Vector2(1.1, 1.1)
 texture = ExtResource("13_6fqb1")
 
-[connection signal="pressed" from="ButtonContainer/AddItemButton" to="." method="_on_add_item_button_pressed"]
 [connection signal="pressed" from="ButtonContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
 [connection signal="pressed" from="ButtonContainer/GlueButton" to="." method="_on_glue_button_pressed"]
 [connection signal="toggled" from="ButtonContainer/MovementButton" to="." method="_on_movement_button_toggled"]
 [connection signal="toggled" from="ButtonContainer/RotateButton" to="." method="_on_rotate_button_toggled"]
+[connection signal="pressed" from="ButtonContainer/AddItemButton" to="." method="_on_add_item_button_pressed"]
 [connection signal="pressed" from="ButtonContainer/SaveItemButton" to="." method="_on_save_item_button_pressed"]

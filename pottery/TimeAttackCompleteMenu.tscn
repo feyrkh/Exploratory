@@ -108,7 +108,7 @@ text = "-"
 [node name="CategoryComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "complete"
+text = "Complete"
 
 [node name="ValueComplete" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScoreContainer"]
 layout_mode = 2

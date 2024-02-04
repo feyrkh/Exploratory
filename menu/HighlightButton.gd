@@ -38,7 +38,7 @@ func start_flash():
 	cleanup_flash_tween()
 	glow_sprite.visible = true
 	glow_sprite.modulate = FLASH_COLOR
-	glow_sprite.position = position + pivot_offset
+	glow_sprite.global_position = get_global_rect().get_center() - Vector2(4, -4)
 	flash_tween = glow_sprite.create_tween()
 	flash_tween.tween_property(glow_sprite, "modulate", Color.TRANSPARENT, 0.3)
 	flash_tween.tween_property(glow_sprite, "visible", false, 0.0)

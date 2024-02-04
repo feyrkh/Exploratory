@@ -35,16 +35,16 @@ polygon = PackedVector2Array(366, 112, 366, 83, 372, 72, 382, 62, 398, 52, 429, 
 
 [node name="Scars" type="Node2D" parent="."]
 visibility_layer = 3
-z_index = 1
+z_index = 10
 metadata/_edit_lock_ = true
 
 [node name="ShardEdges" type="Node2D" parent="."]
 visibility_layer = 3
-z_index = -4
+z_index = -40
 
 [node name="Glue" type="Node2D" parent="."]
 visibility_layer = 3
-z_index = -2
+z_index = -20
 script = ExtResource("4_e74n6")
 
 [node name="StructurePct" type="Label" parent="."]

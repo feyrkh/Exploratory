@@ -1,10 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://f8pyt2b5hltf"]
+[gd_scene load_steps=4 format=3 uid="uid://f8pyt2b5hltf"]
 
 [ext_resource type="Texture2D" uid="uid://bvjwapmakjf1l" path="res://art/item/item_knife.png" id="1_ibncj"]
 [ext_resource type="Script" path="res://util/DecorationBase.gd" id="2_ipyk2"]
+[ext_resource type="Script" path="res://pottery/MaterialPolygon.gd" id="3_ne6wp"]
 
 [node name="Item" type="StaticBody2D"]
 metadata/_edit_lock_ = true
+
+[node name="MetalPolygon" type="Polygon2D" parent="."]
+color = Color(0.394531, 0.394531, 0.394531, 1)
+polygon = PackedVector2Array(7, 3, 14, 138, 260, 540, 400, 602, 413, 580, 428, 558, 452, 533, 500, 502, 224, 125, 53, 0)
+script = ExtResource("3_ne6wp")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(87, 50, 157, 108, 222, 182, 252, 224, 367, 384, 402, 432, 406, 430, 411, 428, 419, 428, 427, 432, 430, 437, 430, 444, 422, 455, 466, 512, 467, 523, 532, 603, 561, 638, 592, 669, 630, 714, 639, 714, 659, 747, 659, 753, 648, 773, 630, 791, 606, 806, 575, 816, 558, 818, 553, 815, 528, 785, 532, 767, 483, 687, 441, 637, 404, 598, 394, 597, 351, 541, 337, 546, 320, 529, 313, 529, 304, 526, 299, 517, 303, 503, 292, 499, 277, 496, 268, 499, 255, 505, 102, 252, 50, 134, 11, 36, 10, 20, 10, 4, 12, 4, 16, 6)

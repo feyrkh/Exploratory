@@ -8,6 +8,7 @@ const IMAGE_TYPES := VALID_TYPES
 ## Dictionary of item name (file prefix) -> ItemConfig
 var all_items:Dictionary = {} 
 var base_item_names:Array = []
+var base_item_material_zones:Dictionary = {}
 static var __next_unique_id:int = 0
 var disabled_items_config := SettingsFile.new("user://disabled_items.cfg", {})
 
@@ -320,6 +321,7 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 	var combined_img := await ImageMerger.merge_images(image_details, weathering, get_tree() if should_load_slowly else null)
 	retval_img.texture = combined_img
 	retval.find_child("Polygon2D").save_data = save_data
+	retval.base_item_name = base_item_cfg.item_name
 	collider_scene.queue_free()
 	print("Item complete")
 	return retval
@@ -391,6 +393,13 @@ func read_file(dir_name, file_name):
 		if !scene:
 			print("Found a base item config file, but it doesn't have a matching ", file_name_prefix+'.tscn', " file, can't use this one!")
 			return
+		var tmp_scene = scene.instantiate()
+		var materials := []
+		for child in tmp_scene.get_children():
+			if child is MaterialPolygon:
+				materials.append(child.get_data())
+		tmp_scene.free()
+		base_item_material_zones[file_name_prefix] = materials
 	if data.get('min_scale') != null:
 		item.min_scale = Vector2(data['min_scale'], data['min_scale'])
 	if data.get('max_scale') != null:

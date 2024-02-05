@@ -171,17 +171,22 @@ func prepare_next_item(load_slowly=true):
 	item.create_scars_from_paths(cracks)
 	#for j in range(randi_range(5, 12)):
 	#	item.random_scar()
+	if !is_inside_tree(): return
 	if load_slowly: await(get_tree().process_frame)
 	if !item or !is_instance_valid(item):
 		return
+	if !is_inside_tree(): return
 	await item.try_shatter(randf_range(1.0, 1.8), load_slowly)
 	if load_slowly: await(get_tree().process_frame)
 	for i in find_child("ItemPreparation").get_children():
 		if i != null and is_instance_valid(i) and i is ArcheologyItem:
 			#i.build_glue_polygons(i.global_position, 99999999)
+			if !is_inside_tree(): return
 			if load_slowly: await(get_tree().process_frame)
+	if !is_inside_tree(): return
 	await get_tree().process_frame
 	while find_child("ItemPreparation").get_child_count() == 0:
+		if !is_inside_tree(): return
 		await get_tree().process_frame
 	find_child("ItemPreparation").get_child(0).add_child(backdrop)
 
@@ -194,8 +199,9 @@ func transfer_prepared_item():
 		child.queue_free()
 	for child in prep.get_children():
 		var pos = child.position
-		prep.remove_child(child)
-		spawn.add_child(child)
+		child.reparent(spawn)
+#		prep.remove_child(child)
+#		spawn.add_child(child)
 		child.position = pos
 
 	var available_space = Vector2(830, 720)

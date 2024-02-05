@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://b4eqtnmc0yb0g"]
+[gd_scene load_steps=5 format=3 uid="uid://b4eqtnmc0yb0g"]
 
+[ext_resource type="Script" path="res://pottery/MaterialPolygon.gd" id="1_14vxh"]
 [ext_resource type="Texture2D" uid="uid://dmu14bv2aais2" path="res://art/item/pot_gray.png" id="1_seo4w"]
 
 [sub_resource type="GDScript" id="GDScript_bsdqt"]
@@ -15,6 +16,12 @@ class_name DecorationIcon
 [node name="Item" type="StaticBody2D"]
 metadata/_edit_lock_ = true
 metadata/_edit_horizontal_guides_ = [51.0, 130.0]
+
+[node name="MaterialPolygon" type="Polygon2D" parent="."]
+position = Vector2(10, -2)
+color = Color(0.341176, 0.341176, 0.341176, 1)
+polygon = PackedVector2Array(160, -21, 161, 205, 164, 464, 443, 445, 371, -54)
+script = ExtResource("1_14vxh")
 
 [node name="band_1" type="ColorRect" parent="."]
 visible = false

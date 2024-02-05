@@ -122,7 +122,7 @@ var collision_polygons:Array[CollisionPolygon2D] = []:
 @onready var rotation_handle_indicator:Node2D = find_child("RotationHandle")
 var _gallery_mode = false
 var gallery_id:String
-
+var base_item_name:String
 func get_save_data(image_save_data:Dictionary, weathering_save_data:Dictionary) -> Dictionary: # Dictionary[String, ItemBuilder.ImageSaveData]
 	var img_save_data = []
 	var scar_save_data = []
@@ -332,6 +332,7 @@ func clone(new_polygon:Array, should_clone_slow=false):
 	new_scene.save_timestamp = save_timestamp
 	new_scene.game_mode = game_mode
 	new_scene.adjusted_scale = adjusted_scale
+	new_scene.base_item_name = base_item_name
 	if should_clone_slow:
 		await wait_frame()
 	#for scar in scars.get_children():
@@ -379,12 +380,24 @@ func refresh_polygon() -> int:
 	#print("About to refresh polygon uv to scale ", adjusted_scale, ": ", polygon.uv)
 	polygon.uv = ArcheologyItem._adjust_polygon_scale(collision.polygon, 1.0/adjusted_scale)
 	#print("After: ", polygon.uv)
-	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.05)
+	var scar_trim_poly = Geometry2D.offset_polygon(collision.polygon, shatter_size+0.1)
 	for scar in scars.get_children():
 		scar.refresh_scar_path(collision.polygon)
+	var material_trim_polys = []
+	var material_zones = []
+	if base_item_name != null:
+		material_zones = ItemBuilder.base_item_material_zones.get(base_item_name, [])
+		for material_data in material_zones: # Dict like {MaterialPolygon.MATERIAL: MaterialPolygon.MaterialType.metal, MaterialPolygon.POLYGON: (polygon points)}
+			material_trim_polys.append(material_data.get(MaterialPolygon.POLYGON, []))
 	for edge in shard_edges.get_children():
 		if scar_trim_poly.size() > 0:
 			edge.refresh_edge_path(scar_trim_poly[0])
+		for trim_poly in material_trim_polys:
+			edge.refresh_edge_path(trim_poly, true)
+	
+	for edge in shard_edges.get_children():
+		edge.set_edge_colors(material_zones)
+
 	if abs(area) < TOO_SMALL_POLYGON_AREA:
 		#print("Too-small shard was created, area is ", area, ", deleting")
 		queue_free()
@@ -567,7 +580,8 @@ func unhighlight_visual_polygons():
 
 func add_scar(scar:ItemScar):
 	scar.refresh_scar_path(collision.polygon)
-	scars.add_child(scar)
+	if scars != null and is_instance_valid(scars):
+		scars.add_child(scar)
 
 #func try_shatter_all_at_once():
 	#var working_polygons = [collision.polygon]

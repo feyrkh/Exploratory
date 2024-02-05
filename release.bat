@@ -1,4 +1,4 @@
-git status --porcelain |findstr . && echo Commit your changes before releasing && exit /B
+git status --porcelain |findstr . && echo Commit your changes before releasing && pause && exit /B
 grep 'config/version' project.godot
 set /p "id=Enter version number: "
 sed -i -b -E 's/config\/version=.+$/config\/version="%id%"/' project.godot
@@ -12,4 +12,7 @@ powershell Compress-Archive ..\web_export\Keshiki\ ..\web_export\Keshiki\index.z
 
 git tag %id% head
 git push
-set /p "done=Finished uploading"
+
+
+echo "All done"
+pause

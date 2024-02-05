@@ -1,7 +1,6 @@
 extends Node2D
 class_name ItemShardEdge
 
-const DEFAULT_COLOR := Color(0.455, 0.192, 0.137)
 var loading := false
 
 func get_save_data():
@@ -9,12 +8,7 @@ func get_save_data():
 	for child in get_children():
 		if child is Line2D:
 			var entry = [child.points]
-			if child.material != null:
-				# If we have a material, this edge has been converted into glue and we should save its color
-				entry.append(child.modulate)
-			else:
-				# otherwise we'll use the normal shard edge texture
-				entry.append(null)
+			entry.append(MaterialPolygon.color_to_material(child.default_color))
 			lines.append(entry)
 	return [position, rotation, lines]
 
@@ -31,11 +25,11 @@ static func load_save_data(save_data) -> ItemShardEdge:
 		line.width = 16
 		line.joint_mode = Line2D.LINE_JOINT_ROUND
 		line.texture_mode = Line2D.LINE_TEXTURE_TILE
-		if line_data[1] != null and line_data[1] != DEFAULT_COLOR:
-			convert_to_glue(line, line_data[1])
+		if line_data[1] != null:
+			line.default_color = MaterialPolygon.material_to_color(line_data[1])
+			line.texture = load(MaterialPolygon.material_to_image(line_data[1]))
 		else:
-			line.default_color = DEFAULT_COLOR
-			line.texture = load("res://art/broken_clay.png")
+			line.default_color = MaterialPolygon.CLAY_COLOR
 		new_item.add_child(line)
 	return new_item
 
@@ -46,8 +40,24 @@ func clone():
 		new_line.points = PackedVector2Array(child.points)
 		new_scene.add_child(new_line)
 	return new_scene
-	
-func refresh_edge_path(polygon:PackedVector2Array):
+
+func set_edge_colors(material_data:Array):
+	# material_data is array of items like {MaterialPolygon.MATERIAL: MaterialPolygon.MaterialType.metal, MaterialPolygon.POLYGON: (polygon points)}
+	if material_data.size() == 0:
+		return
+	for child in get_children():
+		var cur_line = PackedVector2Array(child.points)
+		var internal_point = cur_line[0] + (cur_line[1]-cur_line[0]) / 2
+		var material_color = MaterialPolygon.CLAY_COLOR
+		for data in material_data:
+			if Geometry2D.is_point_in_polygon(internal_point, data.get(MaterialPolygon.POLYGON, [])):
+				material_color = MaterialPolygon.material_to_color(data.get(MaterialPolygon.MATERIAL))
+				child.texture = load(MaterialPolygon.material_to_image(data.get(MaterialPolygon.MATERIAL)))
+				break
+		child.default_color = material_color
+
+
+func refresh_edge_path(polygon:PackedVector2Array, allow_outside_borders:=false):
 	if loading:
 		return
 	for child in get_children():
@@ -56,13 +66,15 @@ func refresh_edge_path(polygon:PackedVector2Array):
 			queue_free()
 			return
 		var new_lines = Geometry2D.intersect_polyline_with_polygon(cur_line, polygon)
+		if allow_outside_borders:
+			new_lines.append_array(Geometry2D.clip_polyline_with_polygon(cur_line, polygon))
 		if new_lines.size() > 0:
-			MyGeom.shorten_path(new_lines[0], -2)
+			#MyGeom.shorten_path(new_lines[0], 2)
 			child.points = new_lines[0]
 			new_lines.pop_front()
 			for extra_line in new_lines: 
 				if extra_line.size() < 2: continue
-				MyGeom.shorten_path(extra_line, -2)
+				#MyGeom.shorten_path(extra_line, 2)
 				var new_line = load("res://pottery/ItemShardEdgeLine.tscn").instantiate()
 				new_line.points = PackedVector2Array(extra_line)
 				add_child(new_line)

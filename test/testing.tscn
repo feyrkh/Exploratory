@@ -17,3 +17,18 @@ width = 0.1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(69, 322)
+
+[node name="PolylineIntersect" type="Node2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="PolylineIntersect"]
+polygon = PackedVector2Array(160, -21, 161, 205, 164, 464, 443, 445, 371, -54)
+
+[node name="MainLine" type="Line2D" parent="PolylineIntersect"]
+points = PackedVector2Array(325.667, 153.005, 314.32, 162.678, 292.45, 173.781, 271.597, 180.637, 251.641, 176.416, 231.122, 182.423, 212.882, 192.76, 192.25, 199.384, 171.769, 205.04, 157.773, 216.72, 142.503, 225.658, 124.825, 232.857, 108.458, 239.58, 90.1862, 244.244, 79.1756, 259.411, 58.3291, 257.897, 39.4998, 258.395, 22.7662, 266.17, 14.7054, 271.886)
+width = 3.0
+default_color = Color(0.0196078, 0, 1, 1)
+
+[node name="LineChunk" type="Line2D" parent="PolylineIntersect"]
+points = PackedVector2Array(325.667, 153.005, 314.32, 162.678, 292.45, 173.781, 271.597, 180.637, 251.641, 176.416, 231.122, 182.423, 212.882, 192.76, 192.25, 199.384, 171.769, 205.04, 161.104, 213.941)
+width = 2.0
+default_color = Color(1, 0.0117647, 0.0784314, 1)

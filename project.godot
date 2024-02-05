@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Keshiki"
 config/description="A game of kintsugi."
-config/version="0.3.0"
+config/version="0.3.1"
 run/main_scene="res://menu/main/TitleScreen.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 run/max_fps=30

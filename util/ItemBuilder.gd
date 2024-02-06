@@ -73,10 +73,10 @@ class ItemConfig:
 		return scene
 	
 	func get_shadow_texture() -> Texture2D:
-		if FileAccess.file_exists(item_dir+item_name+"_shadow.png"):
+		#if FileAccess.file_exists(item_dir+item_name+"_shadow.png"):
 			return load(item_dir+item_name+"_shadow.png")
-		else:
-			return null
+		#else:
+		#	return null
 
 class ImageSaveData:
 	var item_dir:String

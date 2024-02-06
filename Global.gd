@@ -59,7 +59,7 @@ var next_scene_settings
 var shatter_width:float = 0.5
 var rotate_with_shuffle = false
 var glue_materials:Dictionary = {}
-var glue_color:Color = Color("ffdb12"):
+var glue_color:Color = Color("e8c810"):
 	set(val):
 		glue_color = val
 		glue_material = get_glue_material(glue_color)

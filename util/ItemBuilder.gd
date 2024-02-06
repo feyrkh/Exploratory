@@ -288,13 +288,18 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 				# Placement zone is taller than it is wide, rotate the image by 90 degrees and repeat on y axis 
 				info.img.rotate_90(CLOCKWISE)
 				info.repeat_y = ceili(placement.get_size().y / float(info.img.get_size().y))
+				info.position = placement.position + (Vector2(placement.get_size().x/2 - info.img.get_size().x/2, 0))
+				placement.size.x = info.img.get_size().x
 			else:
 				info.repeat_x = ceili(placement.get_size().x / float(info.img.get_size().x))
-			info.position = placement.position
+				info.position = placement.position + (Vector2(0, placement.get_size().y/2 - info.img.get_size().y/2))
+				placement.size.x = info.img.get_size().y
+			#info.position = placement.position
+			#placement.size = info.img.get_size()
 		else:
 			info.position = placement.position + placement.get_size()/2 - Vector2(info.img.get_size())/2
+			placement.size = info.img.get_size()
 		placement.position = info.position
-		placement.size = info.img.get_size()
 		placement.color = info.modulate
 		placement.item_dir = img_group_choices[placement.img_id].item_dir
 		placement.item_name = img_group_choices[placement.img_id].item_name
@@ -310,10 +315,12 @@ func build_random_item(base_item_name=null, should_load_slowly=false, weathering
 		shadow_details.img = shadow.get_image()
 		shadow_details.position = Vector2.ZERO
 		shadow_details.modulate = Color.WHITE
-		#image_details.append(shadow_details)
+		shadow_details.skip_weathering = true
+		image_details.append(shadow_details)
 		var save_data_item = ImageSaveData.new()
-		save_data_item.img_dir = shadow_details.item_dir
-		save_data_item.img_name = shadow_details.item_name
+		save_data_item.item_dir = base_item_cfg.item_dir
+		save_data_item.item_name = base_item_cfg.item_name+"_shadow"
+		save_data_item.type = "shadow"
 		save_data_item.color = shadow_details.modulate
 		save_data_item.position = shadow_details.position
 		save_data_item.size = shadow_details.img.get_size()

@@ -52,11 +52,17 @@ theme = ExtResource("4_m8ihn")
 save_button_text = "Apply
 Color"
 
-[node name="ExampleItemContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="ExampleItemContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ExampleItem" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer/ExampleItemContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ExampleItemShadow" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer/ExampleItemContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1

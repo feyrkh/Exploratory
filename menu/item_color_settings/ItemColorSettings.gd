@@ -40,6 +40,7 @@ func show_cur_item():
 		cur_item_name = decoration_item_list[cur_item_color_option - base_item_list.size()]
 	cur_item_data = ItemBuilder.all_items[cur_item_name]
 	find_child("ExampleItem").texture = cur_item_data.get_texture()
+	find_child("ExampleItemShadow").texture = cur_item_data.get_shadow_texture()
 	find_child("EnabledCheckbox").button_pressed = !ItemBuilder.get_item_disabled(cur_item_name)
 	render_allowed_colors()
 

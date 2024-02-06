@@ -45,7 +45,7 @@ offset_left = 76.0
 offset_top = 13.0
 offset_right = 110.0
 offset_bottom = 45.0
-color = Color(0.8, 0.690196, 0.054902, 1)
+color = Color(0.909804, 0.784314, 0.0627451, 1)
 script = ExtResource("1_f22bh")
 
 [node name="Line2D" type="Line2D" parent="TextureRect2"]

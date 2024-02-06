@@ -7,6 +7,7 @@ class ImageMergeInfo:
 	var modulate:Color
 	var repeat_x:int = 1
 	var repeat_y:int = 1
+	var skip_weathering:bool = false
 
 static func merge_images(image_merge_info:Array, weathering:WeatheringConfig=null, tree:SceneTree=null) -> Texture2D: # Array[ImageMergeInfo] as input
 	var base_img:Image
@@ -28,7 +29,7 @@ static func merge_images(image_merge_info:Array, weathering:WeatheringConfig=nul
 					var cur_pos = merge_info.position + Vector2(x_block * merge_info.img.get_size().x, y_block * merge_info.img.get_size().y)
 					var overlay_img = Image.new()
 					overlay_img.copy_from(unmodified_img)
-					await modulate_image(overlay_img, merge_info.modulate, noise, noise_cutoff, tree, cur_pos, noise_floor)
+					await modulate_image(overlay_img, merge_info.modulate, null if merge_info.skip_weathering else noise, noise_cutoff, tree, cur_pos, noise_floor)
 					base_img.blend_rect(overlay_img, overlay_img.get_used_rect(), cur_pos)
 		else:
 			var overlay_img = merge_info.img

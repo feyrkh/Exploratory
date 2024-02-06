@@ -4,6 +4,8 @@ extends Node
 const VALID_TYPES := ['icon', 'band', 'base']
 ## Which of the 'type' entries also require a .png file to exist alongside it
 const IMAGE_TYPES := VALID_TYPES
+var KNOWN_FILES = [
+]
 
 ## Dictionary of item name (file prefix) -> ItemConfig
 var all_items:Dictionary = {} 
@@ -140,8 +142,29 @@ class ImageSaveData:
 		return result
 
 func _ready():
+	if OS.has_feature("editor"):
+		generate_known_items()
+	load_known_items()
 	reload_definitions()
 	cache_cleanup_thread.start(_cache_cleanup, Thread.PRIORITY_LOW)
+
+var tmp_known_items = []
+
+func generate_known_items():
+	var dir := DirAccess.open("res://art/item")
+	process_dir(dir, collect_known_items)
+	var file = FileAccess.open("res://known_items.cfg", FileAccess.WRITE)
+	file.store_var(tmp_known_items)
+	file.close()
+
+func load_known_items():
+	var file = FileAccess.open("res://known_items.cfg", FileAccess.READ)
+	KNOWN_FILES = file.get_var()
+	file.close()
+
+func collect_known_items(path, file_name):
+	var file_name_prefix = file_name.substr(0, file_name.length()-4)
+	tmp_known_items.append(file_name_prefix)
 
 func filter_options(item_type:String, desired_size:Vector2) -> Array[ItemConfig]:
 	var retval:Array[ItemConfig] = []
@@ -338,31 +361,22 @@ func reload_definitions():
 	base_item_names = []
 	load_known_files()
 	var dir := DirAccess.open("res://art/item")
-	process_dir(dir)
+	process_dir(dir, read_file)
 	dir = DirAccess.open("user://mods/items")
-	process_dir(dir)
+	process_dir(dir, read_file)
 
 func load_known_files():
-	var known_files = [
-		"item_knife.cfg",
-		"knot_band1.cfg",
-		"pot_gray.cfg",
-		"shield_knot1.cfg",
-		"tablet3.cfg",
-		"teapot2.cfg",
-		"tree.cfg",
-	]
-	for f in known_files:
-		read_file("res://art/item/", f)
+	for f in KNOWN_FILES:
+		read_file("res://art/item/", f+".cfg")
 
-func process_dir(dir:DirAccess):
+func process_dir(dir:DirAccess, fn:Callable):
 	if dir:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
 			if !dir.current_is_dir():
 				if file_name.ends_with(".cfg"):
-					read_file(dir.get_current_dir()+"/", file_name)
+					fn.call(dir.get_current_dir()+"/", file_name)
 			file_name = dir.get_next()
 		base_item_names.sort()
 	else:

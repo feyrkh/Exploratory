@@ -24,6 +24,8 @@ func _ready():
 			else:
 				if cur_glue_colors.size() >= glue_idx:
 					child.set_glue_color(cur_glue_colors[glue_idx])
+				if glue_idx == 0:
+					Global.glue_color = child.get_glue_color()
 			glue_idx += 1
 	update_glue_pot_highlights()
 	color_picker.color_changed.connect(update_current_color)

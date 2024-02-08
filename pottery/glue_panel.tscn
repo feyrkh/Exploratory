@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://oft4qrgukbr3"]
+[gd_scene load_steps=8 format=3 uid="uid://oft4qrgukbr3"]
 
 [ext_resource type="Script" path="res://pottery/GluePanel.gd" id="1_do3jw"]
 [ext_resource type="Script" path="res://pottery/GluePot.gd" id="1_f22bh"]
+[ext_resource type="PackedScene" uid="uid://b22xigpry1684" path="res://util/SlideInPanel.tscn" id="3_pxnrj"]
+[ext_resource type="Theme" uid="uid://cr3xalu1waxa4" path="res://theme/color_picker_theme.tres" id="3_sc85u"]
+[ext_resource type="Texture2D" uid="uid://b5ij3m7w65djn" path="res://art/broken_clay.png" id="4_10m4e"]
+[ext_resource type="Script" path="res://util/SlideInPanelHandle.gd" id="5_81jgj"]
 
 [sub_resource type="Curve" id="Curve_h3d5c"]
 _data = [Vector2(0, 0.607053), 0.0, 0.0, 0, 0, Vector2(0.481013, 1), 0.0, 0.0, 0, 0, Vector2(0.990506, 0.541562), 0.0, 0.0, 0, 0]
@@ -363,3 +367,45 @@ offset_right = 37.0
 offset_bottom = 36.0
 mouse_filter = 1
 color = Color(0.356863, 0.356863, 0.356863, 1)
+
+[node name="ColorPickerWindow" parent="." instance=ExtResource("3_pxnrj")]
+layout_mode = 1
+offset_left = 426.0
+offset_top = 84.0
+offset_right = 214.0
+offset_bottom = 318.0
+slide_in_direction = Vector2(0, -1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorPickerWindow"]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="ColorPickerWindow/VBoxContainer"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+focus_mode = 0
+texture_normal = ExtResource("4_10m4e")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("5_81jgj")
+
+[node name="Label" type="Label" parent="ColorPickerWindow/VBoxContainer/TextureButton"]
+layout_mode = 0
+offset_top = -5.0
+offset_right = 207.0
+offset_bottom = 21.0
+text = "Glue Color"
+horizontal_alignment = 1
+
+[node name="ColorPicker" type="ColorPicker" parent="ColorPickerWindow/VBoxContainer"]
+custom_minimum_size = Vector2(207, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("3_sc85u")
+theme_override_constants/sv_width = 0
+theme_override_constants/sv_height = 100
+theme_override_constants/h_width = 30
+alignment = 2
+color_mode = 1
+picker_shape = 2
+presets_visible = false

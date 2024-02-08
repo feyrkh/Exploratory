@@ -7,7 +7,7 @@ const POLYGON := "p"
 enum MaterialType {clay, metal}
 
 const CLAY_COLOR := Color("743123")
-const METAL_COLOR := Color.WHITE #Color("656565")
+const METAL_COLOR := Color("656565")
 
 @export var material_type:MaterialType = MaterialType.metal
 

@@ -2,11 +2,12 @@ extends Control
 
 signal exited()
 
-const MAX_RECENTLY_USED := 35
+const MAX_RECENTLY_USED := 20
 
 @onready var allowed_colors_container := find_child("AllowedColorsContainer")
 @onready var available_colors_container := find_child("AvailableColorsContainer")
 @onready var color_picker := find_child("ColorPicker")
+@onready var use_color_button := find_child("UseColorButton")
 @onready var example_item := find_child("ExampleItem")
 
 @onready var base_item_list := ItemBuilder.base_item_names
@@ -22,7 +23,7 @@ func _ready():
 		decoration_item_list.erase(n)
 	decoration_item_list.sort()
 	color_picker.color_changed.connect(show_color)
-	color_picker.color_chosen.connect(add_allowed_color)
+	use_color_button.pressed.connect(add_allowed_color)
 	show_cur_item()
 	render_recently_used_colors()
 
@@ -123,7 +124,7 @@ func add_recently_used_color(c:Color):
 	ColorMgr.add_recently_used_color(c, MAX_RECENTLY_USED)
 	render_recently_used_color(c)
 
-func add_allowed_color(c:Color):
+func add_allowed_color(c:Color=color_picker.color):
 	for child in allowed_colors_container.get_children():
 		if child.color == c:
 			Global.play_button_click_sound("menu_back")

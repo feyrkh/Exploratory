@@ -161,38 +161,38 @@ theme_override_constants/separation = 28
 
 [node name="Difficulty1" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 settings = SubResource("Resource_61o5g")
 
 [node name="Difficulty2" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 settings = SubResource("Resource_5w6jc")
 
 [node name="Difficulty3" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 settings = SubResource("Resource_fiakc")
 
 [node name="Difficulty4" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 settings = SubResource("Resource_agshd")
 
 [node name="Difficulty5" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 settings = SubResource("Resource_7cf2n")
 
 [node name="Difficulty6" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels" instance=ExtResource("3_ii6p0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 settings = SubResource("Resource_o1c1t")
 
 [node name="CustomDifficultyButton" type="Button" parent="BundleDifficultyPanel/VBoxContainer/ScrollContainer/DifficultyLevels"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 toggle_mode = true
 text = "Custom Difficulty"
 script = ExtResource("5_duj4v")

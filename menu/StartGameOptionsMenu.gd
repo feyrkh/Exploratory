@@ -150,6 +150,7 @@ func reset():
 	for child in find_child("DifficultyLevels").get_children():
 		child.button_pressed = false
 	custom_difficulty_button = null
+	cur_selected_button = null
 	find_child("StartButton").visible = false
 	show_difficulty_description(null)
 
@@ -178,6 +179,7 @@ func select_custom_difficulty():
 	cur_selected_button = custom_difficulty_button
 	load_config()
 	update_labels()
+	show_default_difficulty_description()
 
 func show_difficulty_description(settings:GameSettings):
 	set_process(false)
@@ -258,6 +260,7 @@ func show_menu(new_mode):
 	update_labels()
 	visible = true
 	hover_tooltip("")
+	show_default_difficulty_description()
 
 func hide_menu():
 	save_config()

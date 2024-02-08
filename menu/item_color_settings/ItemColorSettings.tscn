@@ -8,9 +8,9 @@
 [node name="ItemColorSettingsContainer" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_top = 120.0
+offset_top = 64.0
 offset_right = 40.0
-offset_bottom = 160.0
+offset_bottom = 104.0
 theme = ExtResource("1_koslx")
 script = ExtResource("1_mvw51")
 metadata/_edit_vertical_guides_ = [640.0]
@@ -50,11 +50,32 @@ size_flags_horizontal = 4
 size_flags_vertical = 3
 columns = 5
 
-[node name="ColorPicker" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors" instance=ExtResource("3_h8h7k")]
+[node name="ColorPicker3" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors" instance=ExtResource("3_h8h7k")]
+visible = false
 layout_mode = 2
 theme = ExtResource("4_m8ihn")
 save_button_text = "Apply
 Color"
+
+[node name="ColorPicker" type="ColorPicker" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors"]
+custom_minimum_size = Vector2(207, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("4_m8ihn")
+theme_override_constants/sv_width = 0
+theme_override_constants/sv_height = 100
+theme_override_constants/h_width = 30
+alignment = 2
+edit_alpha = false
+color_mode = 1
+picker_shape = 2
+sliders_visible = false
+presets_visible = false
+
+[node name="UseColorButton" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/AvailableColors"]
+layout_mode = 2
+text = "Use Color"
 
 [node name="ExampleItemContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2

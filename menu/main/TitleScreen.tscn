@@ -81,7 +81,6 @@ color = Color(0, 0, 0, 1)
 visible = false
 
 [node name="SettingsContainer" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -124,13 +123,13 @@ text = "Items/Colors"
 script = ExtResource("4_i7rd2")
 
 [node name="GeneralSettingsContainer" parent="SettingsContainer" instance=ExtResource("5_uwmju")]
+visible = false
 
 [node name="WeatheringSettingsContainer" parent="SettingsContainer" instance=ExtResource("6_utrjy")]
 visible = false
 metadata/_edit_vertical_guides_ = [620.0]
 
 [node name="ItemColorSettingsContainer" parent="SettingsContainer" instance=ExtResource("7_81450")]
-visible = false
 offset_top = 77.0
 offset_bottom = 117.0
 
@@ -148,6 +147,7 @@ script = ExtResource("4_i7rd2")
 sfx = "none"
 
 [node name="MainMenu" type="VBoxContainer" parent="."]
+visible = false
 offset_left = 68.0
 offset_top = 192.0
 offset_right = 426.0

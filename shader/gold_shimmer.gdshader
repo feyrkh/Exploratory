@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform vec4 normal_color = vec4(1.0, 0.843137, 0.0, 1.0);
-uniform vec4 shine_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 shine_color = vec4(1.5, 1.5, 1.5, 1.0);
 uniform float offset = 0.0;
 
 void fragment() {

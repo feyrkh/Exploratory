@@ -538,6 +538,7 @@ func shuffle_items():
 	var cur_min_y = 0
 	var max_x = 3500
 	var cur_row_height = 0
+	var flash_delay = 0.1
 	for piece:ArcheologyItem in pieces:
 		var orig_rotation = piece.global_rotation
 		if Global.rotate_with_shuffle:
@@ -578,6 +579,8 @@ func shuffle_items():
 	for piece:ArcheologyItem in pieces:
 		piece.reset_position.y += y_offset
 		piece.reset_position.x += x_offset
+		piece.glue_flash(flash_delay, 2)
+		flash_delay += 0.01
 	#PhysicsServer2D.set_active(true)
 	
 func update_control_hints():

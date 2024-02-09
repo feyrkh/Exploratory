@@ -1028,9 +1028,9 @@ func _on_body_exited(body):
 	next_clink_time[body] = Time.get_ticks_msec() + 300
 	body.next_clink_time[self] = Time.get_ticks_msec() + 300
 
-func glue_flash():
+func glue_flash(flash_delay:float=0, flash_time:float=0.2):
 	if flash_tween != null and flash_tween.is_running():
 		flash_tween.stop()
 	flash_tween = create_tween()
-	flash_tween.tween_property(self, "modulate", FLASH_COLOR, 0.1)
-	flash_tween.tween_property(self, "modulate", Color.WHITE, 0.2)
+	flash_tween.tween_property(self, "modulate", FLASH_COLOR, 0.1).set_delay(flash_delay)
+	flash_tween.tween_property(self, "modulate", Color.WHITE, flash_time)

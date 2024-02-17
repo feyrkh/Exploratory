@@ -32,7 +32,7 @@ func _ready():
 	subviewport.world_2d = get_world_2d()
 	#find_child("DisplayCamera").global_position = find_child("ItemSpawn").global_position
 	find_child("ContinueButton").visible = FileAccess.file_exists("user://save.dat")
-	find_child("MainMenu").visible = true
+	find_child("MainMenu").visible = false
 	find_child("StartGameOptionsContainer").visible = false
 	find_child("SettingsContainer").visible = false
 	find_child("StartGameOptionsContainer").menu_closed.connect(_on_back_button_pressed)
@@ -53,6 +53,7 @@ func _ready():
 		tween.tween_property(splash, "modulate", Color.TRANSPARENT, 1.0).set_delay(1.0)
 		tween.tween_property(splash, "visible", false, 0)
 	Global.enable_sound.emit()
+	find_child("MainMenu").visible = true
 	#var offset = randi_range(800, 1000)
 	#for i in range(5):
 		#var new_table = load("res://menu/main/DemoTable.tscn").instantiate()

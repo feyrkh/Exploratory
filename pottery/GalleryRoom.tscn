@@ -227,12 +227,12 @@ script = ExtResource("9_fhm20")
 shape = SubResource("CircleShape2D_cdxnh")
 
 [connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/PreviousButton" to="." method="_on_previous_button_pressed"]
-[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_click_sound"]
 [connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_on_room_label_gui_input"]
+[connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_click_sound"]
 [connection signal="mouse_entered" from="UI/PanelContainer2/HBoxContainer/RoomLabel" to="." method="_play_button_mouseover_sound"]
 [connection signal="gui_input" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_gui_input"]
-[connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_play_button_mouseover_sound"]
 [connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_on_room_label_edit_text_submitted"]
+[connection signal="text_submitted" from="UI/PanelContainer2/HBoxContainer/RoomLabelEdit" to="." method="_play_button_mouseover_sound"]
 [connection signal="pressed" from="UI/PanelContainer2/HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/HBoxContainer/BackgroundButton" to="." method="_on_background_button_pressed"]
 [connection signal="pressed" from="UI/PanelContainer/HBoxContainer/HBoxContainer/ShelfButton" to="." method="_on_shelf_button_pressed"]

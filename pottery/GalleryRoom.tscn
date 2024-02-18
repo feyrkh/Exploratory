@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://tpag1njdnwcy"]
+[gd_scene load_steps=15 format=3 uid="uid://tpag1njdnwcy"]
 
 [ext_resource type="Script" path="res://pottery/GalleryRoom.gd" id="1_2k2a3"]
 [ext_resource type="Texture2D" uid="uid://clend3rmdal32" path="res://art/shelf.png" id="1_klnyf"]
 [ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_dhsuc"]
 [ext_resource type="Texture2D" uid="uid://dghql4vk2n04v" path="res://art/background/gallery_bg2.png" id="2_gw2lf"]
+[ext_resource type="Script" path="res://util/SmoothZoomCamera.gd" id="2_xklvw"]
 [ext_resource type="Script" path="res://menu/CustomMenuButton.gd" id="4_5ockw"]
 [ext_resource type="PackedScene" uid="uid://dr6w8rungysm1" path="res://menu/gallery/GalleryMenu.tscn" id="4_gxinv"]
 [ext_resource type="PackedScene" uid="uid://btr4madyriyi0" path="res://util/FadeRect.tscn" id="5_0t2vs"]
@@ -27,6 +28,7 @@ metadata/_edit_horizontal_guides_ = [2397.0]
 position = Vector2(2136, 1200)
 zoom = Vector2(0.3, 0.3)
 position_smoothing_enabled = true
+script = ExtResource("2_xklvw")
 
 [node name="BackgroundSprite" type="Sprite2D" parent="."]
 scale = Vector2(3.33437, 3.32639)

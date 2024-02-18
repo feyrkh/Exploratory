@@ -53,11 +53,13 @@ func _process(_delta):
 		var offset = get_viewport().get_mouse_position() - camera_drag_mouse_start
 		offset = offset/camera.zoom.x
 		set_camera_position(camera_drag_camera_start - offset)
+		camera.on_explicit_move()
 	else:
 		var movement = Input.get_vector("left", "right", "up", "down")
 		if movement != Vector2.ZERO:
 			var view_rect = camera.get_viewport_rect()
 			view_rect.position += camera.get_screen_center_position()
+			camera.on_explicit_move()
 			set_camera_position(camera.position + movement * CAMERA_MOVE_SPEED / camera.zoom.x)
 
 func set_camera_position(new_pos:Vector2):
@@ -79,37 +81,45 @@ func set_camera_position(new_pos:Vector2):
 	elif camera_bot_right.y > camera_bot_right_limit.y:
 		new_pos.y = camera_bot_right_limit.y - view_rect.size.y / 2
 	camera.position = new_pos
+	camera.camera_position_target = camera.global_position
+
 
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:
 		if event.is_action_pressed("zoom_in", true):
+			var old_target:float = camera.zoom_target.x
 			if Input.is_action_pressed("disable_collision"):
 				var overlaps := cursor_area.get_overlaps().filter(func(i): return i is ArcheologyItem)
 				if overlaps.size() > 0 and overlaps[0].bounding_box.size.x < 1500 and overlaps[0].bounding_box.size.y < 1500:
 					overlaps[0].gallery_scale *= 1.1
 					overlaps[0].adjust_scale(1.1)
 			else:
-				if camera.zoom.x >= 2:
-					camera.zoom += ZOOM_INCREMENT * 2
-				camera.zoom += ZOOM_INCREMENT
-				if camera.zoom.x > 4.0:
-					camera.zoom = Vector2(4, 4)
-				Global.camera_zoom_changed.emit(camera.zoom.x)
+				if camera.zoom_target.x >= 2:
+					camera.zoom_target += ZOOM_INCREMENT * 2
+				camera.zoom_target += ZOOM_INCREMENT
+				if camera.zoom_target.x > 4.0:
+					camera.zoom_target = Vector2(4, 4)
+				Global.camera_zoom_changed.emit(camera.zoom_target.x)
+				var new_target:float = camera.zoom_target.x
+				camera.update_zoom_position_target(old_target, new_target)
 				adjust_camera_limits()
 				get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("zoom_out", true):
+			var old_target:float = camera.zoom_target.x
 			if Input.is_action_pressed("disable_collision"):
 				var overlaps := cursor_area.get_overlaps().filter(func(i): return i is ArcheologyItem)
 				if overlaps.size() > 0 and overlaps[0].bounding_box.size.x > 100 and overlaps[0].bounding_box.size.y > 100:
 					overlaps[0].gallery_scale *= 0.9
 					overlaps[0].adjust_scale(0.9)
 			else:
-				if camera.zoom.x > 2:
-					camera.zoom -= ZOOM_INCREMENT * 2
-				camera.zoom -= ZOOM_INCREMENT
-				if camera.zoom.x < 0.3:
-					camera.zoom = Vector2(0.3, 0.3)
-				Global.camera_zoom_changed.emit(camera.zoom.x)
+				if camera.zoom_target.x > 2:
+					camera.zoom_target -= ZOOM_INCREMENT * 2
+				camera.zoom_target -= ZOOM_INCREMENT
+				if camera.zoom_target.x < 0.3:
+					camera.zoom_target = Vector2(0.3, 0.3)
+				Global.camera_zoom_changed.emit(camera.zoom_target.x)
+				var new_target:float = camera.zoom_target.x
+				camera.update_zoom_position_target(old_target, new_target)
 				adjust_camera_limits()
 				get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("camera_drag"):
@@ -118,9 +128,11 @@ func handle_camera_input(event:InputEvent):
 			else:
 				camera_drag_mouse_start = get_viewport().get_mouse_position()
 				camera_drag_camera_start = camera.position
+				camera.on_explicit_move()
 		elif event.is_action_released("camera_drag"):
 			camera_drag_mouse_start = null
 			camera_drag_camera_start = null
+			camera.on_explicit_move()
 
 func adjust_camera_limits():
 		var view_rect = camera.get_viewport_rect()
@@ -140,6 +152,7 @@ func adjust_camera_limits():
 			camera.position.y = camera_top_left_limit.y + view_rect.size.y / 2
 		elif camera_bot_right.y > camera_bot_right_limit.y:
 			camera.position.y = camera_bot_right_limit.y - view_rect.size.y / 2
+		camera.camera_position_target = camera.global_position
 
 
 const ROOM_FIELD_NAME := 0
@@ -215,6 +228,7 @@ func _init():
 	load_gallery_rooms()
 
 func _ready():
+	camera.move_callback = set_camera_position
 	load_background_images()
 	Global.unpack_gallery_item.connect(unpack_gallery_item)
 	Global.delete_archeology_item.connect(item_deleted)

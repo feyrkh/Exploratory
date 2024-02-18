@@ -28,7 +28,6 @@ var total_items
 
 var intro_zoom_tween:Tween
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	settings = Global.next_scene_settings
@@ -42,6 +41,8 @@ func _ready():
 	find_child("RelaxPanelCloseButton").pressed.connect(hide_relax_completion_window)
 	find_child("StrugglePanelScoreButton").pressed.connect(time_attack_show_scoreboard)
 	find_child("StrugglePanelExitButton").pressed.connect(func(): Global.change_scene("res://menu/main/TitleScreen.tscn"))
+	
+	camera.move_callback = set_camera_position
 	
 	glue_brush_audio.finished.connect(update_glue_brush_sfx)
 		
@@ -152,6 +153,7 @@ func set_camera_position(new_pos:Vector2):
 		new_pos.y = camera_bot_right_limit.y - view_rect.size.y / 2
 	if !camera.position.is_equal_approx(new_pos):
 		camera.position = new_pos
+		camera.camera_position_target = camera.global_position
 		Global.tutorial_panned_camera.emit()
 
 
@@ -180,6 +182,7 @@ func _process(_delta):
 	if camera_drag_mouse_start != null:
 		var offset = get_viewport().get_mouse_position() - camera_drag_mouse_start
 		offset = offset/camera.zoom.x
+		camera.on_explicit_move()
 		set_camera_position(camera_drag_camera_start - offset)
 	else:
 		var movement = Input.get_vector("left", "right", "up", "down")
@@ -187,6 +190,7 @@ func _process(_delta):
 			stop_zoom_tween()
 			var view_rect = camera.get_viewport_rect()
 			view_rect.position += camera.get_screen_center_position()
+			camera.on_explicit_move()
 			set_camera_position(camera.position + movement * CAMERA_MOVE_SPEED / camera.zoom.x)
 	if glue_cooldown > 0:
 		glue_cooldown = max(0, glue_cooldown-_delta)
@@ -289,6 +293,7 @@ func stop_zoom_tween():
 func handle_camera_input(event:InputEvent):
 	#if event is InputEventMouseButton:
 		if event.is_action_pressed("zoom_in", true):
+			var old_target:float = camera.zoom_target.x
 			stop_zoom_tween()
 			if camera.zoom_target.x > 3:
 				camera.zoom_target += ZOOM_INCREMENT * 2
@@ -298,9 +303,12 @@ func handle_camera_input(event:InputEvent):
 			if camera.zoom_target.x > 4.0:
 				camera.zoom_target = Vector2(4, 4)
 			Global.camera_zoom_changed.emit(camera.zoom_target.x)
+			var new_target:float = camera.zoom_target.x
+			camera.update_zoom_position_target(old_target, new_target)
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("zoom_out", true):
+			var old_target:float = camera.zoom_target.x
 			stop_zoom_tween()
 			if camera.zoom_target.x > 3:
 				camera.zoom_target -= ZOOM_INCREMENT * 2
@@ -310,14 +318,18 @@ func handle_camera_input(event:InputEvent):
 			if camera.zoom_target.x < 0.3:
 				camera.zoom_target = Vector2(0.3, 0.3)
 			Global.camera_zoom_changed.emit(camera.zoom_target.x)
+			var new_target:float = camera.zoom_target.x
+			camera.update_zoom_position_target(old_target, new_target)
 			adjust_camera_limits()
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("camera_drag"):
+			camera.on_explicit_move()
 			stop_zoom_tween()
 			camera_drag_mouse_start = get_viewport().get_mouse_position()
 			camera_drag_camera_start = camera.position
 			get_viewport().set_input_as_handled()
 		elif event.is_action_released("camera_drag"):
+			camera.on_explicit_move()
 			camera_drag_mouse_start = null
 			camera_drag_camera_start = null
 			get_viewport().set_input_as_handled()

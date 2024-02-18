@@ -61,6 +61,7 @@ text = "structure 100%"
 
 [node name="CenterOfMass" type="Polygon2D" parent="RotationGuide"]
 visible = false
+z_index = 99
 polygon = PackedVector2Array(-1, 0, 0, -1, 1, 0, 0, 1)
 
 [node name="Polygon2D" type="Polygon2D" parent="RotationGuide/CenterOfMass"]
@@ -69,6 +70,7 @@ polygon = PackedVector2Array(-2, 0, 0, -2, 2, 0, 0, 2)
 
 [node name="RotationHandle" type="Polygon2D" parent="RotationGuide"]
 visible = false
+z_index = 100
 polygon = PackedVector2Array(-1, 0, 0, -1, 1, 0, 0, 1)
 
 [node name="Polygon2D" type="Polygon2D" parent="RotationGuide/RotationHandle"]

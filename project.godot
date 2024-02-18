@@ -15,7 +15,7 @@ config/description="A game of kintsugi."
 config/version="0.3.10"
 run/main_scene="res://menu/main/TitleScreen.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
-run/max_fps=30
+run/max_fps=60
 config/icon="res://icon.svg"
 
 [autoload]

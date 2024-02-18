@@ -62,6 +62,7 @@ var area:float:
 			for child in get_children():
 				if child is CollisionPolygon2D:
 					area += _calculate_area(child.polygon)
+			mass = area
 		return area
 
 # time attack score values, not for use during normal gameplay
@@ -81,7 +82,9 @@ var area_pct:
 	get:
 		if !original_area:
 			refresh_polygon()
-		return area / original_area
+		area_pct = area / original_area
+		mass = area_pct * original_area
+		return area_pct
 
 var visual_polygons:Array[ItemPolygon2D] = []:
 	get:

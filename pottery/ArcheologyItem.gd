@@ -255,6 +255,7 @@ func _post_load():
 
 func _ready():
 	Global.cleanup_all_items.connect(func():self.queue_free())
+	Global.camera_zoom_changed.connect(on_camera_zoom_changed)
 	if !loading:
 		refresh_polygon()
 	if original_area == null:
@@ -266,7 +267,12 @@ func _ready():
 		if Global.click_mode == Global.ClickMode.move:
 			stop_dragging()
 	)
-	
+
+func on_camera_zoom_changed(cur_zoom:float)->void:
+	cur_zoom = 1.0/cur_zoom
+	center_of_mass_indicator.scale = Vector2(cur_zoom, cur_zoom)
+	rotation_handle_indicator.scale = Vector2(cur_zoom, cur_zoom)
+
 func gallery_mode():
 	_gallery_mode = true
 	collision_mask &= ~1 # disable collision with other pieces

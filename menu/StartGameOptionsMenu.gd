@@ -446,4 +446,3 @@ func _on_start_button_pressed():
 	Global.next_scene_settings = settings
 	var scene = load("res://pottery/CleaningTable.tscn")
 	Global.change_scene(scene)
-

@@ -5,7 +5,7 @@ const TOO_SMALL_POLYGON_AREA := 35
 const TOO_SMALL_POLYGON_EDGE_RATIO := 0.9
 const DRAG_SPEED := 15
 const MAX_LINEAR_VELOCITY := 5000.0
-const MAX_ANGULAR_VELOCITY := 25.0
+const MAX_ANGULAR_VELOCITY := 10.0
 const FLASH_COLOR = Color(3, 3, 3, 1.0) #Color(1.0*5, 0.9*5, 0.05*5, 1.0)
 
 enum Fields {
@@ -22,9 +22,18 @@ var drag_start_item = null
 var target_pos = null
 # if null, the user is not rotating ringthis piece
 var rotate_start_mouse = null
+var rotation_handle_start_mouse = null
+var rotation_handle_start_screen = null
 var rotate_start_item = null
 var rotate_start_item_com_position = null
+var indirect_rotation_x_direction:int = 1
+var indirect_rotation_y_direction:int = 1
+var indirect_rotation_on_x_axis := true
+var rotation_pixel_delta:float = 0
+var prev_rotation_pixel_delta:float = 0
+var distance_travelled:Vector2 = Vector2.ZERO
 var target_rot = null
+var indirect_rotation_move_direction:int = 1
 var reset_position = null
 var reset_rotation = null
 var bounding_box:Rect2
@@ -123,6 +132,7 @@ var collision_polygons:Array[CollisionPolygon2D] = []:
 @onready var glue_edges:Node2D = find_child("Glue")
 @onready var center_of_mass_indicator:Node2D = find_child("CenterOfMass")
 @onready var rotation_handle_indicator:Node2D = find_child("RotationHandle")
+var rotate_arrow:Node2D
 var _gallery_mode = false
 var gallery_id:String
 var base_item_name:String
@@ -270,8 +280,11 @@ func _ready():
 
 func on_camera_zoom_changed(cur_zoom:float)->void:
 	cur_zoom = 1.0/cur_zoom
-	center_of_mass_indicator.scale = Vector2(cur_zoom, cur_zoom)
-	rotation_handle_indicator.scale = Vector2(cur_zoom, cur_zoom)
+	var cur_scale = Vector2(cur_zoom, cur_zoom)
+	center_of_mass_indicator.scale = cur_scale
+	rotation_handle_indicator.scale = cur_scale
+	if rotate_arrow:
+		rotate_arrow.scale = cur_scale
 
 func gallery_mode():
 	_gallery_mode = true
@@ -463,8 +476,31 @@ func handle_move_input(event):
 				rotate_start_item = global_rotation
 				rotate_start_item_com_position = to_global(center_of_mass)
 				center_of_mass_indicator.visible = true
-				rotation_handle_indicator.visible = true
-				rotation_handle_indicator.position = to_local(get_global_mouse_position())
+				rotation_handle_indicator.visible = Global.rotation_mode_direct
+				rotation_handle_start_mouse = get_global_mouse_position()
+				rotation_handle_indicator.position = to_local(rotation_handle_start_mouse)
+				if !Global.rotation_mode_direct:
+					distance_travelled = Vector2.ZERO
+					rotation_handle_start_mouse = get_global_mouse_position()
+					rotation_handle_start_screen = get_viewport().get_mouse_position()
+					indirect_rotation_x_direction = 1 if rotation_handle_start_mouse.y < rotate_start_item_com_position.y else -1
+					indirect_rotation_y_direction = -1 if rotation_handle_start_mouse.x < rotate_start_item_com_position.x else 1
+					var offset = rotation_handle_start_mouse - rotate_start_item_com_position
+					indirect_rotation_on_x_axis = abs(offset.y) > abs(offset.x)
+					if indirect_rotation_on_x_axis:
+						rotate_arrow = get_tree().get_first_node_in_group("RotateArrow")
+						rotate_arrow.rotation_degrees = 0 if rotation_handle_start_mouse.y < rotate_start_item_com_position.y else 180
+						rotate_arrow.visible = true
+						Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+						update_rotation_arrow_placement()
+					else:
+						rotate_arrow = get_tree().get_first_node_in_group("RotateArrow")
+						rotate_arrow.rotation_degrees = -90 if rotation_handle_start_mouse.x < rotate_start_item_com_position.x else 90
+						rotate_arrow.visible = true
+						Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+						update_rotation_arrow_placement()
+					print("Directions: %d, %d" % [indirect_rotation_x_direction, indirect_rotation_y_direction])
+					rotation_pixel_delta = 0
 				lock_rotation = false
 				safe_freeze(false)
 				#print("Mouse at ", get_global_mouse_position(), ", COM at ", to_global(center_of_mass))
@@ -473,6 +509,7 @@ func handle_move_input(event):
 			stop_dragging()
 			#print("Ending drag")
 		elif rotate_start_mouse != null and event.is_action_released("rotate_start"):
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 			rotate_start_mouse = null
 			rotate_start_item = null
 			target_rot = null
@@ -482,6 +519,10 @@ func handle_move_input(event):
 			else:
 				center_of_mass_indicator.visible = !Global.lock_rotation 
 			rotation_handle_indicator.visible = false
+			if rotate_arrow:
+				rotate_arrow.visible = false
+				rotate_arrow = null
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			lock_rotation = Global.lock_rotation
 			safe_freeze(Global.freeze_pieces)
 			#print("Stopping rotate")
@@ -495,6 +536,12 @@ func handle_move_input(event):
 		if Global.game_mode == "gallery":
 			Global.delete_archeology_item.emit(self)
 			queue_free()
+	if rotate_arrow != null and rotate_arrow.visible: update_rotation_arrow_placement()
+
+func update_rotation_arrow_placement()->void:
+	if rotate_arrow == null or rotate_arrow.visible == false:
+		return
+	rotate_arrow.position = to_global(center_of_mass)
 
 func start_dragging():
 	if Global.awaiting_first_click:
@@ -521,6 +568,15 @@ func stop_dragging():
 	safe_freeze(Global.freeze_pieces)
 	Global.stopped_dragging_item.emit(self)
 
+func reset_indirect_rotation_move_direction():
+	target_rot = 0
+	distance_travelled = Vector2.ZERO
+	rotate_start_item = global_rotation
+	rotation_handle_start_mouse = get_global_mouse_position()
+	rotation_pixel_delta = 0
+	prev_rotation_pixel_delta = 0
+	angular_velocity = 0
+
 func _integrate_forces(state):
 	if reset_position != null:
 		freeze = false
@@ -536,24 +592,90 @@ func _integrate_forces(state):
 		if state.linear_velocity.length() > MAX_LINEAR_VELOCITY:
 			state.linear_velocity = state.linear_velocity.normalized() * MAX_LINEAR_VELOCITY
 	if target_rot != null:
-		var item_center = to_global(center_of_mass)
-		var mouse_cursor = get_global_mouse_position()
-		var angle_from_item_to_mouse = item_center.angle_to_point(mouse_cursor)
-		var offset_from_original_angle = angle_from_item_to_mouse - rotate_start_mouse
-		var distance_already_rotated = global_rotation - rotate_start_item
-		var distance_to_rotate = offset_from_original_angle - distance_already_rotated
-		if distance_to_rotate >= PI:
-			distance_to_rotate -= 2*PI
-		elif distance_to_rotate <= -PI:
-			distance_to_rotate += 2*PI
-		target_rot = distance_to_rotate
-		while target_rot > PI:
-			target_rot -= PI
-		while target_rot < -PI:
-			target_rot += PI
-		angular_velocity = target_rot * 15
-		if angular_velocity > MAX_ANGULAR_VELOCITY: angular_velocity = MAX_ANGULAR_VELOCITY
-		elif angular_velocity < -MAX_ANGULAR_VELOCITY: angular_velocity = -MAX_ANGULAR_VELOCITY
+		if Global.rotation_mode_direct:
+			# Direct rotation - tries to make a straight line between center of item, rotation handle, and mouse pointer
+			var item_center = to_global(center_of_mass)
+			var mouse_cursor = get_global_mouse_position()
+			var angle_from_item_to_mouse = item_center.angle_to_point(mouse_cursor)
+			var offset_from_original_angle = angle_from_item_to_mouse - rotate_start_mouse
+			var distance_already_rotated = global_rotation - rotate_start_item
+			var distance_to_rotate = offset_from_original_angle - distance_already_rotated
+			if distance_to_rotate >= PI:
+				distance_to_rotate -= 2*PI
+			elif distance_to_rotate <= -PI:
+				distance_to_rotate += 2*PI
+			target_rot = distance_to_rotate
+			while target_rot > PI:
+				target_rot -= 2*PI
+			while target_rot < -PI:
+				target_rot += 2*PI
+			angular_velocity = target_rot * 15
+			if angular_velocity > MAX_ANGULAR_VELOCITY: angular_velocity = MAX_ANGULAR_VELOCITY
+			elif angular_velocity < -MAX_ANGULAR_VELOCITY: angular_velocity = -MAX_ANGULAR_VELOCITY
+		else:
+			# Indirect rotation - 
+			var item_center := to_global(center_of_mass)
+			var mouse_cursor := get_global_mouse_position()
+			distance_travelled += (get_viewport().get_mouse_position() - rotation_handle_start_screen)
+			Input.warp_mouse(rotation_handle_start_screen)
+			if indirect_rotation_on_x_axis:
+				rotation_pixel_delta = distance_travelled.x * indirect_rotation_x_direction
+			else:
+				rotation_pixel_delta = distance_travelled.y * indirect_rotation_y_direction
+			print("\nRotation pixel delta: ", rotation_pixel_delta)
+			var distance_to_rotate_from_original:float = rotation_pixel_delta * Global.rotation_pixels_to_radians
+			print("distance_to_rotate_from_original: ", distance_to_rotate_from_original)
+			target_rot = distance_to_rotate_from_original + rotate_start_item
+			print("target_rot1: ", target_rot)
+			if abs(rotation_pixel_delta-prev_rotation_pixel_delta) > 0.0000001:
+				var new_move_direction = sign(rotation_pixel_delta-prev_rotation_pixel_delta)
+				if indirect_rotation_move_direction != 0 and new_move_direction != 0 and new_move_direction != indirect_rotation_move_direction:
+					# We reversed course, reset the rotation
+					indirect_rotation_move_direction = new_move_direction
+					reset_indirect_rotation_move_direction()
+					return
+				indirect_rotation_move_direction = new_move_direction
+				prev_rotation_pixel_delta = rotation_pixel_delta
+			print("indirect_rotation_move_direction: ", indirect_rotation_move_direction)
+			# keep target_rot between -360 and +360
+			#target_rot = fmod(target_rot, 2*PI)
+			# keep global_rotation between -360 and +360
+			#while global_rotation > 2*PI:
+			#	global_rotation -= 2*PI
+			#while global_rotation < -2*PI:
+			#	global_rotation += 2*PI
+			#if target_rot > 0 and global_rotation < 0:
+				#target_rot -= 2*PI
+			#elif target_rot < 0 and global_rotation > 0:
+				#target_rot += 2*PI
+			#if indirect_rotation_move_direction > 0:
+				#while target_rot < global_rotation:
+					#target_rot += 2*PI
+				#while target_rot > global_rotation+2*PI:
+					#target_rot -= 2*PI
+			#if indirect_rotation_move_direction < 0:
+				#while target_rot > global_rotation:
+					#target_rot -= 2*PI
+					#print("Reduced target_rot")
+				#while target_rot < global_rotation-2*PI:
+					#target_rot += 2*PI
+			target_rot = fmod(target_rot, 2*PI)
+			if abs(target_rot - global_rotation) > PI:
+				if target_rot > global_rotation:
+					target_rot -= 2*PI
+				else:
+					target_rot += 2*PI
+			print("target_rot2: ", target_rot)
+			var rotation_left = target_rot - global_rotation
+			print("cur rotation: ", global_rotation)
+			print("rotation_left: ", rotation_left)
+			if abs(rotation_left) > 0.0001:
+				angular_velocity = abs(rotation_left)*indirect_rotation_move_direction*10
+				print("Setting angular velocity: ", angular_velocity)
+			else:
+				angular_velocity = 0
+			if angular_velocity > MAX_ANGULAR_VELOCITY: angular_velocity = MAX_ANGULAR_VELOCITY
+			elif angular_velocity < -MAX_ANGULAR_VELOCITY: angular_velocity = -MAX_ANGULAR_VELOCITY
 		#print("av=", angular_velocity)
 
 func _on_mouse_shape_entered(shape_idx):

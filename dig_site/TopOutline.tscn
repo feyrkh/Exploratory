@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://ctm7hiqpl4u5r"]
+
+[node name="TopOutline" type="Line2D"]
+modulate = Color(0.179688, 0.127787, 0.0443601, 1)
+points = PackedVector2Array(0, 0, 40, 0, 20, 40, -20, 40, 0, 0)
+closed = true
+width = 0.5

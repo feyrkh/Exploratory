@@ -71,5 +71,3 @@ static func interpolate(low:WeatheringConfig, high:WeatheringConfig, degree:floa
 
 static func _interpolate(v1, v2, degree:float)->float:
 	return v1 + (v2-v1) * degree
-
-

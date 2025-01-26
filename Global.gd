@@ -65,6 +65,9 @@ var glue_color:Color = Color("e8c810"):
 		glue_material = get_glue_material(glue_color)
 		glue_color_changed.emit()
 
+var rotation_mode_direct := true
+var rotation_pixels_to_radians:float = 0.003
+
 func get_glue_material(c:Color):
 		if !glue_materials.has(c):
 			var new_mat:ShaderMaterial = glue_material.duplicate()

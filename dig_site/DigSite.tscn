@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://dy2t0g776bwke"]
+
+[ext_resource type="Script" path="res://dig_site/dig_site.gd" id="1_bfmpm"]
+[ext_resource type="PackedScene" uid="uid://lhqhagnjwvml" path="res://dig_site/DigGridUI.tscn" id="2_0708y"]
+[ext_resource type="Theme" uid="uid://bvc652bwjujtl" path="res://theme/main_ui.tres" id="2_xc3w2"]
+
+[node name="DigSite" type="Node2D"]
+script = ExtResource("1_bfmpm")
+
+[node name="GridContainer" type="PanelContainer" parent="."]
+offset_left = 162.0
+offset_top = 101.0
+offset_right = 1105.0
+offset_bottom = 650.0
+mouse_filter = 1
+theme = ExtResource("2_xc3w2")
+theme_type_variation = &"NoBorderPanelContainer"
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="GridContainer"]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport2" type="SubViewport" parent="GridContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(882, 489)
+render_target_update_mode = 4
+
+[node name="DigGridUI" parent="GridContainer/SubViewportContainer/SubViewport2" instance=ExtResource("2_0708y")]

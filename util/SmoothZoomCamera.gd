@@ -1,4 +1,5 @@
 extends Camera2D
+class_name SmoothZoomCamera
 
 const HALF_VECTOR:Vector2 = Vector2(0.5, 0.5)
 
@@ -13,7 +14,7 @@ var zoom_panning:bool = false
 func _process(delta):
 	if !zoom_target.is_equal_approx(zoom):
 		zoom = lerp(zoom, zoom_target, zoom_speed * delta)
-		if zoom_panning:
+		if zoom_panning and move_callback:
 			move_callback.call(camera_zoom_position_target)
 
 # zoom so cursor stays on the same pixel when zooming completes
